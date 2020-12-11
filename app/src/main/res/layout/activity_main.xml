@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingDefaultResource"
+
+    android:id="@+id/launcher_background"
+    android:background="@color/ic_launcher_background"
+    android:onClick="click_launcher_background"
+    tools:context=".MainActivity">
+
+
+    <LinearLayout
+        style="@style/ScriptMapLinearLayoutHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <LinearLayout
+            style="@style/ScriptMapLinearLayoutVertical"
+            android:layout_width="85dp">
+
+            <TextView
+                android:id="@+id/Left_result_Center"
+                style="@style/ScriptMapNumText"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="92dp"
+                android:enabled="false"
+                android:visibility="invisible" />
+
+            <EditText
+                android:id="@+id/Center_EditText"
+                style="@style/ScriptMapNumText"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:autofillHints="@string/reltat"
+                android:background="@null"
+                android:cursorVisible="true"
+                android:hint="@string/reltat"
+                android:imeOptions="actionDone|actionNext"
+                android:textColorHint="#FFFFFF"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/Center_result_Right"
+                style="@style/ScriptMapNumText"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="92dp"
+                android:enabled="false"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/ScriptMapLinearLayoutVertical"
+            android:layout_width="85dp">
+
+            <EditText
+                android:id="@+id/Left_EditText"
+                style="@style/ScriptMapNumText"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:autofillHints="@string/reltat"
+                android:background="@null"
+                android:hint="@string/reltat"
+                android:imeOptions="actionDone|actionNext" />
+
+            <LinearLayout
+                style="@style/ScriptMapLinearLayoutHorizontal"
+                android:layout_height="510dp">
+
+                <LinearLayout
+                    style="@style/ScriptMapLinearLayoutVertical"
+                    android:id="@+id/linear_Left_Center_Right"
+                    android:layout_width="30dp"
+                    android:layout_height="510dp"
+                    android:layout_marginEnd="-12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/Left_direction_Center"
+                        style="@style/ScriptMapDirectionLine"
+                        android:fontFamily="@font/font_scriptmap_rotate"
+                        android:textSize="16sp"
+                        android:layout_width="30dp"
+                        android:layout_height="255dp"
+                        android:text="@string/Left_and_Center"
+                        android:onClick="click_direction_choice"
+                        android:visibility="visible"
+                        android:lineSpacingExtra="-6dp"
+                        android:letterSpacing="1"/>
+
+                    <TextView
+                        android:id="@+id/Center_direction_Right"
+                        style="@style/ScriptMapDirectionLine"
+                        android:fontFamily="@font/font_scriptmap_rotate"
+                        android:textSize="16sp"
+                        android:layout_width="30dp"
+                        android:layout_height="255dp"
+                        android:text="@string/Center_and_Right"
+                        android:onClick="click_direction_choice"
+                        android:visibility="visible"
+                        android:lineSpacingExtra="-6dp"
+                        android:letterSpacing="1"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/Left_direction_Right"
+                    style="@style/ScriptMapDirectionLine"
+                    android:fontFamily="@font/font_scriptmap_rotate"
+                    android:textSize="16sp"
+                    android:layout_width="35dp"
+                    android:layout_height="510dp"
+                    android:text="@string/Left_and_Right"
+                    android:onClick="click_direction_choice"
+                    android:lineSpacingExtra="-6dp"
+                    android:letterSpacing="1" />
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/Right_EditText"
+                style="@style/ScriptMapNumText"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:autofillHints="@string/reltat"
+                android:background="@null"
+                android:cursorVisible="true"
+                android:hint="@string/reltat"
+                android:imeOptions="actionDone" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/ScriptMapLinearLayoutVertical"
+            android:layout_width="85dp">
+
+            <TextView
+                android:id="@+id/Left_result_Right"
+                style="@style/ScriptMapNumText"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:enabled="false"
+                android:visibility="invisible" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/ScriptMapLinearLayoutHorizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="170dp"
+        android:orientation="vertical">
+
+        <LinearLayout style="@style/ScriptMapLinearLayoutHorizontal">
+
+            <Button
+                android:id="@+id/button_direction"
+                style="@style/ScriptMapButton"
+                android:onClick="click_mode_choice"
+                android:text="@string/direction"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/button_action"
+                style="@style/ScriptMapButton"
+                android:enabled="false"
+                android:onClick="click_action"
+                android:text="@string/action" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/ScriptMapLinearLayoutHorizontal"
+            android:layout_height="100dp">
+
+            <Button
+                android:id="@+id/button_notcount"
+                android:layout_width="28dp"
+                android:layout_height="100dp"
+                android:layout_marginEnd="-6dp"
+                android:onClick="click_count_choice"
+                android:text="@string/notcount"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/button_modes"
+                style="@style/ScriptMapButton"
+                android:onClick="click_modes"
+                android:text="@string/modes"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/linear_count_choice"
+                style="@style/ScriptMapLinearLayoutHorizontal"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginEnd="1dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/button_positive"
+                    style="@style/ScriptMapButton"
+                    android:clickable="false"
+                    android:onClick="click_count_choice"
+                    android:text="@string/positive" />
+
+                <Button
+                    android:id="@+id/button_negative"
+                    style="@style/ScriptMapButton"
+                    android:clickable="false"
+                    android:onClick="click_count_choice"
+                    android:text="@string/negative" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginEnd="1dp">
+
+                <LinearLayout
+                    style="@style/ScriptMapLinearLayoutHorizontal"
+                    android:layout_width="100dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/button_stiffLeft"
+                        style="@style/ScriptMapButton"
+                        android:layout_width="44dp"
+                        android:layout_marginEnd="-4dp"
+                        android:onClick="click_count"
+
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/button_count"
+                        style="@style/ScriptMapButton"
+                        android:layout_width="100dp"
+                        android:layout_marginStart="-4dp"
+                        android:layout_marginEnd="-4dp"
+                        android:onClick="click_count"
+
+                        android:text="@string/count"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/button_stiffRight"
+                        style="@style/ScriptMapButton"
+                        android:layout_width="44dp"
+                        android:layout_marginStart="-4dp"
+                        android:onClick="click_count"
+
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView_stiffcount"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:lineSpacingExtra="-2dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout style="@style/ScriptMapLinearLayoutHorizontal">
+
+            <Button
+                android:id="@+id/button_accident"
+                style="@style/ScriptMapButton"
+                android:onClick="click_mode_choice"
+                android:text="@string/accident"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/button_player"
+                style="@style/ScriptMapButton"
+                android:onClick="click_player"
+                android:text="@string/addline" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/ScriptMapLinearLayoutHorizontal">
+
+            <Button
+                android:id="@+id/button_battleline"
+                style="@style/ScriptMapButton"
+                android:onClick="click_mode_choice"
+                android:text="@string/battleline"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/button_clear"
+                style="@style/ScriptMapButton"
+                android:onClick="click_clear"
+                android:text="@string/clear" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

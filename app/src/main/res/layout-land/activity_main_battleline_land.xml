@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingDefaultResource"
+
+    android:id="@+id/launcher_background"
+    android:background="@color/ic_launcher_background"
+    android:onClick="click_launcher_background">
+
+
+    <FrameLayout
+        android:layout_width="510dp"
+        android:layout_height="35dp"
+        android:layout_centerInParent="true"
+        tools:visibility="visible">
+
+        <SeekBar
+            android:id="@+id/Left_seekBarAnd_Right"
+            style="@style/ScriptMapSeekBar"
+            android:progress="50"
+            android:progressBackgroundTint="#DDDCDC"
+            android:progressTint="#A1A1A1"
+            android:thumb="?attr/selectableItemBackground"
+            android:visibility="invisible" />
+
+        <SeekBar
+            android:id="@+id/Left_seekBar_Right"
+            style="@style/ScriptMapSeekBar"
+            android:thumbTint="#DDDCDC" />
+
+        <SeekBar
+            android:id="@+id/Right_seekBar_Left"
+            style="@style/ScriptMapSeekBar"
+            android:thumbTint="#A1A1A1"
+            android:rotation="180"/>
+
+        <TextView
+            android:id="@+id/Left_direction_Right"
+            style="@style/ScriptMapDirectionLine"
+            android:fontFamily="@font/font_scriptmap"
+            android:layout_width="510dp"
+            android:layout_height="35dp"
+            android:onClick="click_direction_choice"
+            android:text="@string/Left_and_Right_rotate"
+            android:textSize="40sp"
+            android:visibility="visible" />
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="90dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            style="@style/ScriptMapLinearLayoutVertical"
+            android:layout_width="50dp"
+            android:gravity="center_vertical|end">
+
+            <LinearLayout
+                android:id="@+id/linear_flank_Left"
+                android:layout_width="45dp"
+                android:layout_height="130dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/button_up_flank_Left"
+                    style="@style/ScriptMapButtonRotateMax"
+                    android:layout_height="55dp"
+                    android:layout_marginBottom="-6dp"
+                    android:onClick="click_flank"
+                    android:rotation="180"
+                    android:text="@string/flank_up"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/button_center_flank_Left"
+                    style="@style/ScriptMapButtonRotateMax"
+                    android:layout_height="43dp"
+                    android:layout_marginTop="-6dp"
+                    android:layout_marginBottom="-6dp"
+                    android:onClick="click_flank"
+                    android:rotation="180" />
+
+                <Button
+                    android:id="@+id/button_down_flank_Left"
+                    style="@style/ScriptMapButtonRotateMax"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="-6dp"
+                    android:onClick="click_flank"
+                    android:rotation="180"
+                    android:text="@string/flank_down"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button_move_Left"
+                style="@style/ScriptMapButtonRotateMax"
+                android:layout_height="130dp"
+                android:rotation="180"
+                android:text="@string/move"
+                android:visibility="gone" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            style="@style/ScriptMapLinearLayoutVertical"
+            android:layout_width="40dp">
+
+            <Button
+                android:id="@+id/button_defense_Left"
+                style="@style/ScriptMapButtonRotateMin"
+                android:rotation="180"
+                android:text="@string/defense"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/Left_EditText"
+                style="@style/ScriptMapNumText"
+                android:layout_width="40dp"
+                android:layout_height="80dp"
+                android:autofillHints="@string/reltat"
+                android:background="@null"
+                android:hint="@string/reltat"
+                android:imeOptions="actionDone|flagNoFullscreen|actionNext"
+                android:rotation="90" />
+
+            <Button
+                android:id="@+id/button_attack_Left"
+                style="@style/ScriptMapButtonRotateMin"
+                android:rotation="180"
+                android:text="@string/attack"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="90dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            style="@style/ScriptMapLinearLayoutVertical"
+            android:layout_width="40dp">
+
+            <Button
+                android:id="@+id/button_attack_Right"
+                style="@style/ScriptMapButtonRotateMin"
+
+                android:text="@string/attack"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/Right_EditText"
+                style="@style/ScriptMapNumText"
+                android:layout_width="40dp"
+                android:layout_height="80dp"
+                android:autofillHints="@string/reltat"
+                android:background="@null"
+                android:hint="@string/reltat"
+                android:imeOptions="actionDone|flagNoFullscreen"
+                android:rotation="-90" />
+
+            <Button
+                android:id="@+id/button_defense_Right"
+                style="@style/ScriptMapButtonRotateMin"
+
+                android:text="@string/defense"
+                android:visibility="gone" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            style="@style/ScriptMapLinearLayoutVertical"
+            android:layout_width="50dp">
+
+            <Button
+                android:id="@+id/button_move_Right"
+                style="@style/ScriptMapButtonRotateMax"
+                android:layout_height="130dp"
+                android:hapticFeedbackEnabled="true"
+                android:text="@string/move"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/linear_flank_Right"
+                android:layout_width="45dp"
+                android:layout_height="130dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/button_up_flank_Right"
+                    style="@style/ScriptMapButtonRotateMax"
+                    android:layout_height="55dp"
+                    android:layout_marginBottom="-6dp"
+                    android:onClick="click_flank"
+                    android:text="@string/flank_down"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/button_center_flank_Right"
+                    style="@style/ScriptMapButtonRotateMax"
+                    android:layout_height="43dp"
+                    android:layout_marginTop="-6dp"
+                    android:layout_marginBottom="-6dp"
+                    android:onClick="click_flank" />
+
+                <Button
+                    android:id="@+id/button_down_flank_Right"
+                    style="@style/ScriptMapButtonRotateMax"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="-6dp"
+                    android:onClick="click_flank"
+                    android:text="@string/flank_up"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linear_menu"
+        style="@style/ScriptMapLinearLayoutVertical"
+        android:layout_width="300dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible">
+
+        <LinearLayout
+            style="@style/ScriptMapLinearLayoutHorizontal"
+            android:layout_height="50dp"
+            android:layout_marginTop="100dp">
+
+            <Button
+                android:id="@+id/button_player"
+                style="@style/ScriptMapButton"
+                android:layout_margin="50dp"
+                android:onClick="click_player"
+                android:text="@string/addline" />
+
+            <Button
+                android:id="@+id/button_modes"
+                style="@style/ScriptMapButton"
+                android:layout_margin="50dp"
+                android:onClick="click_modes"
+                android:text="@string/battleline" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/ScriptMapLinearLayoutHorizontal">
+            <Button
+                android:id="@+id/button_action"
+                style="@style/ScriptMapButton"
+                android:enabled="false"
+                android:onClick="click_action"
+                android:text="@string/action" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/ScriptMapLinearLayoutHorizontal"
+            android:layout_height="50dp">
+
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_margin="50dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginEnd="1dp">
+
+                <Button
+                    android:id="@+id/button_basis"
+                    style="@style/ScriptMapButton"
+                    android:onClick="click_basis"
+                    android:text="@string/basis"
+                    android:textSize="14sp"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/linear_basisofmode_choice"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <Button
+                        android:id="@+id/button_basisofmodeLeft"
+                        style="@style/ScriptMapButton"
+                        android:layout_width="54dp"
+                        android:layout_marginEnd="-4dp"
+                        android:onClick="click_basis" />
+
+                    <Button
+                        android:id="@+id/button_basisofmodeRight"
+                        style="@style/ScriptMapButton"
+                        android:layout_width="54dp"
+                        android:layout_marginStart="-4dp"
+                        android:onClick="click_basis" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView_basisofmode"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:lineSpacingExtra="-2dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_margin="50dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginEnd="1dp">
+
+                <LinearLayout
+                    style="@style/ScriptMapLinearLayoutHorizontal"
+                    android:layout_width="100dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/button_stiffLeft"
+                        style="@style/ScriptMapButton"
+                        android:layout_width="44dp"
+                        android:layout_marginEnd="-4dp"
+                        android:onClick="click_count"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/button_count"
+                        style="@style/ScriptMapButton"
+                        android:layout_width="100dp"
+                        android:layout_marginStart="-4dp"
+                        android:layout_marginEnd="-4dp"
+                        android:onClick="click_count"
+                        android:text="@string/count"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/button_stiffRight"
+                        style="@style/ScriptMapButton"
+                        android:layout_width="44dp"
+                        android:layout_marginStart="-4dp"
+                        android:onClick="click_count"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView_stiffcount"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:lineSpacingExtra="-2dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/ScriptMapLinearLayoutHorizontal"
+            android:layout_height="50dp">
+
+            <Button
+                android:id="@+id/button_notcount"
+                android:layout_width="100dp"
+                android:layout_height="28dp"
+                android:layout_marginBottom="-6dp"
+                android:onClick="click_count_choice"
+                android:text="@string/notcount"
+                android:visibility="gone" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            style="@style/ScriptMapLinearLayoutHorizontal"
+            android:layout_height="50dp">
+
+            <LinearLayout
+                android:id="@+id/linear_basis_choice"
+                style="@style/ScriptMapLinearLayoutHorizontal"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/button_dynamicall"
+                    style="@style/ScriptMapButton"
+                    android:onClick="click_base_choice"
+                    android:text="@string/dynamicall" />
+
+                <Button
+                    android:id="@+id/button_mechanical"
+                    style="@style/ScriptMapButton"
+                    android:onClick="click_base_choice"
+                    android:text="@string/mechanical" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_count_choice"
+                style="@style/ScriptMapLinearLayoutHorizontal"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/button_positive"
+                    style="@style/ScriptMapButton"
+                    android:onClick="click_count_choice"
+                    android:text="@string/positive" />
+
+                <Button
+                    android:id="@+id/button_negative"
+                    style="@style/ScriptMapButton"
+                    android:onClick="click_count_choice"
+                    android:text="@string/negative" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        style="@style/ScriptMapLinearLayoutVertical"
+        android:layout_centerHorizontal="true">
+        <TextView
+            android:id="@+id/Left_result_Right"
+            style="@style/ScriptMapNumText"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="155dp"
+            android:enabled="false"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_clear"
+        style="@style/ScriptMapButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp"
+        android:onClick="click_clear"
+        android:text="@string/clear"
+        android:visibility="visible" />
+</RelativeLayout>

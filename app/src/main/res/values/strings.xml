@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">ScriptMap</string>
+
+    <string name="reltat" translatable="false">0</string>
+
+    <string name="Left_and_Right" translatable="false"><![CDATA[<-------------------------------------->]]></string>
+    <string name="Left_to_Right" translatable="false"><![CDATA[-------------------------------------->]]></string>
+    <string name="Right_to_Left" translatable="false"><![CDATA[<--------------------------------------]]></string>
+    <string name="Left_peace_Right" translatable="false"><![CDATA[>-------------------------------------<]]></string>
+
+    <string name="Left_and_Center" translatable="false"><![CDATA[<-----------------┓]]></string>
+    <string name="Left_to_Center" translatable="false"><![CDATA[└--------------------┓]]></string>
+    <string name="Center_to_Left" translatable="false"><![CDATA[┗--------------------┐]]></string>
+    <string name="Center_peace_Left" translatable="false"><![CDATA[└>--------------------<┐]]></string>
+
+    <string name="Center_and_Right" translatable="false"><![CDATA[┏----------------->]]></string>
+    <string name="Center_to_Right" translatable="false"><![CDATA[┌--------------------┛]]></string>
+    <string name="Right_to_Center" translatable="false"><![CDATA[┏--------------------┘]]></string>
+    <string name="Center_peace_Right" translatable="false"><![CDATA[┌>--------------------<┘]]></string>
+
+    <string name="Left_and_Right_rotate" translatable="false"><![CDATA[---------------------------------------]]></string>
+    <string name="Left_to_Right_rotate" translatable="false"><![CDATA[-------------------------------------->]]></string>
+    <string name="Right_to_Left_rotate" translatable="false"><![CDATA[<--------------------------------------]]></string>
+    <string name="Left_peace_Right_rotate" translatable="false"><![CDATA[>-------------------------------------<]]></string>
+
+    <string name="direction">DIRECTION</string>
+    <string name="action">ACTION</string>
+    <string name="modes">MODES</string>
+    <string name="probably">PROBABLY</string>
+    <string name="count">COUNT</string>
+    <string name="stiffcount">STIFFCOUNT</string>
+
+    <string name="stiffprimary"><![CDATA[STIFFCOUNT<br/><small>PRIMARY</small>]]></string>
+    <string name="stiffness"><![CDATA[STIFFCOUNT<br/><small><font color="#989898">%.0f < </font>%.0f<font color="#989898"> > %.0f</font></small>]]></string>
+
+    <string name="vabank">VABANK</string>
+    <string name="notcount">NOTCOUNT</string>
+    <string name="positive">POSITIVE</string>
+    <string name="humbly">HUMBLY</string>
+    <string name="negative">NEGATIVE</string>
+    <string name="accident">ACCIDENT</string>
+    <string name="addline">ADDLINE</string>
+    <string name="outline">OUTLINE</string>
+    <string name="battleline">BATTLELINE</string>
+    <string name="clear">CLEAR</string>
+
+
+    <string name="back">RETURN</string>
+    <string name="dynamicall">DYNAMICS</string>
+    <string name="mechanical">MEHANICS</string>
+    <string name="basis">BASIS</string>
+    <string name="basisofmode"><![CDATA[BASISOFMODE<br/><small>%s</small>]]></string>
+    <string name="dependent">DEPENDENT</string>
+    <string name="monotonous">MONOTONOUS</string>
+    <string name="isabsent">ISABSENT</string>
+    <string name="rotate_notcount">NOT\nCOUNT</string>
+    <string name="stop">STOP</string>
+
+    <string name="flank_down" translatable="false">˅</string>
+    <string name="flank_up" translatable="false">˄</string>
+    <string name="rotate_stop">POTS</string>
+    <string name="move">EVOM</string>
+    <string name="rotate">ETATOR</string>
+    <string name="attack">KCATTA</string>
+    <string name="defense">ESNEFED</string>
+
+
+    <string name="bacgraund" translatable="false">bacgraund</string>
+</resources>

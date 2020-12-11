@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ScriptMap</string>
+
+    <string name="direction">НАПРЯМОК</string>
+    <string name="action">ДІЯТИ</string>
+    <string name="modes">РЕЖИМИ</string>
+    <string name="probably">ЙМОВІРНО</string>
+    <string name="count">ЛІЧИТИ</string>
+    <string name="stiffcount">ЖОРСТКІСТЬ</string>
+    <string name="stiffprimary"><![CDATA[ЖОРСТКІСТЬ<br/><small>ОСНОВНА</small>]]></string>
+    <string name="stiffness"><![CDATA[ЖОРСТКІСТЬ<br/><small><font color="#989898">%.0f < </font>%.0f<font color="#989898"> > %.0f</font></small>]]></string>
+    <string name="vabank">ВАБАНК</string>
+    <string name="notcount">НЕЛІЧИТИ</string>
+    <string name="positive">ДОДАТНІЙ</string>
+    <string name="humbly">СКРОМНО</string>
+    <string name="negative">ВІДЄМНИЙ</string>
+    <string name="accident">ВИПАДОК</string>
+    <string name="addline">ЩЕЛІНІЮ</string>
+    <string name="outline">НІЛІНІЮ</string>
+    <string name="battleline">ЛІНІЯБОЮ</string>
+    <string name="clear">ОЧИСТИТИ</string>
+
+    <string name="back">НАЗАД</string>
+    <string name="dynamicall">ДИНАМІКА</string>
+    <string name="mechanical">МЕХАНІКА</string>
+    <string name="basis">ОСНОВА</string>
+    <string name="basisofmode"><![CDATA[ОСНОВАРЕЖИМУ<br/><small>%s</small>]]></string>
+    <string name="dependent">ЗАЛЕЖНА</string>
+    <string name="monotonous">ОДНОМАНІТНА</string>
+    <string name="isabsent">ВІДСУТНЯ</string>
+    <string name="rotate_notcount">НЕ\nЛІЧИТИ</string>
+    <string name="stop">СТОП</string>
+
+    <string name="rotate_stop">ПОТС</string>
+    <string name="move">ИТАХУР</string>
+    <string name="rotate">ТРЕБО</string>
+    <string name="attack">АКАТТА</string>
+    <string name="defense">АНОРОБО</string>
+</resources>

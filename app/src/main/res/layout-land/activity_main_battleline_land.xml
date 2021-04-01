@@ -442,6 +442,21 @@
             android:visibility="invisible" />
     </LinearLayout>
 
+    <ToggleButton
+        android:id="@+id/button_restore"
+        style="@style/ScriptMapButton"
+        android:layout_height="28dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:gravity="center|top"
+        android:onClick="click_restore"
+        android:textOff="@string/resume"
+        android:textOn="@string/resume"
+        android:textSize="8sp"
+        android:visibility="gone" />
+
+
     <Button
         android:id="@+id/button_clear"
         style="@style/ScriptMapButton"
@@ -451,4 +466,5 @@
         android:onClick="click_clear"
         android:text="@string/clear"
         android:visibility="visible" />
+
 </RelativeLayout>

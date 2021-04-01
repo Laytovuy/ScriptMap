@@ -11,6 +11,14 @@
     tools:context=".MainActivity">
 
 
+    <Button
+        android:id="@+id/chang"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:onClick="click_chang"
+        android:text="Переробити fonts і добавити локалізацію"
+        android:textSize="8sp" />
+
     <LinearLayout
         style="@style/ScriptMapLinearLayoutHorizontal"
         android:layout_width="wrap_content"
@@ -141,7 +149,7 @@
                 style="@style/ScriptMapNumText"
                 android:layout_width="80dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="10dp"
+
                 android:enabled="false"
                 android:visibility="invisible" />
         </LinearLayout>
@@ -171,6 +179,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linear_modes_count_choice"
             style="@style/ScriptMapLinearLayoutHorizontal"
             android:layout_height="100dp">
 
@@ -270,7 +279,9 @@
             </FrameLayout>
         </LinearLayout>
 
-        <LinearLayout style="@style/ScriptMapLinearLayoutHorizontal">
+        <LinearLayout
+            android:id="@+id/linear_accident_player"
+            style="@style/ScriptMapLinearLayoutHorizontal">
 
             <Button
                 android:id="@+id/button_accident"

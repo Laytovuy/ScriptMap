@@ -1,55 +1,30 @@
 package way.calculation.scriptmap;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import java.nio.channels.GatheringByteChannel;
+import java.util.Locale;
 
 
-public class MainBattleline extends MainActivity {
-
-    public Button button_clear, button_dynamicall, button_mechanical, button_positive, button_notcount,
-            button_negative, button_stiffLeft, button_count,
-            button_stiffRight, button_basisofmodeLeft, button_basis, button_basisofmodeRight,button_action, button_player, button_modes,
-            button_attack_Left, button_attack_Right, button_move_Left, button_move_Right,
-            button_up_flank_Left, button_center_flank_Left, button_down_flank_Left, button_up_flank_Right, button_center_flank_Right, button_down_flank_Right,
-            button_defense_Left, button_defense_Right;
-    public ToggleButton button_restore;
-    private LinearLayout linear_count_choice, linear_basis_choice, linear_basisofmode_choice, linear_menu, linear_flank_Left, linear_flank_Right;
-    private EditText editText_left, editText_right;
-    public TextView  left_result_right, textView_stiffcount, textView_basisofmode, left_direct_right;
-    public SeekBar left_seekBarAnd_right, left_seekBar_right, right_seekBar_left;
-    public RelativeLayout launcher_background;
-    private long system_start_Left_time, system_start_Right_time, system_back_time;
-
-    public String string_left, string_right;
-    public int Int_left = 0, Int_right = 0, L_Int_and_R, L_seekbarAnd_R, L_seekbar_R, R_seekbar_L;
-    public double OLD_L_seekbarAnd_R, OLD_roundedL, OLD_L_seekbar_R, OLD_R_seekbar_L, OLD_L_Int_and_R; // , roundedR, roundedL
-    public byte restore = 0, b = 0, bm = 2, m = 4, c = 0, p = 2, L_direct_R = 0;
-    public double sc = 10;
-    public boolean view_on = false, m_on = false, c_on = false, b_on = false,  menu_on = true, d_long_on = false, move_on = false;
+public class MainBattleline extends MainData {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_battleline_land);
-        // TODO create get intent
-        // TODO STOP battleline
+        MainDataExchange = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         // TODO Скрол створений не підходить на кнопки.
-        // Також я думаю над тим чи змінити всю орінтацію застосунку на горизонтальну...
 
         button_clear = findViewById(R.id.button_clear);
         button_restore = findViewById(R.id.button_restore);
@@ -100,6 +75,8 @@ public class MainBattleline extends MainActivity {
         linear_flank_Left = findViewById(R.id.linear_flank_Left);
         linear_flank_Right = findViewById(R.id.linear_flank_Right);
 
+        frameLayout_seekBar = findViewById(R.id.frameLayout_seekBar);
+
         editText_left = findViewById(R.id.Left_EditText);
         editText_right = findViewById(R.id.Right_EditText);
 
@@ -113,9 +90,6 @@ public class MainBattleline extends MainActivity {
         left_seekBar_right = findViewById(R.id.Left_seekBar_Right);
         right_seekBar_left = findViewById(R.id.Right_seekBar_Left);
 
-        string_left = editText_left.getText().toString().trim();
-        string_right = editText_right.getText().toString().trim();
-
         launcher_background = findViewById(R.id.launcher_background);
         launcher_background.setOnLongClickListener(long_click_launcher_background);
         button_clear.setOnLongClickListener(long_click_clear);
@@ -123,12 +97,29 @@ public class MainBattleline extends MainActivity {
         editText_left.addTextChangedListener(editText_watcher);
         editText_right.addTextChangedListener(editText_watcher);
 
+        arguments = getIntent().getExtras();
+        if(arguments != null){ outData(); getIntent().removeExtra("intent"); getIntent().removeCategory("intent"); arguments = getIntent().getExtras(); }
         // Як що основа режиму 3 "довічне" то, очки не будуть обчислюватись, але як що гравець не виставить очки, задається стандартна швидкість,
         // або як що вписати то швидкість буде виходити з цього показника.
     }
 
 
-    private TextWatcher editText_watcher = new TextWatcher() {
+    public void click_chang (View view) { // TODO Локалізація
+        languageCode  = "uk";
+        localization(languageCode);
+    }
+
+    public void localization (String languageCode) { // TODO Локалізація
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        getBaseContext().getResources().updateConfiguration(config, null);
+        recreate();
+    }
+
+
+    private final TextWatcher editText_watcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
         @Override
@@ -157,14 +148,15 @@ public class MainBattleline extends MainActivity {
 
     public void click_clear (View view){ // TODO Очищує показники.
         if (menu_on){
-            L_seekbarAnd_R = 0; L_seekbar_R = 0; R_seekbar_L = 0;
-            L_direct_R = 0;
-            if (!d_long_on){
-                editText_right.setText("");
-                editText_left.setText("");
-            } left_result_right.setVisibility(View.INVISIBLE);
-            d_long_on = false; restore = 0;
-            direction_choice(); seekbar_choice(); close_cursor();
+            L_seekbarLenght_R = 0; L_seekbar_R = 0; R_seekbar_L = 0;
+            L_position_R = 0; R_position_L = 0;
+            L_direct = true; R_direct = true;
+
+            L_direct_R = 0;  L_result_R = 0;
+            editText_right.setText(""); editText_left.setText("");
+
+            restore = 0;
+            result_choice(); direction_choice(); seekbar_choice(); close_cursor();
         }
     }
 
@@ -173,7 +165,7 @@ public class MainBattleline extends MainActivity {
         public boolean onLongClick(View v) {
             if (!menu_on){
                 button_move_Left.setEnabled(false); button_move_Right.setEnabled(false);
-                menu_on = true; menu_visible();
+                menu_on = true; menu_visible(); result_choice();
                 button_restore.setVisibility(View.GONE);
                 if (move_on) {if (restore != 2) {restore = 1;} check_start();}
             } else {
@@ -181,7 +173,7 @@ public class MainBattleline extends MainActivity {
                 c = 0; button_count.setText(R.string.count);
                 sc = 10;
                 bm = 2; anim_base_choice();
-                view_on = false; viwe_on_off();
+                view_on = false; viwe_on_off(); close_cursor();
             }
             return true;
         }
@@ -214,29 +206,26 @@ public class MainBattleline extends MainActivity {
 
 
     public void click_count (View view){
-        switch (view.getId()){
-            case R.id.button_stiffLeft:
-                sc += 2; if (sc > 20){ sc = 10; }
-                break;
-            case R.id.button_count:
-                if (!c_on){
-                    c_on = true; view_on = true; viwe_on_off();
-                    button_clear.setVisibility(View.GONE);
-                    button_count.getLayoutParams().width = (int)
-                            (button_count.getResources().getDisplayMetrics().density * 28);
+        int id = view.getId();
+        if (id == R.id.button_stiffLeft) {
+            sc += 2; if (sc > 20){ sc = 10; }
+        } else if (id == R.id.button_count) {
+            if (!c_on){
+                c_on = true; view_on = true; viwe_on_off();
+                button_clear.setVisibility(View.GONE);
+                button_count.getLayoutParams().width = (int)
+                        (button_count.getResources().getDisplayMetrics().density * 28);
 
-                    button_count.setText("");
-                    button_notcount.setVisibility(View.VISIBLE);
-                    textView_stiffcount.setVisibility(View.VISIBLE);
-                    linear_count_choice.setVisibility(View.VISIBLE);
-                    button_stiffLeft.setVisibility(View.VISIBLE);
-                    button_stiffRight.setVisibility(View.VISIBLE);
-                    button_notcount.setTextSize(8);
-                } else {sc = 10; textView_stiffcount.setText(Html.fromHtml(getString(R.string.stiffprimary)));}
-                break;
-            case R.id.button_stiffRight:
-                sc -= 2; if (sc < 0){ sc = 10; }
-                break;
+                button_count.setText("");
+                button_notcount.setVisibility(View.VISIBLE);
+                textView_stiffcount.setVisibility(View.VISIBLE);
+                linear_count_choice.setVisibility(View.VISIBLE);
+                button_stiffLeft.setVisibility(View.VISIBLE);
+                button_stiffRight.setVisibility(View.VISIBLE);
+                button_notcount.setTextSize(8);
+            } else {sc = 10; textView_stiffcount.setText(Html.fromHtml(getString(R.string.stiffprimary)));}
+        } else if (id == R.id.button_stiffRight) {
+            sc -= 2; if (sc < 0){ sc = 10; }
         }
 
         if (c_on) {
@@ -259,55 +248,45 @@ public class MainBattleline extends MainActivity {
 
 
     public void click_count_choice (View view) {
-        switch (view.getId()){
-            case R.id.button_notcount:
-                c = 3;
-                button_count.setText(R.string.notcount);
-                break;
-            case R.id.button_negative:
-                c = 2;
-                button_count.setText(R.string.negative);
-                break;
-            case R.id.button_positive:
-                c = 1;
-                button_count.setText(R.string.positive);
-                break;
+        int id = view.getId();
+        if (id == R.id.button_notcount) {
+            c = 3; button_count.setText(R.string.notcount);
+        } else if (id == R.id.button_negative) {
+            c = 2; button_count.setText(R.string.negative);
+        } else if (id == R.id.button_positive) {
+            c = 1; button_count.setText(R.string.positive);
         }
-
         close_cursor ();
     }
 
 
-    public void click_basis (View view){
-        switch (view.getId()){
-            case R.id.button_basisofmodeLeft:
-                if (bm > 2){ bm = 1;
-                } else { bm --; if (bm < 1){ bm = 2; } }
-                break;
-            case R.id.button_basis:
-                if (!b_on){
-                    b_on = true; view_on = true; viwe_on_off();
-                    textView_basisofmode.setVisibility(View.VISIBLE);
-                    linear_basis_choice.setVisibility(View.VISIBLE);
-                    linear_basisofmode_choice.setVisibility(View.VISIBLE);
-                    button_basis.setVisibility(View.GONE);
-                    button_clear.setVisibility(View.GONE);
-                }
-                break;
-            case R.id.button_basisofmodeRight:
-                if (bm < 2) { bm = 3;
-                } else { bm ++; if (bm > 3){ bm = 2; } }
-                break;
+    public void click_basis (View view){ // TODO Відповідає за вплив врахування очків на гемпей
+        int id = view.getId();
+        if (id == R.id.button_basisofmodeLeft) {
+            if (bm > 2){ bm = 1;
+            } else { bm --; if (bm < 1){ bm = 2; } }
+        } else if (id == R.id.button_basis) {
+            if (!b_on){
+                b_on = true; view_on = true; viwe_on_off();
+                textView_basisofmode.setVisibility(View.VISIBLE);
+                linear_basis_choice.setVisibility(View.VISIBLE);
+                linear_basisofmode_choice.setVisibility(View.VISIBLE);
+                button_basis.setVisibility(View.GONE);
+                button_clear.setVisibility(View.GONE);
+            }
+        } else if (id == R.id.button_basisofmodeRight) {
+            if (bm < 2) { bm = 3;
+            } else { bm ++; if (bm > 3){ bm = 2; } }
         }
 
         if (b_on) {
-            if (bm == 3) {
+            if (bm == 3) { // Відсутній.
                 String string_isabsent = getString(R.string.isabsent);
                 textView_basisofmode.setText(Html.fromHtml(getString(R.string.basisofmode, string_isabsent)));
-            } else if (bm == 2) {
+            } else if (bm == 2) { // Залежний.
                 String string_dependent = getString(R.string.dependent);
                 textView_basisofmode.setText(Html.fromHtml(getString(R.string.basisofmode, string_dependent)));
-            } else if (bm == 1) {
+            } else if (bm == 1) { // Одноманітний.
                 String string_monotonous = getString(R.string.monotonous);
                 textView_basisofmode.setText(Html.fromHtml(getString(R.string.basisofmode, string_monotonous)));}
             textView_basisofmode.setTextSize(12);
@@ -316,19 +295,16 @@ public class MainBattleline extends MainActivity {
 
 
     public void click_base_choice (View view){
-        switch (view.getId()){
-            case R.id.button_mechanical:
-                b = 2;
-                button_basis.setText(R.string.mechanical);
-                break;
-            case R.id.button_dynamicall:
-                b = 1;
-                button_basis.setText(R.string.dynamicall);
-                break;
+        int id = view.getId();
+        if (id == R.id.button_mechanical) {
+            if (b != 2) {b = 2;} else {id = 0;}
+        } else if (id == R.id.button_dynamicall) {
+            if (b != 1) {b = 1;} else {id = 0;}
         }
 
         close_cursor ();
-        direction_choice(); anim_base_choice();
+        direction_choice();
+        if (id != 0) {anim_base_choice();}
     }
 
 
@@ -340,7 +316,7 @@ public class MainBattleline extends MainActivity {
             @Override
             public void run() { button_attack_Left.setVisibility(View.GONE); button_attack_Right.setVisibility(View.GONE);
                 button_defense_Left.setVisibility(View.GONE); button_defense_Right.setVisibility(View.GONE); }
-        }, 100);
+        }, 200);
 
         if (b == 2){ // mechanical
             view_on = true; viwe_on_off();
@@ -409,20 +385,18 @@ public class MainBattleline extends MainActivity {
 
 
     public void click_action (View view){ // TODO Відповідає за готовність до гри - обрахунку
-        if (!string_left.isEmpty()) { Int_left = Integer.parseInt(string_left);} // Конвертація з строки в число
-        if (!string_right.isEmpty()) { Int_right = Integer.parseInt(string_right);}
+        if (p == 2) { Int_left = Integer.parseInt(string_left); Int_right = Integer.parseInt(string_right); }
 
-        if (b == 0 || c == 0 && bm != 3){ // Провірка чи виконані умови для продовження
-            close_cursor();
+        if (b == 0 || c == 0){ // Провірка чи виконані умови для продовження
             if (b == 0){button_basis.setEnabled(false);}
-            if (c == 0 && bm != 3){button_count.setEnabled(false);}
+            if (c == 0){button_count.setEnabled(false);}
 
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (b == 0){button_basis.setEnabled(true);}
-                    if (c == 0 && bm != 3){button_count.setEnabled(true);}
+                    if (b == 0 && !c_on){button_basis.setEnabled(true);}
+                    if (c == 0 && !b_on){button_count.setEnabled(true);}
                 }
             }, 250);
 
@@ -439,9 +413,6 @@ public class MainBattleline extends MainActivity {
             }
         }
     }
-
-
-    public void click_player (View view){ }
 
 
     View.OnTouchListener click_attack_Left = new View.OnTouchListener() {
@@ -480,8 +451,11 @@ public class MainBattleline extends MainActivity {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     if (move_on) {
+                        if (b == 2){ // mechanical
+                        }
 
-
+                        if (b == 1){ // dynamicall
+                        }
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -519,14 +493,39 @@ public class MainBattleline extends MainActivity {
         }
     };
 
-
     View.OnTouchListener click_move_Right = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     if (move_on) {
+                        if (b == 2){ // mechanical
+                            if (R_seekbar_L != 0){
+                                R_seekbar_L -= 1;
+                                editText_right.setText(String.valueOf(R_seekbar_L));
+                                //frameLayout_seekBar.bringChildToFront(findViewById(R.id.Right_seekBar_Left));
+                                //right_seekBar_left.bringToFront();
 
+                                if (R_direct) {
+                                    if (R_position_L >= L_seekbarLenght_R){
+                                        R_direct = false; R_position_L--;
+                                    } else {
+                                        R_position_L++;
+                                    }
+                                } else {
+                                    if (R_position_L <= 0){
+                                        R_direct = true; R_position_L++;
+                                    } else {
+                                        R_position_L--;
+                                    }
+                                }
+                                System.out.println(R_position_L);
+                                right_seekBar_left.setProgress(R_position_L);
+                            } else {button_move_Right.setEnabled(false);}
+                        }
+
+                        if (b == 1){ // dynamicall
+                        }
                     }
                     break;
                 case MotionEvent.ACTION_UP:
@@ -571,23 +570,39 @@ public class MainBattleline extends MainActivity {
                 move_on = true; battleline_count();
                 //restore = 0; button_restore.callOnClick();
                 button_restore.setVisibility(View.GONE);
-
-                if (b == 2) { // mechanical
-                    button_attack_Left.setEnabled(true);
-                    button_attack_Right.setEnabled(true);
-                    button_defense_Left.setEnabled(true);
-                    button_defense_Right.setEnabled(true);
-                } else if (b == 1) {} // dynamicall
-                button_up_flank_Left.setEnabled(true);
-                button_center_flank_Left.setEnabled(true);
-                button_down_flank_Left.setEnabled(true);
-                button_up_flank_Right.setEnabled(true);
-                button_center_flank_Right.setEnabled(true);
-                button_down_flank_Right.setEnabled(true);
-                left_direct_right.setText("");
                 left_result_right.setVisibility(View.VISIBLE);
                 left_seekBarAnd_right.setVisibility(View.VISIBLE);
+                left_direct_right.setText("");
 
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (move_on) {
+                                button_move_Left.setEnabled(true);
+                                button_move_Right.setEnabled(true);
+                            }
+                        }
+                    }, 400);
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (move_on) {
+                                if (b == 2) { // mechanical
+                                    button_attack_Left.setEnabled(true);
+                                    button_attack_Right.setEnabled(true);
+                                    button_defense_Left.setEnabled(true);
+                                    button_defense_Right.setEnabled(true);
+                                } // else if (b == 1) {} // dynamicall
+                                button_up_flank_Left.setEnabled(true);
+                                button_center_flank_Left.setEnabled(true);
+                                button_down_flank_Left.setEnabled(true);
+                                button_up_flank_Right.setEnabled(true);
+                                button_center_flank_Right.setEnabled(true);
+                                button_down_flank_Right.setEnabled(true);
+                            }
+                        }
+                    }, 1000);
             } // else {}
         } else {
             move_on = false; battleline_count();
@@ -608,68 +623,101 @@ public class MainBattleline extends MainActivity {
     }
 
 
+
     public void battleline_count() { //TODO Розрахунок значень в полях.
 
         if (move_on) {
 
+            if (bm == 3) { // Вплив очок на гемплей відсутній.
+
+            } else if (bm == 2) { // Вплив очок на гемплей звичайний.
+
+            } else if (bm == 1) { // Вплив очок на гемплей одноманітний.
+                }
+
+
             if (restore == 2) {
-                OLD_L_seekbar_R = L_seekbar_R / OLD_L_seekbar_R * 100;
-                OLD_R_seekbar_L = R_seekbar_L / OLD_R_seekbar_L * 100;
-                OLD_L_Int_and_R = L_Int_and_R / OLD_L_Int_and_R * 100;
+                L_percen_R = L_seekbar_R * 1.0 / OLD_L_seekbar_R * 100;
+                R_percen_L = R_seekbar_L * 1.0 / OLD_R_seekbar_L * 100;
+                L_percenAnd_R = L_sekbarResult_R * 1.0 / OLD_L_Int_and_R * 100;
+                L_percenPost_R = L_position_R * 1.0 / L_seekbarLenght_R * 100;
+                R_percenPost_L = R_position_L * 1.0 / L_seekbarLenght_R * 100;
             }
 
-            L_Int_and_R = Int_left + Int_right; // Спільне значення
-            L_seekbarAnd_R = L_Int_and_R; // Довжина шляху
-            double L_double_R = L_Int_and_R; int degree_LR, result_degree;
+            L_sekbarResult_R = Int_left + Int_right; // Спільне значення
+            L_seekbarLenght_R = L_sekbarResult_R; // Довжина шляху
+            double L_double_R = L_sekbarResult_R; int degree_LR, result_degree;
 
-            if (L_seekbarAnd_R > 25) { // Система розрахунку оптимальної суми кліків для пройдення поля
-                for (degree_LR = 2, result_degree = 1 + L_seekbarAnd_R; result_degree > L_seekbarAnd_R; degree_LR ++) {
-                    result_degree = (L_seekbarAnd_R / degree_LR * (L_seekbarAnd_R / degree_LR));
-                } L_seekbarAnd_R = degree_LR + 19;
+            if (L_seekbarLenght_R > 25) { // Система розрахунку оптимальної суми кліків для пройдення поля
+                for (degree_LR = 2, result_degree = 1 + L_seekbarLenght_R; result_degree > L_seekbarLenght_R; degree_LR ++) {
+                    result_degree = (L_seekbarLenght_R / degree_LR * (L_seekbarLenght_R / degree_LR));
+                } L_seekbarLenght_R = degree_LR + 19;
             }
 
             int roundedL, roundedR;
-            roundedL = (int) Math.round(Int_left / (L_double_R / L_seekbarAnd_R));
-            roundedR = (int) Math.round(Int_right / (L_double_R / L_seekbarAnd_R));
-            if (roundedL + roundedR > L_seekbarAnd_R) { L_seekbarAnd_R ++; }
-
+            roundedL = (int) Math.round(Int_left / (L_double_R / L_seekbarLenght_R));
+            roundedR = (int) Math.round(Int_right / (L_double_R / L_seekbarLenght_R));
+            if (roundedL == 0 || roundedR == 0){ // Цей код можна впростити до простоти. Але мені нрав.
+                if (roundedL == 0){
+                    roundedL = (int)Math.ceil(Int_left / (L_double_R / L_seekbarLenght_R));
+                    roundedR = (int)Math.floor(Int_right / (L_double_R / L_seekbarLenght_R));
+                }
+                if (roundedR == 0){
+                    roundedR = (int)Math.ceil(Int_right / (L_double_R / L_seekbarLenght_R));
+                    roundedL = (int)Math.floor(Int_left / (L_double_R / L_seekbarLenght_R));
+                }
+            } if (roundedL + roundedR > L_seekbarLenght_R) { L_seekbarLenght_R++; }
 
             if (b == 2){ // mechanical // Підрахунок індевідуальних сум
-                L_seekbar_R = roundedL + 2 + (L_seekbarAnd_R - (L_seekbarAnd_R / roundedL));  // Кількість кліків лівого
-                R_seekbar_L = roundedR + 2 + (L_seekbarAnd_R - (L_seekbarAnd_R / roundedR)); // Кількість кліків правого
-                L_Int_and_R = (L_seekbar_R + R_seekbar_L + L_seekbarAnd_R) / 2; // Число спільної суми кліків
+                L_seekbar_R = roundedL + 2 + (L_seekbarLenght_R - (L_seekbarLenght_R / roundedL));  // Кількість кліків лівого
+                R_seekbar_L = roundedR + 2 + (L_seekbarLenght_R - (L_seekbarLenght_R / roundedR)); // Кількість кліків правого
+                L_sekbarResult_R = (L_seekbar_R + R_seekbar_L + L_seekbarLenght_R) / 2; // Число спільної суми кліків
             }
 
-            if (b == 1){ // dynamicall
-                L_seekbar_R = roundedL; // Speed_left
-                R_seekbar_L = roundedR; // Speed_right
+            if (b == 1){ // dynamicall // TODO TIME
+                L_speed_R = roundedL; // Speed_left
+                R_speed_L = roundedR; // Speed_right
+
+                L_seekbar_R = 0;
+                R_seekbar_L = 0;
                 for (degree_LR = 0, result_degree = 0; result_degree < 200; degree_LR ++){
-                    result_degree = L_seekbarAnd_R * degree_LR;
-                    L_Int_and_R = result_degree - degree_LR;
-                } L_seekbarAnd_R += L_Int_and_R;
-                L_Int_and_R = (int) Math.round(((20 / L_double_R) + 1) * ((L_seekbarAnd_R - L_Int_and_R) * (L_seekbarAnd_R)));
+                    result_degree = L_seekbarLenght_R * degree_LR;
+                    L_sekbarResult_R = result_degree - degree_LR;
+                } L_seekbarLenght_R += L_sekbarResult_R;
+                L_sekbarResult_R = (int) Math.round(((20 / L_double_R) + 1) * ((L_seekbarLenght_R - L_sekbarResult_R) * (L_seekbarLenght_R)));
             }
+
+            if (bm == 1) {
+                L_seekbar_R = R_seekbar_L = (L_seekbar_R + R_seekbar_L) / 2;
+                L_sekbarResult_R = L_seekbar_R + R_seekbar_L;
+                // TODO для динамічного потрібно переробити. + розібратись з серединою.
+            }
+            OLD_L_seekbar_R = L_seekbar_R; OLD_R_seekbar_L = R_seekbar_L; OLD_L_Int_and_R = L_sekbarResult_R;
 
             if (restore == 2) {
-                L_seekbar_R = (int) Math.round(L_seekbar_R / 100.0 * OLD_L_seekbar_R);
-                R_seekbar_L = (int) Math.round(R_seekbar_L / 100.0 * OLD_R_seekbar_L);
-                L_Int_and_R = (int) Math.round(L_Int_and_R / 100.0 * OLD_L_Int_and_R);
+                L_seekbar_R = (int) Math.round(L_seekbar_R / 100.0 * L_percen_R);
+                R_seekbar_L = (int) Math.round(R_seekbar_L / 100.0 * R_percen_L);
+                L_sekbarResult_R = (int) Math.round(L_sekbarResult_R / 100.0 * L_percenAnd_R);
+                L_position_R = (int) Math.round(L_seekbarLenght_R / 100.0 * L_percenPost_R);
+                R_position_L = (int) Math.round(L_seekbarLenght_R / 100.0 * R_percenPost_L);
+            } else {
+                L_position_R = 0; R_position_L = 0; L_direct = true; R_direct = true;
             }
 
-            OLD_L_seekbar_R = L_seekbar_R; OLD_R_seekbar_L = R_seekbar_L; OLD_L_Int_and_R = L_Int_and_R;
 
-            left_seekBar_right.setMax(L_seekbarAnd_R); right_seekBar_left.setMax(L_seekbarAnd_R);
-            left_seekBarAnd_right.setMax(L_seekbarAnd_R); left_seekBarAnd_right.setProgress(roundedL);
+            left_seekBar_right.setMax(L_seekbarLenght_R); right_seekBar_left.setMax(L_seekbarLenght_R); left_seekBarAnd_right.setMax(L_seekbarLenght_R);
+            left_seekBar_right.setProgress(L_position_R); right_seekBar_left.setProgress(R_position_L); left_seekBarAnd_right.setProgress(roundedL);
             editText_left.setText(String.valueOf(L_seekbar_R)); editText_right.setText(String.valueOf(R_seekbar_L));
-            left_result_right.setText(String.valueOf(L_Int_and_R));
+            left_result_right.setText(String.valueOf(L_sekbarResult_R));
         }
 
         if (!move_on) {
             editText_left.setText(String.valueOf(Int_left));
             editText_right.setText(String.valueOf(Int_right));
-            left_result_right.setText("");
+            if (L_result_C != 0){ left_result_right.setText(String.valueOf(L_result_C));
+            } else { left_result_right.setVisibility(View.GONE); }
+            direction_choice(); seekbar_choice();
         }
-
     }
 
 
@@ -678,7 +726,11 @@ public class MainBattleline extends MainActivity {
         public boolean onTouch(View view, MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    //some code....
+                    if (b == 2){ // mechanical
+                    }
+
+                    if (b == 1){ // dynamicall
+                    }
                     break;
                 case MotionEvent.ACTION_UP:
                     break;
@@ -706,21 +758,24 @@ public class MainBattleline extends MainActivity {
 
 
     public void click_flank (View view) {
-        switch (view.getId()){
-            case R.id.button_up_flank_Left:
-                break;
-            case R.id.button_center_flank_Left:
-                break;
-            case R.id.button_down_flank_Left:
-                break;
-            case R.id.button_up_flank_Right:
-                break;
-            case R.id.button_center_flank_Right:
-                break;
-            case R.id.button_down_flank_Right:
-                break;
+        int id = view.getId();
+        if (id == R.id.button_up_flank_Left) {
+
+        } else if (id == R.id.button_center_flank_Left) {
+
+        } else if (id == R.id.button_down_flank_Left) {
+
+        } else if (id == R.id.button_up_flank_Right) {
+
+        } else if (id == R.id.button_center_flank_Right) {
+
+        } else if (id == R.id.button_down_flank_Right) {
+
         }
     }
+
+
+    public void click_player (View view){ if (p == 3) { p = 2;} }
 
 
     public void click_modes (View view){
@@ -728,35 +783,23 @@ public class MainBattleline extends MainActivity {
         if (!m_on){
             m_on = true; view_on = true; viwe_on_off();
             button_modes.setText(R.string.back);
-        } else {
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (m_on) { m_on = false; view_on = false; viwe_on_off(); button_modes.setText(R.string.battleline); }
+                }
+            }, 1000);
+        } else { m_on = false; button_modes.setEnabled(false);
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     Intent intent = new Intent(MainBattleline.this, MainActivity.class);
-                    intent.putExtra("string_left", string_left);
-                    intent.putExtra("string_center", string_center);
-                    intent.putExtra("string_right", string_right);
-
-                    intent.putExtra("sn", sc);
-                    intent.putExtra("c", c);
-                    //intent.putExtra("p", p);
-                    intent.putExtra("b", b);
-                    intent.putExtra("bm", bm);
-                    if (L_direct_C == 3) {intent.putExtra("L_direct_C", L_direct_C);}
-                    if (L_direct_R == 3) {intent.putExtra("L_direct_R", L_direct_R);}
-                    if (C_direct_R == 3) {intent.putExtra("C_direct_R", C_direct_R);}
-                    //startActivity(intent);
-                    onBackPressed();
-                    finish();
+                    saveData(); intent.putExtra("intent", "intent");
+                    startActivity(intent);
                 }
             }, 250);
         }
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                m_on = false; view_on = false; viwe_on_off(); button_modes.setText(R.string.battleline);
-            }
-        }, 1000);
     }
 
 
@@ -774,24 +817,30 @@ public class MainBattleline extends MainActivity {
         if (L_direct_R == 3){ left_direct_right.setText(R.string.Left_peace_Right_rotate);}
     }
 
-
-    public void seekbar_choice() {
-        left_seekBarAnd_right.setProgress(L_seekbarAnd_R);
-        left_seekBar_right.setProgress(L_seekbar_R);
-        right_seekBar_left.setProgress(R_seekbar_L);
+    public void seekbar_choice() { // TODO Відповідає за онулення позиції гравців.
+        left_seekBarAnd_right.setProgress(0);
+        left_seekBar_right.setProgress(0);
+        right_seekBar_left.setProgress(0);
     }
-
 
     View.OnLongClickListener long_direction_choice = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
             if (menu_on){
-                d_long_on = true;
-                button_clear.callOnClick();
+                L_position_R = 0; R_position_L = 0; L_direct = true; R_direct = true; seekbar_choice();
             }
             return true;
         }
     };
+
+    public void result_choice () {
+        if (Int_left == 0 || Int_right == 0) { L_result_R = 0; }
+        if (L_direct_R != 3 && L_result_R != 0){
+            left_result_right.setText(String.valueOf(L_result_R));
+            left_result_right.setVisibility(View.VISIBLE);
+        } else {left_result_right.setVisibility(View.GONE);
+            if (L_direct_R != 3){L_direct_R = 0;}}
+    }
 
 
     public void menu_visible () { // TODO Відповідає за скриття опційного меню
@@ -813,7 +862,7 @@ public class MainBattleline extends MainActivity {
 
     public void viwe_on_off () {
         if (!view_on){
-            button_clear.setEnabled(true); if (bm != 3){button_count.setEnabled(true);}
+            button_clear.setEnabled(true); button_count.setEnabled(true);
             button_basis.setEnabled(true); button_player.setEnabled(true);
             button_modes.setEnabled(true);
 
@@ -829,20 +878,22 @@ public class MainBattleline extends MainActivity {
 
             editText_left.setEnabled(false);
             editText_right.setEnabled(false);
-            left_direct_right.setEnabled(false);
+            if (menu_on) {left_direct_right.setEnabled(false);}
         }
     }
 
 
     public void editText_check () {
-        string_left = editText_left.getText().toString().trim();
-        string_right = editText_right.getText().toString().trim();
+        if (arguments == null) {
+            string_left = editText_left.getText().toString().trim();
+            string_right = editText_right.getText().toString().trim();
+        }
 
         if (!string_left.isEmpty() && !string_right.isEmpty() && p == 2) {
             button_action.setEnabled(true);
         } else {
-            if (bm == 3){ button_action.setEnabled(true);
-            } else { button_action.setEnabled(false);}
+            button_action.setEnabled(false);
+            if (menu_on) {L_result_C = 0;}
         }
     }
 
@@ -854,33 +905,39 @@ public class MainBattleline extends MainActivity {
         }
 
         if (c_on) {
-            if (c == 3){ button_count.setText(R.string.notcount); }
-            else if (c == 2) { button_count.setText(R.string.negative); }
-            else if (c == 1) { button_count.setText(R.string.positive); }
-            else { button_count.setText(R.string.count); }
+            if (c == 3){button_count.setText(R.string.notcount);}
+            else if (c == 2) {button_count.setText(R.string.negative);}
+            else if (c == 1) {button_count.setText(R.string.positive);}
+            else {button_count.setText(R.string.count);}
             button_count.getLayoutParams().width = (int)
                     (button_count.getResources().getDisplayMetrics().density * 100);
 
-            button_notcount.setVisibility(View.GONE);
-            textView_stiffcount.setVisibility(View.GONE);
-            button_stiffLeft.setVisibility(View.GONE);
-            button_stiffRight.setVisibility(View.GONE);
-            linear_count_choice.setVisibility(View.GONE);
-            button_clear.setVisibility(View.VISIBLE);
-            c_on = false; view_on = false; viwe_on_off();
+            c_on = false;
+            if (arguments == null){
+                button_notcount.setVisibility(View.GONE);
+                textView_stiffcount.setVisibility(View.GONE);
+                button_stiffLeft.setVisibility(View.GONE);
+                button_stiffRight.setVisibility(View.GONE);
+                linear_count_choice.setVisibility(View.GONE);
+                button_clear.setVisibility(View.VISIBLE);
+                view_on = false; viwe_on_off();
+            }
         }
 
         if (b_on) {
-            if (b == 2) { button_basis.setText(R.string.mechanical); }
-            else if (b == 1) { button_basis.setText(R.string.dynamicall); }
-            else { button_basis.setText(R.string.basis); }
+            if (b == 2) {button_basis.setText(R.string.mechanical);}
+            else if (b == 1) {button_basis.setText(R.string.dynamicall);}
+            else {button_basis.setText(R.string.basis);}
 
-            textView_basisofmode.setVisibility(View.GONE);
-            linear_basisofmode_choice.setVisibility(View.GONE);
-            button_basis.setVisibility(View.VISIBLE);
-            linear_basis_choice.setVisibility(View.GONE);
-            button_clear.setVisibility(View.VISIBLE);
-            b_on = false; view_on = false; viwe_on_off();
+            b_on = false;
+            if (arguments == null){
+                textView_basisofmode.setVisibility(View.GONE);
+                linear_basisofmode_choice.setVisibility(View.GONE);
+                button_basis.setVisibility(View.VISIBLE);
+                linear_basis_choice.setVisibility(View.GONE);
+                button_clear.setVisibility(View.VISIBLE);
+                view_on = false; viwe_on_off();
+            }
         }
     }
 
@@ -889,8 +946,51 @@ public class MainBattleline extends MainActivity {
     public void onBackPressed() {
         if (menu_on){
             if (system_back_time + 2000 > System.currentTimeMillis()){
-                m_on = true; button_modes.callOnClick();
+                view_on = true; viwe_on_off(); m_on = true; button_modes.callOnClick();
             } system_back_time = System.currentTimeMillis();
         }
+    }
+
+
+    public void saveData () {
+        SharedPreferences.Editor editMainData = MainDataExchange.edit();
+        editMainData.putString("languageCode", languageCode);
+
+        editMainData.putString("string_left", string_left); editMainData.putString("string_center", string_center); editMainData.putString("string_right", string_right);
+        editMainData.putBoolean("L_direct", L_direct); editMainData.putBoolean("R_direct", R_direct);
+        editMainData.putInt("Int_left", Int_left); editMainData.putInt("Int_center", Int_center); editMainData.putInt("Int_right", Int_right);
+        editMainData.putInt("L_result_C", L_result_C); editMainData.putInt("L_result_R", L_result_R); editMainData.putInt("C_result_R", C_result_R);
+        editMainData.putInt("L_seekbar_R", L_seekbar_R); editMainData.putInt("R_seekbar_L", R_seekbar_L);
+        editMainData.putInt("L_position_R", L_position_R); editMainData.putInt("R_position_L", R_position_L);
+        editMainData.putInt("L_speed_R", L_speed_R); editMainData.putInt("R_speed_L", R_speed_L);
+        editMainData.putInt("L_seekbarLenght_R", L_seekbarLenght_R); editMainData.putInt("L_sekbarResult_R", L_sekbarResult_R);
+        editMainData.putInt("OLD_L_seekbar_R", OLD_L_seekbar_R); editMainData.putInt("OLD_R_seekbar_L", OLD_R_seekbar_L); editMainData.putInt("OLD_L_Int_and_R", OLD_L_Int_and_R);
+        editMainData.putInt("m", m); editMainData.putInt("c", c); editMainData.putInt("p", p); editMainData.putInt("b", b);
+        editMainData.putInt("L_direct_C", L_direct_C); editMainData.putInt("L_direct_R", L_direct_R); editMainData.putInt("C_direct_R", C_direct_R);
+        editMainData.putInt("restore", restore); editMainData.putInt("bm", bm); editMainData.putInt("sc", (int) sc);
+
+        editMainData.apply(); editMainData.commit();
+    }
+
+    public void outData () {
+        languageCode = MainDataExchange.getString("languageCode", languageCode);
+
+        string_left = MainDataExchange.getString("string_left", string_left) ; string_center = MainDataExchange.getString("string_center", string_center); string_right = MainDataExchange.getString("string_right", string_right) ;
+        L_direct = MainDataExchange.getBoolean("L_direct", L_direct); R_direct = MainDataExchange.getBoolean("R_direct", R_direct);
+        Int_left = MainDataExchange.getInt("Int_left", Int_left); Int_center = MainDataExchange.getInt("Int_center", Int_center); Int_right = MainDataExchange.getInt("Int_right", Int_right);
+        L_result_C = MainDataExchange.getInt("L_result_C", L_result_C); L_result_R = MainDataExchange.getInt("L_result_R", L_result_R); C_result_R = MainDataExchange.getInt("C_result_R", C_result_R);
+        L_seekbar_R = MainDataExchange.getInt("L_seekbar_R", L_seekbar_R); R_seekbar_L = MainDataExchange.getInt("R_seekbar_L", R_seekbar_L);
+        L_position_R = MainDataExchange.getInt("L_position_R", L_position_R); R_position_L = MainDataExchange.getInt("R_position_L", R_position_L);
+        L_speed_R = MainDataExchange.getInt("L_speed_R", L_speed_R); R_speed_L = MainDataExchange.getInt("R_speed_L", R_speed_L);
+        L_seekbarLenght_R = MainDataExchange.getInt("L_seekbarLenght_R", L_seekbarLenght_R); L_sekbarResult_R = MainDataExchange.getInt("L_sekbarResult_R", L_sekbarResult_R);
+        OLD_L_seekbar_R = MainDataExchange.getInt("OLD_L_seekbar_R", OLD_L_seekbar_R); OLD_R_seekbar_L = MainDataExchange.getInt("OLD_R_seekbar_L", OLD_R_seekbar_L); OLD_L_Int_and_R = MainDataExchange.getInt("OLD_L_Int_and_R", OLD_L_Int_and_R);
+        m = (byte) MainDataExchange.getInt("m", m); c = (byte) MainDataExchange.getInt("c", c); p = (byte) MainDataExchange.getInt("p", p); b = (byte) MainDataExchange.getInt("b", b);
+        L_direct_C = (byte) MainDataExchange.getInt("L_direct_C", L_direct_C); L_direct_R = (byte) MainDataExchange.getInt("L_direct_R", L_direct_R); C_direct_R = (byte) MainDataExchange.getInt("C_direct_R", C_direct_R);
+        restore = (byte) MainDataExchange.getInt("restore", restore); bm = (byte) MainDataExchange.getInt("bm", bm); sc = MainDataExchange.getInt("sc", (int) sc);
+
+        editText_left.setText(string_left); editText_right.setText(string_right);
+        //localization(languageCode);
+        button_player.callOnClick(); c_on = true; b_on = true; close_cursor();
+        result_choice(); direction_choice();
     }
 }

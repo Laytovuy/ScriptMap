@@ -4,13 +4,7 @@ package way.calculation.scriptmap;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class ActionCalculator {
-
-    public int Int_left = 0, Int_center = 0, Int_right = 0;
-    public int L_result_C = 0, L_result_R = 0, C_result_R = 0;
-    public int Final_left = 0, Final_center = 0, Final_right = 0;
-    public byte m = 0, c = 0, L_direct_C = 0, L_direct_R = 0, C_direct_R = 0;
-    public double sc = 10;
+public class ActionCalculator extends MainData {
 
     public void Calculation () {
 
@@ -74,10 +68,7 @@ public class ActionCalculator {
             }
         }
 
-
-        double doubleL = Int_left, doubleC = Int_center, doubleR = Int_right;
-        // int resultL = 0, resultC = 0, resultR = 0; // Обчисленя
-
+        double doubleL = Int_left, doubleC = Int_center, doubleR = Int_right; // Обчисленя
 
         if (L_direct_C != 3 && L_direct_C != 0 && Int_left != 0 && Int_center != 0){ // Обчисленя між Left і Center
             if (L_direct_C == 1) {
@@ -283,9 +274,7 @@ public class ActionCalculator {
             }
         }
 
-
-//        double doubleL = Int_left, doubleC = Int_center, doubleR = Int_right; // Сумування 2 напрямків
-
+// Сумування 2 напрямків
 
         if (L_direct_C == 2 && L_direct_R == 1 && Int_left != 0){ // Сумування 2 напрямків на left
 

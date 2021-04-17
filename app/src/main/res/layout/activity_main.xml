@@ -15,6 +15,7 @@
         android:id="@+id/chang"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
+        android:layout_centerHorizontal="true"
         android:onClick="click_chang"
         android:text="Переробити fonts і добавити локалізацію"
         android:textSize="8sp" />
@@ -27,38 +28,58 @@
 
         <LinearLayout
             style="@style/ScriptMapLinearLayoutVertical"
-            android:layout_width="85dp">
+            android:layout_width="85dp"
+            android:layout_height="fill_parent">
 
-            <TextView
-                android:id="@+id/Left_result_Center"
-                style="@style/ScriptMapNumText"
-                android:layout_width="80dp"
+            <LinearLayout
+                style="@style/ScriptMapLinearLayoutVertical"
+                android:layout_width="85dp"
                 android:layout_height="40dp"
-                android:layout_marginBottom="92dp"
-                android:enabled="false"
-                android:visibility="invisible" />
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/Center_EditText"
-                style="@style/ScriptMapNumText"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
-                android:autofillHints="@string/reltat"
-                android:background="@null"
-                android:cursorVisible="true"
-                android:hint="@string/reltat"
-                android:imeOptions="actionDone|actionNext"
-                android:textColorHint="#FFFFFF"
-                android:visibility="invisible" />
+                <TextView
+                    android:id="@+id/Left_result_Center"
+                    style="@style/ScriptMapNumText"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:enabled="false"
+                    android:visibility="gone" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/Center_result_Right"
-                style="@style/ScriptMapNumText"
-                android:layout_width="80dp"
+            <LinearLayout
+                style="@style/ScriptMapLinearLayoutVertical"
+                android:layout_width="85dp"
+                android:layout_height="230dp">
+
+                <EditText
+                    android:id="@+id/Center_EditText"
+                    style="@style/ScriptMapNumText"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:autofillHints="@string/reltat"
+                    android:background="@null"
+                    android:cursorVisible="true"
+                    android:hint="@string/reltat"
+                    android:imeOptions="actionDone|actionNext"
+                    android:textColorHint="#FFFFFF"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/ScriptMapLinearLayoutVertical"
+                android:layout_width="85dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="92dp"
-                android:enabled="false"
-                android:visibility="invisible" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/Center_result_Right"
+                    style="@style/ScriptMapNumText"
+                    android:layout_width="80dp"
+                    android:layout_height="40dp"
+                    android:enabled="false"
+                    android:visibility="gone" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -149,9 +170,8 @@
                 style="@style/ScriptMapNumText"
                 android:layout_width="80dp"
                 android:layout_height="40dp"
-
                 android:enabled="false"
-                android:visibility="invisible" />
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 
@@ -166,7 +186,7 @@
             <Button
                 android:id="@+id/button_direction"
                 style="@style/ScriptMapButton"
-                android:onClick="click_mode_choice"
+                android:onClick="click_modes"
                 android:text="@string/direction"
                 android:visibility="gone" />
 
@@ -286,7 +306,7 @@
             <Button
                 android:id="@+id/button_accident"
                 style="@style/ScriptMapButton"
-                android:onClick="click_mode_choice"
+                android:onClick="click_modes"
                 android:text="@string/accident"
                 android:visibility="gone" />
 
@@ -302,7 +322,7 @@
             <Button
                 android:id="@+id/button_battleline"
                 style="@style/ScriptMapButton"
-                android:onClick="click_mode_choice"
+                android:onClick="click_modes"
                 android:text="@string/battleline"
                 android:visibility="gone" />
 

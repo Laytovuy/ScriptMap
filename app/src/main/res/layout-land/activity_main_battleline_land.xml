@@ -9,8 +9,17 @@
     android:background="@color/ic_launcher_background"
     android:onClick="click_launcher_background">
 
+    <Button
+        android:id="@+id/chang"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_centerHorizontal="true"
+        android:onClick="click_chang"
+        android:text="Переробити fonts і добавити локалізацію"
+        android:textSize="8sp" />
 
     <FrameLayout
+        android:id="@+id/frameLayout_seekBar"
         android:layout_width="510dp"
         android:layout_height="35dp"
         android:layout_centerInParent="true"
@@ -439,7 +448,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="155dp"
             android:enabled="false"
-            android:visibility="invisible" />
+            android:visibility="gone" />
     </LinearLayout>
 
     <ToggleButton

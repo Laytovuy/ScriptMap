@@ -53,6 +53,7 @@
     <string name="dependent">DEPENDENT</string>
     <string name="monotonous">MONOTONOUS</string>
     <string name="isabsent">ISABSENT</string>
+    <string name="creative">CREATIVE</string>
     <string name="rotate_notcount">NOT\nCOUNT</string>
     <string name="resume">continue</string>
     <string name="stop">STOP</string>

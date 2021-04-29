@@ -1,16 +1,26 @@
 package way.calculation.scriptmap;
 
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+
+import androidx.core.content.ContextCompat;
 
 import java.util.Locale;
 
@@ -41,16 +51,11 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         linear_modes_count_choice = findViewById(R.id.linear_modes_count_choice);
         linear_accident_player = findViewById(R.id.linear_accident_player);
 
-        editText_left = findViewById(R.id.Left_EditText);
-        editText_center = findViewById(R.id.Center_EditText);
-        editText_right = findViewById(R.id.Right_EditText);
-
         textView_stiffcount = findViewById(R.id.textView_stiffcount);
 
         left_direct_center = findViewById(R.id.Left_direction_Center);
         left_direct_right = findViewById(R.id.Left_direction_Right);
         center_direct_right = findViewById(R.id.Center_direction_Right);
-
         left_direct_center.setOnLongClickListener(long_direction_choice);
         left_direct_right.setOnLongClickListener(long_direction_choice);
         center_direct_right.setOnLongClickListener(long_direction_choice);
@@ -63,28 +68,47 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         launcher_background.setOnLongClickListener(long_click_launcher_background);
         button_clear.setOnLongClickListener(long_click_clear);
 
+        button_Left_plus = findViewById(R.id.Left_plus);
+        button_Left_minus = findViewById(R.id.Left_minus);
+        button_Center_plus = findViewById(R.id.Center_plus);
+        button_Center_minus = findViewById(R.id.Center_minus);
+        button_Right_plus = findViewById(R.id.Right_plus);
+        button_Right_minus = findViewById(R.id.Right_minus);
+
+        editText_left = findViewById(R.id.Left_EditText);
+        editText_center = findViewById(R.id.Center_EditText);
+        editText_right = findViewById(R.id.Right_EditText);
         editText_left.addTextChangedListener(editText_watcher);
         editText_center.addTextChangedListener(editText_watcher);
         editText_right.addTextChangedListener(editText_watcher);
 
         arguments = getIntent().getExtras();
-        if(arguments != null){ outData(); getIntent().removeExtra("intent"); getIntent().removeCategory("intent"); arguments = getIntent().getExtras(); }
+        if(arguments != null){ setRotationAnimation(); outData(); getIntent().removeExtra("intent"); getIntent().removeCategory("intent"); arguments = getIntent().getExtras(); }
     } // І кстаті, цей код має послідовність, тобто функціонал вюшок розпосаний, від нижньої вшки до верхньої, йдучи зік заком, з ліва на право. І між методами, пропуски в два рядка.
 
 
-    public void click_chang (View view) { // TODO Локалізація
-        languageCode  = "uk";
-        localization(languageCode);
+
+
+    private void setRotationAnimation() { // TODO Проводить заміну анімації зміни орінтації екрана.
+        int rotationAnimation = WindowManager.LayoutParams.ROTATION_ANIMATION_JUMPCUT;
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        winParams.rotationAnimation = rotationAnimation;
+        win.setAttributes(winParams);
     }
 
-    public void localization (String languageCode) { // TODO Локалізація
-        Locale locale = new Locale(languageCode);
+    public void localization (String languageCode) { // TODO Проводить зміну локалізації.
+        Locale locale = new Locale(languageCode); // TODO Локалізація погано працює
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.setLocale(locale);
         getBaseContext().getResources().updateConfiguration(config, null);
-        recreate();
-    } // Локалізація
+
+        // TODO Є бажння придумати щось краще. Згрупувати це.
+        button_clear.setText(R.string.clear);
+        if (p == 3) {button_player.setText(R.string.outline);} else {button_player.setText(R.string.addline);}
+        button_action.setText(R.string.action);
+    }
 
 
     private final TextWatcher editText_watcher = new TextWatcher() { // TODO Це реєструє редагування ЕдітТекста користувачем.
@@ -110,7 +134,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         }
     };
 
-    public void click_launcher_background (View view){ if (menu_on) {close_cursor();} } // TODO В цей метод зруповані закриття меню, і забрання курсора.
+    public void click_launcher_background (View view){ if (menu_on) { if (m == 4) {m = -4;} close_cursor();} } // TODO В цей метод зруповані закриття меню, і забрання курсора.
 
 
     public void click_clear (View view){ // TODO Очищує значення, і ставить їх в дефолтне положення.
@@ -136,10 +160,14 @@ public class MainActivity extends MainData { // TODO Відповідає за �
             if (!menu_on) {
                 menu_on = true; menu_visible(); result_choice();
             } else {
+                if (languageCode.equals("default")) {
+                    languageCode  = "uk";
+                } else {languageCode = "default";}
+
+                localization(languageCode);
                 m = 0; button_modes.setText(R.string.modes);
                 c = 0; button_count.setText(R.string.count);
-                sc = 10;
-                view_on = false; viwe_on_off(); close_cursor();
+                sc = 10; view_on = false; viwe_on_off(); close_cursor();
             }
             return true; // "true" відповідає за те, що цей код не визве короткий клік, при натискані.
         }
@@ -250,6 +278,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        setRotationAnimation();
                         Intent intent = new Intent(MainActivity.this, MainBattleline.class); // Це створення обєкту який містить в собі запуск Активиті.
                         saveData(); intent.putExtra("intent", "intent");
                         startActivity(intent);
@@ -482,9 +511,9 @@ public class MainActivity extends MainData { // TODO Відповідає за �
             string_right = editText_right.getText().toString().trim();
         }
 
-        if (!string_left.isEmpty() && !string_center.isEmpty() && !string_right.isEmpty() && p == 3){
+        if (!string_left.isEmpty() && !string_center.isEmpty() && !string_right.isEmpty() && p == 3 && (!view_on || !menu_on)){
             button_action.setEnabled(true);
-        } else if (!string_left.isEmpty() && !string_right.isEmpty() && p == 2) {
+        } else if (!string_left.isEmpty() && !string_right.isEmpty() && p == 2 && (!view_on || !menu_on)) {
             button_action.setEnabled(true);
         } else {
            button_action.setEnabled(false);
@@ -520,7 +549,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         }
 
         if (m_on) {
-            if (m == 4) {button_modes.setText(R.string.battleline);}
+            if (m == 4 || m == -4) {button_modes.setText(R.string.battleline);}
             else if (m == 3) {button_modes.setText(R.string.accident);}
             else if (m == 2) {button_modes.setText(R.string.direction);}
             else if (m == 1) {button_modes.setText(R.string.probably);}
@@ -532,7 +561,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
                 button_accident.setVisibility(View.GONE);
                 button_battleline.setVisibility(View.GONE);
                 if (m != 4) { view_on = false; viwe_on_off(); }
-            }
+            } if (m == -4) {m = 4;}
         }
     }
 
@@ -545,22 +574,16 @@ public class MainActivity extends MainData { // TODO Відповідає за �
     }
 
 
-    public void saveData () { // TODO Можна не всімами даними обмінюватись. А лише зберігати потрібні. Так само як і вибирати їх.
+    public void saveData () {
         SharedPreferences.Editor editMainData = MainDataExchange.edit();
         editMainData.putString("languageCode", languageCode);
 
         editMainData.putString("string_left", string_left); editMainData.putString("string_center", string_center); editMainData.putString("string_right", string_right);
-        editMainData.putBoolean("L_direct", L_direct); editMainData.putBoolean("R_direct", R_direct);
         editMainData.putInt("Int_left", Int_left); editMainData.putInt("Int_center", Int_center); editMainData.putInt("Int_right", Int_right);
         editMainData.putInt("L_result_C", L_result_C); editMainData.putInt("L_result_R", L_result_R); editMainData.putInt("C_result_R", C_result_R);
-        editMainData.putInt("L_seekbar_R", L_seekbar_R); editMainData.putInt("R_seekbar_L", R_seekbar_L);
-        editMainData.putInt("L_position_R", L_position_R); editMainData.putInt("R_position_L", R_position_L);
-        editMainData.putInt("L_speed_R", L_speed_R); editMainData.putInt("R_speed_L", R_speed_L);
-        editMainData.putInt("L_seekbarLenght_R", L_seekbarLenght_R); editMainData.putInt("L_sekbarResult_R", L_sekbarResult_R);
-        editMainData.putInt("OLD_L_seekbar_R", OLD_L_seekbar_R); editMainData.putInt("OLD_R_seekbar_L", OLD_R_seekbar_L); editMainData.putInt("OLD_L_Int_and_R", OLD_L_Int_and_R);
-        editMainData.putInt("m", m); editMainData.putInt("c", c); editMainData.putInt("p", p); editMainData.putInt("b", b);
+        editMainData.putInt("m", m); editMainData.putInt("c", c); editMainData.putInt("p", p);
         editMainData.putInt("L_direct_C", L_direct_C); editMainData.putInt("L_direct_R", L_direct_R); editMainData.putInt("C_direct_R", C_direct_R);
-        editMainData.putInt("restore", restore); editMainData.putInt("bm", bm); editMainData.putInt("sc", (int) sc);
+        editMainData.putInt("sc", (int) sc);
 
         editMainData.apply(); editMainData.commit();
     }
@@ -572,17 +595,12 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         L_direct = MainDataExchange.getBoolean("L_direct", L_direct); R_direct = MainDataExchange.getBoolean("R_direct", R_direct);
         Int_left = MainDataExchange.getInt("Int_left", Int_left); Int_center = MainDataExchange.getInt("Int_center", Int_center); Int_right = MainDataExchange.getInt("Int_right", Int_right);
         L_result_C = MainDataExchange.getInt("L_result_C", L_result_C); L_result_R = MainDataExchange.getInt("L_result_R", L_result_R); C_result_R = MainDataExchange.getInt("C_result_R", C_result_R);
-        L_seekbar_R = MainDataExchange.getInt("L_seekbar_R", L_seekbar_R); R_seekbar_L = MainDataExchange.getInt("R_seekbar_L", R_seekbar_L);
-        L_position_R = MainDataExchange.getInt("L_position_R", L_position_R); R_position_L = MainDataExchange.getInt("R_position_L", R_position_L);
-        L_speed_R = MainDataExchange.getInt("L_speed_R", L_speed_R); R_speed_L = MainDataExchange.getInt("R_speed_L", R_speed_L);
-        L_seekbarLenght_R = MainDataExchange.getInt("L_seekbarLenght_R", L_seekbarLenght_R); L_sekbarResult_R = MainDataExchange.getInt("L_sekbarResult_R", L_sekbarResult_R);
-        OLD_L_seekbar_R = MainDataExchange.getInt("OLD_L_seekbar_R", OLD_L_seekbar_R); OLD_R_seekbar_L = MainDataExchange.getInt("OLD_R_seekbar_L", OLD_R_seekbar_L); OLD_L_Int_and_R = MainDataExchange.getInt("OLD_L_Int_and_R", OLD_L_Int_and_R);
-        m = (byte) MainDataExchange.getInt("m", m); c = (byte) MainDataExchange.getInt("c", c); p = (byte) MainDataExchange.getInt("p", p); b = (byte) MainDataExchange.getInt("b", b);
+        m = (byte) MainDataExchange.getInt("m", m); c = (byte) MainDataExchange.getInt("c", c); p = (byte) MainDataExchange.getInt("p", p);
         L_direct_C = (byte) MainDataExchange.getInt("L_direct_C", L_direct_C); L_direct_R = (byte) MainDataExchange.getInt("L_direct_R", L_direct_R); C_direct_R = (byte) MainDataExchange.getInt("C_direct_R", C_direct_R);
-        restore = (byte) MainDataExchange.getInt("restore", restore); bm = (byte) MainDataExchange.getInt("bm", bm); sc = MainDataExchange.getInt("sc", (int) sc);
+        sc = MainDataExchange.getInt("sc", (int) sc);
 
         editText_left.setText(string_left); editText_center.setText(string_center); editText_right.setText(string_right);
-        //localization(languageCode);
+        localization(languageCode);
         button_player.callOnClick(); c_on = true; m_on = true; close_cursor();
         result_choice(); direction_choice();
     }

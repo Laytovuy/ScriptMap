@@ -6,17 +6,9 @@
     tools:ignore="MissingDefaultResource"
 
     android:id="@+id/launcher_background"
-    android:background="@color/ic_launcher_background"
-    android:onClick="click_launcher_background">
+    android:onClick="click_launcher_background"
+    tools:context=".MainBattleline">
 
-    <Button
-        android:id="@+id/chang"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_centerHorizontal="true"
-        android:onClick="click_chang"
-        android:text="Переробити fonts і добавити локалізацію"
-        android:textSize="8sp" />
 
     <FrameLayout
         android:id="@+id/frameLayout_seekBar"
@@ -55,6 +47,7 @@
             android:text="@string/Left_and_Right_rotate"
             android:textSize="40sp"
             android:visibility="visible" />
+
     </FrameLayout>
 
 
@@ -115,7 +108,6 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-
         <LinearLayout
             style="@style/ScriptMapLinearLayoutVertical"
             android:layout_width="40dp">
@@ -130,7 +122,7 @@
             <EditText
                 android:id="@+id/Left_EditText"
                 style="@style/ScriptMapNumText"
-                android:layout_width="40dp"
+                android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:autofillHints="@string/reltat"
                 android:background="@null"
@@ -144,9 +136,11 @@
                 android:rotation="180"
                 android:text="@string/attack"
                 android:visibility="gone" />
-        </LinearLayout>
-    </LinearLayout>
 
+        </LinearLayout>
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="90dp"
@@ -169,7 +163,7 @@
             <EditText
                 android:id="@+id/Right_EditText"
                 style="@style/ScriptMapNumText"
-                android:layout_width="40dp"
+                android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:autofillHints="@string/reltat"
                 android:background="@null"
@@ -183,6 +177,7 @@
 
                 android:text="@string/defense"
                 android:visibility="gone" />
+
         </LinearLayout>
 
 
@@ -264,6 +259,7 @@
         </LinearLayout>
 
         <LinearLayout style="@style/ScriptMapLinearLayoutHorizontal">
+
             <Button
                 android:id="@+id/button_action"
                 style="@style/ScriptMapButton"
@@ -277,11 +273,8 @@
             android:layout_height="50dp">
 
             <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:layout_margin="50dp"
-                android:layout_marginStart="1dp"
-                android:layout_marginEnd="1dp">
+                style="@style/ScriptMapButton"
+                android:layout_margin="50dp">
 
                 <Button
                     android:id="@+id/button_basis"
@@ -328,43 +321,59 @@
 
 
             <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:layout_margin="50dp"
-                android:layout_marginStart="1dp"
-                android:layout_marginEnd="1dp">
+                style="@style/ScriptMapButton"
+                android:layout_margin="50dp">
 
                 <LinearLayout
-                    style="@style/ScriptMapLinearLayoutHorizontal"
                     android:layout_width="100dp"
+                    android:layout_height="50dp"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <Button
-                        android:id="@+id/button_stiffLeft"
-                        style="@style/ScriptMapButton"
-                        android:layout_width="44dp"
-                        android:layout_marginEnd="-4dp"
-                        android:onClick="click_count"
-                        android:visibility="gone" />
-
-                    <Button
-                        android:id="@+id/button_count"
-                        style="@style/ScriptMapButton"
+                    <LinearLayout
+                        style="@style/ScriptMapLinearLayoutHorizontal"
                         android:layout_width="100dp"
-                        android:layout_marginStart="-4dp"
-                        android:layout_marginEnd="-4dp"
-                        android:onClick="click_count"
-                        android:text="@string/count"
-                        android:textSize="14sp" />
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/button_stiffLeft"
+                            style="@style/ScriptMapButton"
+                            android:layout_width="44dp"
+                            android:layout_marginEnd="-4dp"
+                            android:onClick="click_count"
+                            android:visibility="gone" />
+
+                        <Button
+                            android:id="@+id/button_count"
+                            style="@style/ScriptMapButton"
+                            android:layout_width="100dp"
+                            android:layout_marginStart="-4dp"
+                            android:layout_marginTop="-6dp"
+                            android:layout_marginEnd="-4dp"
+                            android:layout_marginBottom="-6dp"
+                            android:onClick="click_count"
+                            android:text="@string/count" />
+
+                        <Button
+                            android:id="@+id/button_stiffRight"
+                            style="@style/ScriptMapButton"
+                            android:layout_width="44dp"
+                            android:layout_marginStart="-4dp"
+                            android:onClick="click_count"
+                            android:visibility="gone" />
+                    </LinearLayout>
 
                     <Button
-                        android:id="@+id/button_stiffRight"
+                        android:id="@+id/button_creative"
                         style="@style/ScriptMapButton"
-                        android:layout_width="44dp"
-                        android:layout_marginStart="-4dp"
-                        android:onClick="click_count"
+                        android:layout_height="31dp"
+                        android:layout_marginTop="-5.5dp"
+                        android:layout_marginBottom="-5.5dp"
+                        android:onClick="click_basis"
+                        android:text="@string/creative"
                         android:visibility="gone" />
+
                 </LinearLayout>
 
                 <TextView
@@ -405,16 +414,17 @@
                 android:visibility="gone">
 
                 <Button
+                    android:id="@+id/button_mechanical"
+                    style="@style/ScriptMapButton"
+                    android:onClick="click_base_choice"
+                    android:text="@string/mechanical" />
+
+                <Button
                     android:id="@+id/button_dynamicall"
                     style="@style/ScriptMapButton"
                     android:onClick="click_base_choice"
                     android:text="@string/dynamicall" />
 
-                <Button
-                    android:id="@+id/button_mechanical"
-                    style="@style/ScriptMapButton"
-                    android:onClick="click_base_choice"
-                    android:text="@string/mechanical" />
             </LinearLayout>
 
             <LinearLayout
@@ -441,6 +451,7 @@
     <LinearLayout
         style="@style/ScriptMapLinearLayoutVertical"
         android:layout_centerHorizontal="true">
+
         <TextView
             android:id="@+id/Left_result_Right"
             style="@style/ScriptMapNumText"
@@ -449,7 +460,47 @@
             android:layout_marginTop="155dp"
             android:enabled="false"
             android:visibility="gone" />
+
     </LinearLayout>
+
+
+    <LinearLayout
+        style="@style/ScriptMapLinearLayoutVertical"
+        android:layout_width="20dp">
+
+        <Button
+            style="@style/ScriptMapButton"
+            android:id="@+id/Left_plus"
+            android:layout_width="16dp"
+            android:layout_height="38dp" />
+
+        <Button
+            style="@style/ScriptMapButton"
+            android:id="@+id/Left_minus"
+            android:layout_width="16dp"
+            android:layout_height="38dp" />
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        style="@style/ScriptMapLinearLayoutVertical"
+        android:layout_width="20dp"
+        android:layout_alignParentEnd="true">
+
+        <Button
+            style="@style/ScriptMapButton"
+            android:id="@+id/Right_minus"
+            android:layout_width="16dp"
+            android:layout_height="38dp"/>
+
+        <Button
+            style="@style/ScriptMapButton"
+            android:id="@+id/Right_plus"
+            android:layout_width="16dp"
+            android:layout_height="38dp" />
+    </LinearLayout>
+
 
     <ToggleButton
         android:id="@+id/button_restore"
@@ -462,7 +513,6 @@
         android:onClick="click_restore"
         android:textOff="@string/resume"
         android:textOn="@string/resume"
-        android:textSize="8sp"
         android:visibility="gone" />
 
 
@@ -475,5 +525,4 @@
         android:onClick="click_clear"
         android:text="@string/clear"
         android:visibility="visible" />
-
 </RelativeLayout>

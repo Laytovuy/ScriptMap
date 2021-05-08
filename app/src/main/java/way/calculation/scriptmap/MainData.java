@@ -17,8 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainData extends AppCompatActivity {
 
     public Button button_clear, button_battleline, button_player, button_accident, button_stiffLeft,
-            button_count, button_stiffRight, button_modes, button_notcount, button_positive, button_negative, button_action, button_direction,
-            button_Left_plus, button_Left_minus, button_Center_plus, button_Center_minus, button_Right_plus, button_Right_minus;
+            button_count, button_stiffRight, button_modes, button_notcount, button_positive, button_negative, button_action, button_direction;
     public Button button_dynamicall, button_mechanical, button_creative, button_basisofmodeLeft, button_basis, button_basisofmodeRight,
             button_attack_Left, button_attack_Right, button_move_Left, button_move_Right,
             button_up_flank_Left, button_center_flank_Left, button_down_flank_Left, button_up_flank_Right, button_center_flank_Right, button_down_flank_Right,
@@ -26,6 +25,7 @@ public class MainData extends AppCompatActivity {
 
     public ToggleButton button_restore;
 
+    public LinearLayout linear_Right_num_change, linear_Center_num_change, linear_Left_num_change;
     public LinearLayout linear_Left_Center_Right, linear_count_choice, linear_modes_count_choice, linear_accident_player; // Це поверхність, на яку можна помістити контент, і управляти ним як окремою частиною.
     public LinearLayout linear_basis_choice, linear_basisofmode_choice, linear_menu, linear_flank_Left, linear_flank_Right;
 

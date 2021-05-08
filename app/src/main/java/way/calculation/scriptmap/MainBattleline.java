@@ -4,22 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.RelativeLayout;
 import android.widget.ToggleButton;
 
 import java.util.Locale;
@@ -76,6 +69,8 @@ public class MainBattleline extends MainData {
         button_move_Left.setOnLongClickListener(long_click_move_Left);
         button_move_Right.setOnLongClickListener(long_click_move_Right);
 
+        linear_Right_num_change = findViewById(R.id.linear_Right_num_change);
+        linear_Left_num_change = findViewById(R.id.linear_Left_num_change);
         linear_count_choice = findViewById(R.id.linear_count_choice);
         linear_basisofmode_choice = findViewById(R.id.linear_basisofmode_choice);
         linear_basis_choice = findViewById(R.id.linear_basis_choice);
@@ -98,11 +93,6 @@ public class MainBattleline extends MainData {
         launcher_background = findViewById(R.id.launcher_background);
         launcher_background.setOnLongClickListener(long_click_launcher_background);
         button_clear.setOnLongClickListener(long_click_clear);
-
-        button_Left_plus = findViewById(R.id.Left_plus);
-        button_Left_minus = findViewById(R.id.Left_minus);
-        button_Right_plus = findViewById(R.id.Right_plus);
-        button_Right_minus = findViewById(R.id.Right_minus);
 
         editText_left = findViewById(R.id.Left_EditText);
         editText_right = findViewById(R.id.Right_EditText);
@@ -239,6 +229,8 @@ public class MainBattleline extends MainData {
                         (button_count.getResources().getDisplayMetrics().density * 28);
 
                 button_count.setText("");
+                linear_Right_num_change.setVisibility(View.VISIBLE);
+                linear_Left_num_change.setVisibility(View.VISIBLE);
                 button_notcount.setVisibility(View.VISIBLE);
                 textView_stiffcount.setVisibility(View.VISIBLE);
                 linear_count_choice.setVisibility(View.VISIBLE);
@@ -278,6 +270,19 @@ public class MainBattleline extends MainData {
             c = 1; button_count.setText(R.string.positive);
         }
         close_cursor ();
+    }
+
+    public void click_count_number (View view) {
+        if (c_on) { int id = view.getId();
+
+            if (id == R.id.Right_num_plus || id == R.id.Right_num_minus) {if (!string_right.isEmpty()) { Int_right = Integer.parseInt(string_right); } else {Int_right = 0;}}
+            if (id == R.id.Right_num_plus)   { Int_right++; editText_right.setText(String.valueOf(Int_right));
+            } else if (id == R.id.Right_num_minus)  { if (Int_right > 1) {Int_right--; editText_right.setText(String.valueOf(Int_right));} else {editText_right.setText("");} }
+
+            if (id == R.id.Left_num_plus || id == R.id.Left_num_minus) {if (!string_left.isEmpty()) { Int_left = Integer.parseInt(string_left); } else {Int_left = 0;}}
+            if (id == R.id.Left_num_plus)    { Int_left++; editText_left.setText(String.valueOf(Int_left));
+            } else if (id == R.id.Left_num_minus)   { if (Int_left > 1) {Int_left--; editText_left.setText(String.valueOf(Int_left));} else {editText_left.setText("");} }
+        }
     }
 
 
@@ -839,7 +844,6 @@ public class MainBattleline extends MainData {
                     Intent intent = new Intent(MainBattleline.this, MainActivity.class);
                     saveData(); intent.putExtra("intent", "intent");
                     startActivity(intent);
-                    finish();
                 }
             }, 250);
         }
@@ -955,6 +959,8 @@ public class MainBattleline extends MainData {
 
             c_on = false;
             if (arguments == null){
+                linear_Right_num_change.setVisibility(View.GONE);
+                linear_Left_num_change.setVisibility(View.GONE);
                 button_notcount.setVisibility(View.GONE);
                 textView_stiffcount.setVisibility(View.GONE);
                 button_stiffLeft.setVisibility(View.GONE);

@@ -1,26 +1,17 @@
 package way.calculation.scriptmap;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
-import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-
-import androidx.core.content.ContextCompat;
 
 import java.util.Locale;
 
@@ -46,6 +37,9 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         button_action = findViewById(R.id.button_action);
         button_direction = findViewById(R.id.button_direction);
 
+        linear_Right_num_change = findViewById(R.id.linear_Right_num_change);
+        linear_Center_num_change = findViewById(R.id.linear_Center_num_change);
+        linear_Left_num_change = findViewById(R.id.linear_Left_num_change);
         linear_Left_Center_Right = findViewById(R.id.linear_Left_Center_Right);
         linear_count_choice = findViewById(R.id.linear_count_choice);
         linear_modes_count_choice = findViewById(R.id.linear_modes_count_choice);
@@ -68,13 +62,6 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         launcher_background.setOnLongClickListener(long_click_launcher_background);
         button_clear.setOnLongClickListener(long_click_clear);
 
-        button_Left_plus = findViewById(R.id.Left_plus);
-        button_Left_minus = findViewById(R.id.Left_minus);
-        button_Center_plus = findViewById(R.id.Center_plus);
-        button_Center_minus = findViewById(R.id.Center_minus);
-        button_Right_plus = findViewById(R.id.Right_plus);
-        button_Right_minus = findViewById(R.id.Right_minus);
-
         editText_left = findViewById(R.id.Left_EditText);
         editText_center = findViewById(R.id.Center_EditText);
         editText_right = findViewById(R.id.Right_EditText);
@@ -85,8 +72,6 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         arguments = getIntent().getExtras();
         if(arguments != null){ setRotationAnimation(); outData(); getIntent().removeExtra("intent"); getIntent().removeCategory("intent"); arguments = getIntent().getExtras(); }
     } // І кстаті, цей код має послідовність, тобто функціонал вюшок розпосаний, від нижньої вшки до верхньої, йдучи зік заком, з ліва на право. І між методами, пропуски в два рядка.
-
-
 
 
     private void setRotationAnimation() { // TODO Проводить заміну анімації зміни орінтації екрана.
@@ -208,6 +193,10 @@ public class MainActivity extends MainData { // TODO Відповідає за �
                         (button_count.getResources().getDisplayMetrics().density * 28); // Зменшує кнопку, щоб помістити інші кнопки "вправо" і "вліво", не змінюючи дизайн в 100 діпі ширини кнопки.
 
                 button_count.setText(""); // Ми зменшили кнопку, тому її текс ми очищуємо. Він поставиться вже при закреті. І іншим методом.
+                linear_Right_num_change.setVisibility(View.VISIBLE);
+                if (p == 3) {
+                    linear_Center_num_change.setVisibility(View.VISIBLE);}
+                linear_Left_num_change.setVisibility(View.VISIBLE);
                 textView_stiffcount.setVisibility(View.VISIBLE); // Цей текс накладений поверх кнопок, щоб вітображатись як цільний.
                 linear_count_choice.setVisibility(View.VISIBLE);
                 button_stiffLeft.setVisibility(View.VISIBLE); // Це ліва кнопка показана
@@ -253,8 +242,25 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         close_cursor (); // Щоб відключити відображення курсору, я прибіг по простому шляху, я віключаю і включаю ЕдітТексти, і це змінює відобрежання курсору на фолс.
     }
 
+    public void click_count_number (View view) {
+        if (c_on) { int id = view.getId();
 
-    public void click_modes (View view){ // TODO Вибір режиму
+            if (id == R.id.Right_num_plus || id == R.id.Right_num_minus) {if (!string_right.isEmpty()) { Int_right = Integer.parseInt(string_right); } else {Int_right = 0;}}
+            if (id == R.id.Right_num_plus)   { Int_right++; editText_right.setText(String.valueOf(Int_right));
+            } else if (id == R.id.Right_num_minus)  { if (Int_right > 1) {Int_right--; editText_right.setText(String.valueOf(Int_right));} else {editText_right.setText("");} }
+
+            if (id == R.id.Center_num_plus || id == R.id.Center_num_minus) {if (!string_center.isEmpty()) { Int_center = Integer.parseInt(string_center); } else {Int_center = 0;}}
+            if (id == R.id.Center_num_plus)  { Int_center++; editText_center.setText(String.valueOf(Int_center));
+            } else if (id == R.id.Center_num_minus) { if (Int_center > 1) {Int_center--; editText_center.setText(String.valueOf(Int_center));} else {editText_center.setText("");} }
+
+            if (id == R.id.Left_num_plus || id == R.id.Left_num_minus) {if (!string_left.isEmpty()) { Int_left = Integer.parseInt(string_left); } else {Int_left = 0;}}
+            if (id == R.id.Left_num_plus)    { Int_left++; editText_left.setText(String.valueOf(Int_left));
+            } else if (id == R.id.Left_num_minus)   { if (Int_left > 1) {Int_left--; editText_left.setText(String.valueOf(Int_left));} else {editText_left.setText("");} }
+        }
+    }
+
+
+    public void click_modes (View view) { // TODO Вибір режиму
         if (!m_on){
             m_on = true; view_on = true; viwe_on_off(); // viwe_on_off запускает метод, який відключає кнопки на час взамодії з меню.
             button_direction.setVisibility(View.VISIBLE);
@@ -538,6 +544,9 @@ public class MainActivity extends MainData { // TODO Відповідає за �
 
             c_on = false;
             if (arguments == null) {
+                linear_Right_num_change.setVisibility(View.GONE);
+                linear_Center_num_change.setVisibility(View.GONE);
+                linear_Left_num_change.setVisibility(View.GONE);
                 textView_stiffcount.setVisibility(View.GONE);
                 button_stiffLeft.setVisibility(View.GONE);
                 button_stiffRight.setVisibility(View.GONE);

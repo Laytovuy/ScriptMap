@@ -464,44 +464,6 @@
     </LinearLayout>
 
 
-    <LinearLayout
-        style="@style/ScriptMapLinearLayoutVertical"
-        android:layout_width="20dp">
-
-        <Button
-            style="@style/ScriptMapButton"
-            android:id="@+id/Left_plus"
-            android:layout_width="16dp"
-            android:layout_height="38dp" />
-
-        <Button
-            style="@style/ScriptMapButton"
-            android:id="@+id/Left_minus"
-            android:layout_width="16dp"
-            android:layout_height="38dp" />
-    </LinearLayout>
-
-
-
-    <LinearLayout
-        style="@style/ScriptMapLinearLayoutVertical"
-        android:layout_width="20dp"
-        android:layout_alignParentEnd="true">
-
-        <Button
-            style="@style/ScriptMapButton"
-            android:id="@+id/Right_minus"
-            android:layout_width="16dp"
-            android:layout_height="38dp"/>
-
-        <Button
-            style="@style/ScriptMapButton"
-            android:id="@+id/Right_plus"
-            android:layout_width="16dp"
-            android:layout_height="38dp" />
-    </LinearLayout>
-
-
     <ToggleButton
         android:id="@+id/button_restore"
         style="@style/ScriptMapButton"
@@ -525,4 +487,47 @@
         android:onClick="click_clear"
         android:text="@string/clear"
         android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/linear_Left_num_change"
+        style="@style/ScriptMapLinearLayoutVertical"
+        android:layout_width="20dp"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/Left_num_plus"
+            style="@style/ScriptMapButton"
+            android:onClick="click_count_number"
+            android:layout_width="16dp"
+            android:layout_height="38dp" />
+
+        <Button
+            android:id="@+id/Left_num_minus"
+            style="@style/ScriptMapButton"
+            android:onClick="click_count_number"
+            android:layout_width="16dp"
+            android:layout_height="38dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_Right_num_change"
+        style="@style/ScriptMapLinearLayoutVertical"
+        android:layout_width="20dp"
+        android:layout_alignParentEnd="true"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/Right_num_minus"
+            style="@style/ScriptMapButton"
+            android:onClick="click_count_number"
+            android:layout_width="16dp"
+            android:layout_height="38dp" />
+
+        <Button
+            android:id="@+id/Right_num_plus"
+            style="@style/ScriptMapButton"
+            android:onClick="click_count_number"
+            android:layout_width="16dp"
+            android:layout_height="38dp" />
+    </LinearLayout>
 </RelativeLayout>

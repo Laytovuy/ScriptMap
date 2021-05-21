@@ -3,5 +3,5 @@
     android:shape="rectangle">
 
     <size android:width="2dp" android:height="7dp"/>
-    <solid android:color="@color/colorPrimary"/>
+    <solid android:color="@color/colorTint_Button"/>
 </shape>

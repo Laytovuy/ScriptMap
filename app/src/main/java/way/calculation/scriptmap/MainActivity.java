@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.core.content.ContextCompat;
+
 import java.util.Locale;
 
 public class MainActivity extends MainData { // TODO Відповідає за вміст головного меню гри.
@@ -106,20 +108,17 @@ public class MainActivity extends MainData { // TODO Відповідає за �
     };
 
 
-    View.OnLongClickListener long_click_launcher_background = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) { // TODO Це автоматичне виставлення в поля 50 очків
-            if (menu_on){
-                button_clear.callOnClick();
-                editText_right.setText(String.valueOf(50));
-                if (p == 3){editText_center.setText(String.valueOf(50));}
-                editText_left.setText(String.valueOf(50));
-            }
-            return false;
+    View.OnLongClickListener long_click_launcher_background = v -> { // TODO Це автоматичне виставлення в поля 50 очків
+        if (menu_on){
+            button_clear.callOnClick();
+            editText_right.setText(String.valueOf(50));
+            if (p == 3){editText_center.setText(String.valueOf(50));}
+            editText_left.setText(String.valueOf(50));
         }
+        return false;
     };
 
-    public void click_launcher_background (View view){ if (menu_on) { if (m == 4) {m = -4;} close_cursor();} } // TODO В цей метод зруповані закриття меню, і забрання курсора.
+    public void click_launcher_background (View view){ if (menu_on) { if (m == 4 && m_on) {m = -4;} close_cursor();} } // TODO В цей метод зруповані закриття меню, і забрання курсора.
 
 
     public void click_clear (View view){ // TODO Очищує значення, і ставить їх в дефолтне положення.
@@ -139,23 +138,23 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         }
     }
 
-    View.OnLongClickListener long_click_clear = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) { // TODO При довгому втримані на кнопку клір, скидуються кнопки на дефолт, як і режими, але не значення полей.
-            if (!menu_on) {
-                menu_on = true; menu_visible(); result_choice();
-            } else {
-                if (languageCode.equals("default")) {
-                    languageCode  = "uk";
-                } else {languageCode = "default";}
+    View.OnLongClickListener long_click_clear = v -> { // TODO При втримані на кнопку клір, скидуються кнопки на дефолт, як і режими, але не значення полей.
+        if (!menu_on) {
+            menu_on = true; menu_visible(); result_choice();
+            if (string_left.equals("0")){editText_left.setText("");}
+            if (string_center.equals("0") && p == 3){editText_center.setText("");}
+            if (string_right.equals("0")){ editText_right.setText("");}
+        } else {
+            if (languageCode.equals("default")) {
+                languageCode  = "uk";
+            } else {languageCode = "default";}
 
-                localization(languageCode);
-                m = 0; button_modes.setText(R.string.modes);
-                c = 0; button_count.setText(R.string.count);
-                sc = 10; view_on = false; viwe_on_off(); close_cursor();
-            }
-            return true; // "true" відповідає за те, що цей код не визве короткий клік, при натискані.
+            localization(languageCode);
+            m = 0; button_modes.setText(R.string.modes);
+            c = 0; button_count.setText(R.string.count);
+            sc = 10; view_on = false; viwe_on_off(); close_cursor();
         }
+        return true; // "true" відповідає за те, що цей код не визве короткий клік, при натискані.
     };
 
 
@@ -194,8 +193,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
 
                 button_count.setText(""); // Ми зменшили кнопку, тому її текс ми очищуємо. Він поставиться вже при закреті. І іншим методом.
                 linear_Right_num_change.setVisibility(View.VISIBLE);
-                if (p == 3) {
-                    linear_Center_num_change.setVisibility(View.VISIBLE);}
+                if (p == 3) { linear_Center_num_change.setVisibility(View.VISIBLE);}
                 linear_Left_num_change.setVisibility(View.VISIBLE);
                 textView_stiffcount.setVisibility(View.VISIBLE); // Цей текс накладений поверх кнопок, щоб вітображатись як цільний.
                 linear_count_choice.setVisibility(View.VISIBLE);
@@ -281,16 +279,13 @@ public class MainActivity extends MainData { // TODO Відповідає за �
 
             if (m == 4) { button_modes.setEnabled(false);
                 final Handler handler = new Handler(); // Цей метод створює затримку, для того щоб пройшла анімація, закривання меню.
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        setRotationAnimation();
-                        Intent intent = new Intent(MainActivity.this, MainBattleline.class); // Це створення обєкту який містить в собі запуск Активиті.
-                        saveData(); intent.putExtra("intent", "intent");
-                        startActivity(intent);
-                    }
+                handler.postDelayed(() -> {
+                    setRotationAnimation();
+                    Intent intent = new Intent(MainActivity.this, MainBattleline.class); // Це створення обєкту який містить в собі запуск Активиті.
+                    saveData(); intent.putExtra("intent", "intent");
+                    startActivity(intent);
                 }, 250); }
-            if (m == 1 && c == 3){button_count.setText(R.string.count); c = 0;} // Задумка в тому, що "не рахувати" дозволяє використати режим "випадковість", і прораховувати як монетку, без зачислення результатів.
+            if (m == 1 && c == 3){c = 0;} // Задумка в тому, що "не рахувати" дозволяє використати режим "випадковість", і прораховувати як монетку, без зачислення результатів.
             close_cursor();
         }
     }
@@ -329,26 +324,29 @@ public class MainActivity extends MainData { // TODO Відповідає за �
 
 
     public void click_action (View view){ // TODO Цей метод викликається після кліку на Action, відповідає за надіслання даних в клас, і подальшуї оброботку.
-        if (m == 0 || m == 4 || c == 0 || m == 2 && (L_direct_C + L_direct_R + C_direct_R) == 0){
+        if (m == 0 || m == 4 || c == 0 || m == 2 && menu_on && (
+                ((L_direct_C == 0 || L_direct_R == 0 || C_direct_R == 0) && p == 3) || L_direct_R == 0 && p == 2)){
             if (m == 0 || m == 4){button_modes.setEnabled(false);}
             if (c == 0){button_count.setEnabled(false);}
-            if (m == 2 && (L_direct_C + L_direct_R + C_direct_R) == 0){ left_direct_right.setVisibility(View.INVISIBLE);
-                if (p == 3){ linear_Left_Center_Right.setVisibility(View.GONE); }
+            if (m == 2){
+                if (L_direct_R == 0) { left_direct_right.setVisibility(View.INVISIBLE); }
+                if (p == 3){
+                    if (L_direct_C == 0) { left_direct_center.setVisibility(View.INVISIBLE); }
+                    if (C_direct_R == 0) { center_direct_right.setVisibility(View.INVISIBLE); }
+                }
             }
 
             final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    close_cursor();
-                    if ((m == 0 || m == 4) && !c_on){button_modes.setEnabled(true);}
-                    if (c == 0 && !m_on){button_count.setEnabled(true);}
-                    if (m == 2 && (L_direct_C + L_direct_R + C_direct_R) == 0){ left_direct_right.setVisibility(View.VISIBLE);
-                        if (p == 3){ linear_Left_Center_Right.setVisibility(View.VISIBLE); }
-                    }
+            handler.postDelayed(() -> {
+                close_cursor();
+                if ((m == 0 || m == 4) && !c_on){button_modes.setEnabled(true);}
+                if (c == 0 && !m_on){button_count.setEnabled(true);}
+                if (m == 2){
+                    left_direct_right.setVisibility(View.VISIBLE);
+                    left_direct_center.setVisibility(View.VISIBLE);
+                    center_direct_right.setVisibility(View.VISIBLE);
                 }
             }, 250);
-
         } else {
             if (!string_left.isEmpty()) { Int_left = Integer.parseInt(string_left); }
             if (!string_center.isEmpty() && p != 2) { Int_center = Integer.parseInt(string_center); }
@@ -357,8 +355,10 @@ public class MainActivity extends MainData { // TODO Відповідає за �
             /*if (p == 3){ Int_left = Integer.parseInt(string_left); Int_center = Integer.parseInt(string_center); Int_right = Integer.parseInt(string_right);
             } else if (p == 2) { Int_left = Integer.parseInt(string_left); Int_right = Integer.parseInt(string_right); }*/
 
-            if (Int_left != 0 && Int_right != 0 && p == 2 ||
-                    (Int_left != 0 && Int_center != 0 || Int_left != 0 && Int_right != 0 || Int_right != 0 && Int_center != 0) && p == 3) {
+
+            if ((Int_left != 0 && Int_right != 0 && p == 2) || (Int_left != 0 && Int_center != 0  && Int_right != 0 && p == 3 && menu_on) ||
+                    (Int_left != 0 && Int_center != 0 || Int_left != 0 && Int_right != 0 || Int_right != 0 && Int_center != 0) && p == 3  && !menu_on) {
+
                 if (!menu_on) {
                     final ActionCalculator DataExchange = new ActionCalculator();
 
@@ -372,11 +372,11 @@ public class MainActivity extends MainData { // TODO Відповідає за �
                     L_result_C = DataExchange.L_result_C; L_result_R = DataExchange.L_result_R; C_result_R = DataExchange.C_result_R;
                     if (p != 2) { L_direct_C = DataExchange.L_direct_C; } L_direct_R = DataExchange.L_direct_R; if (p != 2) { C_direct_R = DataExchange.C_direct_R; }
 
-                    if ((Final_left == 0 && p == 2) || (Final_left == 0 && p == 3 && (Final_center == 0 || Final_right == 0))) { editText_left.setText(""); }
+                    if ((Final_left == 0 && p == 2) || (Final_left == 0 && p == 3 && (Final_center == 0 || Final_right == 0))) { editText_left.setText("");}
                     else if (p != 1) { editText_left.setText(String.valueOf(Final_left)); }
-                    if (Final_center == 0 && p == 3 && (Final_left == 0 || Final_right == 0)) { editText_center.setText(""); }
+                    if (Final_center == 0 && p == 3 && (Final_left == 0 || Final_right == 0)) { editText_center.setText("");}
                     else if (p != 2) { editText_center.setText(String.valueOf(Final_center)); }
-                    if ((Final_right == 0 && p == 2) || (Final_right == 0 && p == 3 && (Final_left == 0 || Final_center == 0))) {  editText_right.setText(""); }
+                    if ((Final_right == 0 && p == 2) || (Final_right == 0 && p == 3 && (Final_left == 0 || Final_center == 0))) {  editText_right.setText("");}
                     else if (p != 1) { editText_right.setText(String.valueOf(Final_right)); }
 
                     result_choice(); direction_choice();
@@ -400,7 +400,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
 
             if (m != 2 && p == 3 && L_direct_C != 3){L_direct_C = 3;}
             else if (m != 2 && L_direct_C == 3){ L_direct_C = 0;}
-        } else if (id == R.id.Left_direction_Right){
+        } else if (id == R.id.Left_direction_Right){ System.out.println("Yes");
             if (m == 2) {L_direct_R++;}
             if (m == 2 && p == 2 && L_direct_R == 3) {L_direct_R = 1;}
             if (m == 2 && L_direct_R >= 4) {L_direct_R = 1;}
@@ -418,35 +418,51 @@ public class MainActivity extends MainData { // TODO Відповідає за �
     }
 
     public void direction_choice() {
-        if (L_direct_C == 0){ left_direct_center.setText(R.string.Left_and_Center);}
-        if (L_direct_C == 1){ left_direct_center.setText(R.string.Left_to_Center);}
-        if (L_direct_C == 2){ left_direct_center.setText(R.string.Center_to_Left);}
-        if (L_direct_C == 3 && p == 3){ left_direct_center.setText(R.string.Center_peace_Left);}
+        if (L_direct_C == 0 || L_direct_C == 3){
+            left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
+        if (L_direct_C == 1 || L_direct_C == 2) { left_direct_center.setProgress(1);
+            if ((Final_left == 0 || Final_center == 0) && L_result_C != 0) {
+                left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality));
+            } else { left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red)); } }
+        if (L_direct_C == 0){ left_direct_center.setProgress(0);} // Left_and_Center
+        if (L_direct_C == 1){ left_direct_center.setRotation(-90);} // Left_to_Center
+        if (L_direct_C == 2){ left_direct_center.setRotation(90);} // Center_to_Left
+        if (L_direct_C == 3 && p == 3){ left_direct_center.setProgress(30);} // Center_peace_Left
 
-        if (L_direct_R == 0){ left_direct_right.setText(R.string.Left_and_Right);}
-        if (L_direct_R == 2){ left_direct_right.setText(R.string.Left_to_Right);}
-        if (L_direct_R == 1){ left_direct_right.setText(R.string.Right_to_Left);}
-        if (L_direct_R == 3){ left_direct_right.setText(R.string.Left_peace_Right);}
+        if (L_direct_R == 0 || L_direct_R == 3){
+            left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
+        if (L_direct_R == 1 || L_direct_R == 2) { left_direct_right.setProgress(1);
+            if ((Final_left == 0 || Final_right == 0) && L_result_R != 0) {
+                left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality));
+                } else { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red)); } }
+        if (L_direct_R == 0){ left_direct_right.setProgress(0); } // Left_and_Right
+        if (L_direct_R == 2){ left_direct_right.setRotation(-90);} // Left_to_Right
+        if (L_direct_R == 1){ left_direct_right.setRotation(90); } // Right_to_Left
+        if (L_direct_R == 3){ left_direct_right.setProgress(30); } // Left_peace_Right
 
-        if (C_direct_R == 0){ center_direct_right.setText(R.string.Center_and_Right);}
-        if (C_direct_R == 1){ center_direct_right.setText(R.string.Center_to_Right);}
-        if (C_direct_R == 2){ center_direct_right.setText(R.string.Right_to_Center);}
-        if (C_direct_R == 3 && p == 3){ center_direct_right.setText(R.string.Center_peace_Right);}
+        if (C_direct_R == 0 || C_direct_R == 3){
+            center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
+        if (C_direct_R == 1 || C_direct_R == 2) { center_direct_right.setProgress(1);
+            if ((Final_center == 0 || Final_right == 0) && C_result_R != 0) {
+                center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality));
+            } else { center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red)); } }
+        if (C_direct_R == 0){ center_direct_right.setProgress(0);} // Center_and_Right
+        if (C_direct_R == 1){ center_direct_right.setRotation(-90);} // Center_to_Right
+        if (C_direct_R == 2){ center_direct_right.setRotation(90);} // Right_to_Center
+        if (C_direct_R == 3 && p == 3){ center_direct_right.setProgress(30);} // Center_peace_Right
     }
 
-    View.OnLongClickListener long_direction_choice = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            if (m == 2){ // Це відповідає за стерання напрямків, як що гравець захоче очистити лише їх.
-                L_direct_R = 0;
-                if (p == 3) {
-                    L_direct_C = 0;
-                    C_direct_R = 0;
-                } direction_choice();
-            }
-            return true;
+    View.OnLongClickListener long_direction_choice = v -> {
+        if (m == 2){ // Це відповідає за стерання напрямків, як що гравець захоче очистити лише їх.
+            L_direct_R = 0;
+            if (p == 3) {
+                L_direct_C = 0;
+                C_direct_R = 0;
+            } direction_choice();
         }
+        return true;
     };
+
 
     public void result_choice () {
         if (Int_left == 0 || Int_center == 0) { L_result_C = 0; }
@@ -454,21 +470,21 @@ public class MainActivity extends MainData { // TODO Відповідає за �
             left_result_center.setText(String.valueOf(L_result_C));
             left_result_center.setVisibility(View.VISIBLE);
         } else {left_result_center.setVisibility(View.GONE);
-            if (L_direct_C != 3 && p == 3){L_direct_C = 0;}}
+            if (!menu_on && L_direct_C != 3 && p == 3){ L_direct_C = 0; } }
 
         if (Int_left == 0 || Int_right == 0) { L_result_R = 0; }
         if (L_direct_R != 3 && L_result_R != 0){
             left_result_right.setText(String.valueOf(L_result_R));
             left_result_right.setVisibility(View.VISIBLE);
         } else {left_result_right.setVisibility(View.GONE);
-            if (L_direct_R != 3){L_direct_R = 0;}}
+            if (!menu_on && L_direct_R != 3){ L_direct_R = 0; } }
 
         if (Int_center == 0 || Int_right == 0) { C_result_R = 0; }
         if (C_direct_R != 3 && p == 3 && C_result_R != 0){
             center_result_right.setText(String.valueOf(C_result_R));
             center_result_right.setVisibility(View.VISIBLE);
         } else {center_result_right.setVisibility(View.GONE);
-            if (C_direct_R != 3 && p == 3){C_direct_R = 0;}}
+            if (!menu_on && C_direct_R != 3 && p == 3) {C_direct_R = 0; } }
     }
 
 

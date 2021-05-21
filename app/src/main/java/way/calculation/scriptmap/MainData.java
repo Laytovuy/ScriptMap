@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -30,11 +31,13 @@ public class MainData extends AppCompatActivity {
     public LinearLayout linear_basis_choice, linear_basisofmode_choice, linear_menu, linear_flank_Left, linear_flank_Right;
 
     public EditText editText_left, editText_center, editText_right; // Це поля в які можна щось писати.
+    public EditText left_editText_left, left_editText_center, right_editText_left, right_editText_center;
 
-    public TextView textView_stiffcount, left_direct_center, left_direct_right, center_direct_right, // Це їх аналоги, але без змоги воду.
+    public TextView textView_stiffcount, // Це їх аналоги, але без змоги воду.
             left_result_center, left_result_right, center_result_right;
     public TextView textView_basisofmode;
 
+    public ProgressBar left_direct_center, left_direct_right, center_direct_right;
     public SeekBar left_seekBarAnd_right, left_seekBar_right, right_seekBar_left;
 
     public FrameLayout frameLayout_seekBar;

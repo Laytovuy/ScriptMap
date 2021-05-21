@@ -9,8 +9,19 @@
     android:onClick="click_launcher_background"
     tools:context=".MainActivity">
 
+    <EditText
+        android:id="@+id/Left_EditText"
+        style="@style/ScriptMapNumText"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:autofillHints="@string/reltat"
+        android:background="@null"
+        android:hint="@string/reltat"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:imeOptions="actionDone|actionNext" />
 
-   <LinearLayout
+    <LinearLayout
         style="@style/ScriptMapLinearLayoutHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -69,85 +80,58 @@
                     android:enabled="false"
                     android:visibility="gone" />
             </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout
-            style="@style/ScriptMapLinearLayoutVertical"
+            style="@style/ScriptMapLinearLayoutHorizontal"
             android:layout_width="85dp">
 
-            <EditText
-                android:id="@+id/Left_EditText"
-                style="@style/ScriptMapNumText"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
-                android:autofillHints="@string/reltat"
-                android:background="@null"
-                android:hint="@string/reltat"
-                android:imeOptions="actionDone|actionNext" />
-
             <LinearLayout
-                style="@style/ScriptMapLinearLayoutHorizontal"
-                android:layout_height="510dp">
+                android:id="@+id/linear_Left_Center_Right"
+                style="@style/ScriptMapLinearLayoutVertical"
+                android:layout_width="35dp"
+                android:layout_height="520dp"
+                android:layout_marginEnd="-12dp"
+                android:visibility="gone">
 
-                <LinearLayout
-                    android:id="@+id/linear_Left_Center_Right"
-                    style="@style/ScriptMapLinearLayoutVertical"
-                    android:layout_width="30dp"
-                    android:layout_height="510dp"
-                    android:layout_marginEnd="-12dp"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/Left_direction_Center"
-                        style="@style/ScriptMapDirectionLine"
-                        android:fontFamily="@font/font_scriptmap_rotate"
-                        android:textSize="16sp"
-                        android:layout_width="30dp"
-                        android:layout_height="255dp"
-                        android:text="@string/Left_and_Center"
-                        android:onClick="click_direction_choice"
-                        android:visibility="visible"
-                        android:lineSpacingExtra="-6dp"
-                        android:letterSpacing="1"/>
-
-                    <TextView
-                        android:id="@+id/Center_direction_Right"
-                        style="@style/ScriptMapDirectionLine"
-                        android:fontFamily="@font/font_scriptmap_rotate"
-                        android:textSize="16sp"
-                        android:layout_width="30dp"
-                        android:layout_height="255dp"
-                        android:text="@string/Center_and_Right"
-                        android:onClick="click_direction_choice"
-                        android:visibility="visible"
-                        android:lineSpacingExtra="-6dp"
-                        android:letterSpacing="1"/>
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/Left_direction_Right"
-                    style="@style/ScriptMapDirectionLine"
-                    android:fontFamily="@font/font_scriptmap_rotate"
-                    android:textSize="16sp"
-                    android:layout_width="35dp"
-                    android:layout_height="510dp"
-                    android:text="@string/Left_and_Right"
+                <ProgressBar
+                    android:id="@+id/Left_direction_Center"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:progressDrawable="@drawable/seekbar_default"
+                    android:layout_width="260dp"
+                    android:layout_height="260dp"
                     android:onClick="click_direction_choice"
-                    android:lineSpacingExtra="-6dp"
-                    android:letterSpacing="1" />
+                    android:max="15"
+                    android:progress="0"
+                    android:rotation="90"/>
 
+                <ProgressBar
+                    android:id="@+id/Center_direction_Right"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:progressDrawable="@drawable/seekbar_default"
+                    android:layout_width="260dp"
+                    android:layout_height="260dp"
+                    android:onClick="click_direction_choice"
+                    android:max="15"
+                    android:progress="0"
+                    android:rotation="-90"/>
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/Right_EditText"
-                style="@style/ScriptMapNumText"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
-                android:autofillHints="@string/reltat"
-                android:background="@null"
-                android:hint="@string/reltat"
-                android:imeOptions="actionDone" />
+            <LinearLayout
+                style="@style/ScriptMapLinearLayoutVertical"
+                android:layout_width="35dp"
+                android:layout_height="520dp">
+
+                <ProgressBar
+                    android:id="@+id/Left_direction_Right"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:progressDrawable="@drawable/seekbar_default"
+                    android:layout_width="520dp"
+                    android:layout_height="match_parent"
+                    android:onClick="click_direction_choice"
+                    android:max="30"
+                    android:rotation="90" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -161,9 +145,22 @@
                 android:layout_height="40dp"
                 android:enabled="false"
                 android:visibility="gone" />
-
         </LinearLayout>
     </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/Right_EditText"
+        style="@style/ScriptMapNumText"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:autofillHints="@string/reltat"
+        android:background="@null"
+        android:hint="@string/reltat"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:imeOptions="actionDone" />
 
 
     <LinearLayout
@@ -281,7 +278,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:gravity="center"
                     android:lineSpacingExtra="-2dp"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorDark"
                     android:textSize="12sp"
                     android:visibility="gone" />
             </FrameLayout>

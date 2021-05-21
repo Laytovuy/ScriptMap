@@ -3,26 +3,6 @@
 
     <string name="reltat" translatable="false">0</string>
 
-    <string name="Left_and_Right" translatable="false"><![CDATA[<-------------------------------------->]]></string>
-    <string name="Left_to_Right" translatable="false"><![CDATA[-------------------------------------->]]></string>
-    <string name="Right_to_Left" translatable="false"><![CDATA[<--------------------------------------]]></string>
-    <string name="Left_peace_Right" translatable="false"><![CDATA[>-------------------------------------<]]></string>
-
-    <string name="Left_and_Center" translatable="false"><![CDATA[<-----------------┓]]></string>
-    <string name="Left_to_Center" translatable="false"><![CDATA[└--------------------┓]]></string>
-    <string name="Center_to_Left" translatable="false"><![CDATA[┗--------------------┐]]></string>
-    <string name="Center_peace_Left" translatable="false"><![CDATA[└>--------------------<┐]]></string>
-
-    <string name="Center_and_Right" translatable="false"><![CDATA[┏----------------->]]></string>
-    <string name="Center_to_Right" translatable="false"><![CDATA[┌--------------------┛]]></string>
-    <string name="Right_to_Center" translatable="false"><![CDATA[┏--------------------┘]]></string>
-    <string name="Center_peace_Right" translatable="false"><![CDATA[┌>--------------------<┘]]></string>
-
-    <string name="Left_and_Right_rotate" translatable="false"><![CDATA[---------------------------------------]]></string>
-    <string name="Left_to_Right_rotate" translatable="false"><![CDATA[-------------------------------------->]]></string>
-    <string name="Right_to_Left_rotate" translatable="false"><![CDATA[<--------------------------------------]]></string>
-    <string name="Left_peace_Right_rotate" translatable="false"><![CDATA[>-------------------------------------<]]></string>
-
     <string name="direction">DIRECTION</string>
     <string name="action">ACTION</string>
     <string name="modes">MODES</string>

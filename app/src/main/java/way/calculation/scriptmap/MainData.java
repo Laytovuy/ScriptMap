@@ -1,8 +1,11 @@
 package way.calculation.scriptmap;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -24,7 +27,7 @@ public class MainData extends AppCompatActivity {
             button_up_flank_Left, button_center_flank_Left, button_down_flank_Left, button_up_flank_Right, button_center_flank_Right, button_down_flank_Right,
             button_defense_Left, button_defense_Right;
 
-    public ToggleButton button_restore;
+    public ToggleButton button_continue;
 
     public LinearLayout linear_Right_num_change, linear_Center_num_change, linear_Left_num_change;
     public LinearLayout linear_Left_Center_Right, linear_count_choice, linear_modes_count_choice, linear_accident_player; // Це поверхність, на яку можна помістити контент, і управляти ним як окремою частиною.
@@ -47,9 +50,8 @@ public class MainData extends AppCompatActivity {
 
     public static final String APP_PREFERENCES = "MainData";
     public static SharedPreferences MainDataExchange;
-    public Bundle arguments;
     public String languageCode = "default";
-
+    public boolean StartData = true;
 
 
     public long system_clear_time, system_back_time; // Це невеличкі переміні які зберігають час кліка, в деяких функціях.
@@ -67,10 +69,10 @@ public class MainData extends AppCompatActivity {
 
     public byte m, c, p = 2, L_direct_C, L_direct_R, C_direct_R; // Це скороченя від m = Mode, c = Count, p = Player, b = Basis, bm = BasisMode
     public double sc = 10; // Ця переміна має в собі ключове число яке впливає на результат сили атаки.
+    public double L_percen_R, R_percen_L, L_percenAnd_R, L_percenPost_R, R_percenPost_L;
     public byte restore, k, b, bm = 2; // R_vector
 
 
-    public double L_percen_R, R_percen_L, L_percenAnd_R, L_percenPost_R, R_percenPost_L;
 
     /*getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN); setContentView(R.layout.activity_main);*/
@@ -115,6 +117,21 @@ public class MainData extends AppCompatActivity {
         //localization(languageCode);
         button_player.callOnClick(); c_on = true; m_on = true; close_cursor();
         result_choice(); direction_choice();
+    }*/
+
+    /*@Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Bundle arguments = getIntent().getExtras();
+        if(arguments != null){ setRotationAnimation(); outData(); getIntent().removeExtra("intent"); getIntent().removeCategory("intent"); arguments = getIntent().getExtras(); }
+    }
+
+    public void StartActivity2 (View view) {
+        setRotationAnimation();
+        Intent intent = new Intent(MainActivity.this, MainBattleline.class); // Це створення обєкту який містить в собі запуск Активиті.
+        saveData(); intent.putExtra("intent", "intent");
+        startActivity(intent);
     }*/
 }
 

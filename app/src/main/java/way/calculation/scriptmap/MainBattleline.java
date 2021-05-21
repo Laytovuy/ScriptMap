@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -30,7 +29,7 @@ public class MainBattleline extends MainData {
         MainDataExchange = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         button_clear = findViewById(R.id.button_clear);
-        button_restore = findViewById(R.id.button_restore);
+        button_continue = findViewById(R.id.button_restore);
         button_dynamicall = findViewById(R.id.button_dynamicall);
         button_mechanical = findViewById(R.id.button_mechanical);
         button_positive = findViewById(R.id.button_positive);
@@ -110,11 +109,9 @@ public class MainBattleline extends MainData {
         editText_left.addTextChangedListener(editText_watcher);
         editText_right.addTextChangedListener(editText_watcher);
 
-        arguments = getIntent().getExtras(); // TODO це автоматично загружає дані, тому при виход актівіту пусте, а це з старими числами.
-        if(arguments != null){ setRotationAnimation(); outData(); getIntent().removeExtra("intent"); getIntent().removeCategory("intent"); arguments = getIntent().getExtras(); }
-        // Як що основа режиму 3 "довічне" то, очки не будуть обчислюватись, але як що гравець не виставить очки, задається стандартна швидкість,
-        // або як що вписати то швидкість буде виходити з цього показника.
+        if (StartData) { setRotationAnimation(); outData(); }
     }
+
 
     private void setRotationAnimation() {
         int rotationAnimation = WindowManager.LayoutParams.ROTATION_ANIMATION_JUMPCUT;
@@ -131,10 +128,22 @@ public class MainBattleline extends MainData {
         config.setLocale(locale);
         getBaseContext().getResources().updateConfiguration(config, null);
 
-        // TODO Є бажння придумати щось краще. Згрупувати це.
         button_clear.setText(R.string.clear);
+        button_continue.setText(R.string.continue_action);
+        button_dynamicall.setText(R.string.dynamicall);
+        button_mechanical.setText(R.string.mechanical);
+        button_positive.setText(R.string.positive);
+        button_notcount.setText(R.string.notcount);
+        button_negative.setText(R.string.negative);
+        if (k == 1) {button_action.setText(R.string.creative);} else {button_action.setText(R.string.action);}
         if (p == 3) {button_player.setText(R.string.outline);} else {button_player.setText(R.string.addline);}
         if (m == 4) {button_modes.setText(R.string.battleline);}
+        button_attack_Left.setText(R.string.attack);
+        button_attack_Right.setText(R.string.attack);
+        button_move_Left.setText(R.string.move);
+        button_move_Right.setText(R.string.move);
+        button_defense_Left.setText(R.string.defense);
+        button_defense_Right.setText(R.string.defense);
     }
 
 
@@ -177,15 +186,15 @@ public class MainBattleline extends MainData {
         }
     }
 
-    // TODO Зупинняє битву.
+
     View.OnLongClickListener long_click_clear = v -> {
-        if (!menu_on){
+        if (!menu_on){ // TODO Зупинняє битву.
             button_move_Left.setEnabled(false); button_move_Right.setEnabled(false);
             menu_on = true; menu_visible(); result_choice();
-            button_restore.setVisibility(View.GONE);
+            button_continue.setVisibility(View.GONE);
             if (move_on) {if (restore != 2) {restore = 1;} check_start();}
-            if (Int_left == 0){editText_left.setText("");}
-            if (Int_right == 0){ editText_right.setText("");}
+            if (string_left.equals("0")){editText_left.setText("");}
+            if (string_right.equals("0")){ editText_right.setText("");}
         } else {
             if (languageCode.equals("default")) {
                 languageCode  = "uk";
@@ -197,6 +206,9 @@ public class MainBattleline extends MainData {
             k = 0; button_action.setText(R.string.action);
             sc = 10; bm = 2; anim_base_choice();
             view_on = false; viwe_on_off(); close_cursor();
+
+            SharedPreferences.Editor editMainData = MainDataExchange.edit();
+            editMainData.clear(); editMainData.apply();
         }
         return true;
     };
@@ -212,15 +224,15 @@ public class MainBattleline extends MainData {
             }
         } else {
             if (restore == 0) {
-                button_restore.setChecked(false);
-                button_restore.setVisibility(View.GONE);
+                button_continue.setChecked(false);
+                button_continue.setVisibility(View.GONE);
             } else if (restore == 1) {
-                button_restore.setVisibility(View.VISIBLE);
-                button_restore.setChecked(false);
+                button_continue.setVisibility(View.VISIBLE);
+                button_continue.setChecked(false);
             } else if (restore == 2) {
-                button_restore.setVisibility(View.VISIBLE);
-                button_restore.setChecked(true);
-            } button_restore.setTextSize(8);
+                button_continue.setVisibility(View.VISIBLE);
+                button_continue.setChecked(true);
+            } button_continue.setTextSize(8);
         }
     }
 
@@ -333,7 +345,7 @@ public class MainBattleline extends MainData {
                 textView_basisofmode.setText(Html.fromHtml(getString(R.string.basisofmode, string_monotonous)));}
             textView_basisofmode.setTextSize(12);
 
-            if (k == 1){ // Креатив. //TODO Працюю тут
+            if (k == 1){ // Креатив.
                 button_action.setText(R.string.creative);
                 button_creative.setText(R.string.action);
             } else if (k == 0){
@@ -356,7 +368,7 @@ public class MainBattleline extends MainData {
         if (id != 0) {anim_base_choice();}
     }
 
-    public void anim_base_choice() {
+    public void anim_base_choice() { // TODO Відповідає за анімацію кнопок, руху, фронта, атаки, захиста.
         final Handler handler = new Handler();
         if (b != 0) {
             if (b == -1) {b = 0;}
@@ -426,12 +438,12 @@ public class MainBattleline extends MainData {
             if (Int_left != 0 && Int_right != 0){ // Провірка чи не нульове значення в полях. + Перехід в меню боя.
 
                 button_move_Left.setEnabled(true); button_move_Right.setEnabled(true);
-                button_restore.callOnClick();
+                button_continue.callOnClick();
                 menu_on = false; menu_visible(); // Кладеться значення в "меню виключенне? - так", і викликається його закриття
             } else {
                 close_cursor();
-                if (Int_left == 0){editText_left.setText("");}
-                if (Int_right == 0){ editText_right.setText("");}
+                if (string_left.equals("0")){editText_left.setText("");}
+                if (string_right.equals("0")){ editText_right.setText("");}
             }
         }
     }
@@ -559,12 +571,9 @@ public class MainBattleline extends MainData {
         return false;
     };
 
-    View.OnLongClickListener long_click_move_Right = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            if (move_on){}
-            return true;
-        }
+    View.OnLongClickListener long_click_move_Right = v -> {
+        if (move_on){}
+        return true;
     };
 
 
@@ -573,7 +582,7 @@ public class MainBattleline extends MainData {
             if (system_start_Left_time + 120 > System.currentTimeMillis() && system_start_Right_time + 120 > System.currentTimeMillis()){ // На основі фіксації часу проводиться зрівняння.
                 move_on = true; battleline_count();
                 //restore = 0; button_restore.callOnClick();
-                button_restore.setVisibility(View.GONE);
+                button_continue.setVisibility(View.GONE);
                 left_result_right.setVisibility(View.VISIBLE);
                 left_seekBarAnd_right.setVisibility(View.VISIBLE);
                 left_direct_right.setVisibility(View.GONE);
@@ -626,7 +635,10 @@ public class MainBattleline extends MainData {
 
         if (move_on) {
 
-            if (bm == 3) { // Вплив очок на гемплей відсутній.
+            // або як що вписати то швидкість буде виходити з цього показника.
+               // Як що основа режиму 3 "довічне" то, очки не будуть обчислюватись, але як що гравець не виставить очки, задається стандартна швидкість,
+
+        if (bm == 3) { // Вплив очок на гемплей відсутній.
 
             } else if (bm == 2) { // Вплив очок на гемплей звичайний.
 
@@ -786,9 +798,8 @@ public class MainBattleline extends MainData {
             }, 1000);
         } else { m_on = false; button_modes.setEnabled(false);
             handler.postDelayed(() -> {
-                setRotationAnimation();
+                //setRotationAnimation();
                 Intent intent = new Intent(MainBattleline.this, MainActivity.class);
-                saveData(); intent.putExtra("intent", "intent");
                 startActivity(intent);
             }, 250);
         }
@@ -805,7 +816,7 @@ public class MainBattleline extends MainData {
         if (L_direct_R == 0 || L_direct_R == 3){
             left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
         if (L_direct_R == 1 || L_direct_R == 2) { left_direct_right.setProgress(1);
-            if ((Final_left == 0 || Final_right == 0) && L_result_R != 0) {
+            if ((Final_left == 0 || Final_right == 0) && L_result_R != 0 && !StartData) {
                 left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality));
             } else { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red)); } }
         if (L_direct_R == 0){ left_direct_right.setProgress(0); } // Left_and_Right
@@ -879,7 +890,7 @@ public class MainBattleline extends MainData {
 
 
     public void editText_check () {
-        if (arguments == null) {
+        if (!StartData) {
             string_left = editText_left.getText().toString().trim();
             string_right = editText_right.getText().toString().trim();
         }
@@ -906,7 +917,7 @@ public class MainBattleline extends MainData {
             else {button_count.setText(R.string.count);}
 
             c_on = false;
-            if (arguments == null){
+            if (!StartData){
                 linear_Right_num_change.setVisibility(View.GONE);
                 linear_Left_num_change.setVisibility(View.GONE);
                 button_notcount.setVisibility(View.GONE);
@@ -930,7 +941,7 @@ public class MainBattleline extends MainData {
             } else {button_action.setText(R.string.action);}
 
             b_on = false;
-            if (arguments == null){
+            if (!StartData){
                 textView_basisofmode.setVisibility(View.GONE);
                 linear_basisofmode_choice.setVisibility(View.GONE);
                 button_basis.setVisibility(View.VISIBLE);
@@ -996,5 +1007,12 @@ public class MainBattleline extends MainData {
         localization(languageCode);
         button_player.callOnClick(); c_on = true; b_on = true; close_cursor(); anim_base_choice();
         result_choice(); direction_choice();
+        StartData = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveData();
     }
 }

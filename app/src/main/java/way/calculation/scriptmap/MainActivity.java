@@ -71,8 +71,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         editText_center.addTextChangedListener(editText_watcher);
         editText_right.addTextChangedListener(editText_watcher);
 
-        arguments = getIntent().getExtras();
-        if(arguments != null){ setRotationAnimation(); outData(); getIntent().removeExtra("intent"); getIntent().removeCategory("intent"); arguments = getIntent().getExtras(); }
+        if (StartData) { setRotationAnimation(); outData(); }
     } // І кстаті, цей код має послідовність, тобто функціонал вюшок розпосаний, від нижньої вшки до верхньої, йдучи зік заком, з ліва на право. І між методами, пропуски в два рядка.
 
 
@@ -85,15 +84,17 @@ public class MainActivity extends MainData { // TODO Відповідає за �
     }
 
     public void localization (String languageCode) { // TODO Проводить зміну локалізації.
-        Locale locale = new Locale(languageCode); // TODO Локалізація погано працює
+        Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.setLocale(locale);
         getBaseContext().getResources().updateConfiguration(config, null);
 
-        // TODO Є бажння придумати щось краще. Згрупувати це.
         button_clear.setText(R.string.clear);
         if (p == 3) {button_player.setText(R.string.outline);} else {button_player.setText(R.string.addline);}
+        button_notcount.setText(R.string.notcount);
+        button_negative.setText(R.string.negative);
+        button_positive.setText(R.string.positive);
         button_action.setText(R.string.action);
     }
 
@@ -153,13 +154,16 @@ public class MainActivity extends MainData { // TODO Відповідає за �
             m = 0; button_modes.setText(R.string.modes);
             c = 0; button_count.setText(R.string.count);
             sc = 10; view_on = false; viwe_on_off(); close_cursor();
+
+            SharedPreferences.Editor editMainData = MainDataExchange.edit();
+            editMainData.clear(); editMainData.apply();
         }
         return true; // "true" відповідає за те, що цей код не визве короткий клік, при натискані.
     };
 
 
     public void click_player (View view){ // TODO Це клік по додаваню гравців.
-        if (arguments == null) {p ++; if (p == 4) {p = 2;}} // По дефолту значення 2, тому що початковий режим для двох гравців
+        if (!StartData) {p ++; if (p == 4) {p = 2;}} // По дефолту значення 2, тому що початковий режим для двох гравців
 
         if (p == 2){ // Зміна на 4 гравців, який насправді перехід до 2
             linear_Left_Center_Right.setVisibility(View.GONE);
@@ -175,7 +179,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
             result_choice();
         }
 
-        if (arguments == null) { editText_check(); close_cursor();}
+        if (!StartData) { editText_check(); close_cursor();}
         // Це визови методів провірки на написаний текс в полях(просто кнопка повина бути виключена, як що лише двоє гравців
     } // заповнені, і повина бути включна, як що текс є і в третій, яка тепер не скрита), і закритя курсора.
 
@@ -280,9 +284,8 @@ public class MainActivity extends MainData { // TODO Відповідає за �
             if (m == 4) { button_modes.setEnabled(false);
                 final Handler handler = new Handler(); // Цей метод створює затримку, для того щоб пройшла анімація, закривання меню.
                 handler.postDelayed(() -> {
-                    setRotationAnimation();
+                    //setRotationAnimation();
                     Intent intent = new Intent(MainActivity.this, MainBattleline.class); // Це створення обєкту який містить в собі запуск Активиті.
-                    saveData(); intent.putExtra("intent", "intent");
                     startActivity(intent);
                 }, 250); }
             if (m == 1 && c == 3){c = 0;} // Задумка в тому, що "не рахувати" дозволяє використати режим "випадковість", і прораховувати як монетку, без зачислення результатів.
@@ -352,9 +355,6 @@ public class MainActivity extends MainData { // TODO Відповідає за �
             if (!string_center.isEmpty() && p != 2) { Int_center = Integer.parseInt(string_center); }
             if (!string_right.isEmpty()) { Int_right = Integer.parseInt(string_right); }
 
-            /*if (p == 3){ Int_left = Integer.parseInt(string_left); Int_center = Integer.parseInt(string_center); Int_right = Integer.parseInt(string_right);
-            } else if (p == 2) { Int_left = Integer.parseInt(string_left); Int_right = Integer.parseInt(string_right); }*/
-
 
             if ((Int_left != 0 && Int_right != 0 && p == 2) || (Int_left != 0 && Int_center != 0  && Int_right != 0 && p == 3 && menu_on) ||
                     (Int_left != 0 && Int_center != 0 || Int_left != 0 && Int_right != 0 || Int_right != 0 && Int_center != 0) && p == 3  && !menu_on) {
@@ -383,9 +383,9 @@ public class MainActivity extends MainData { // TODO Відповідає за �
                 } else {menu_on = false; menu_visible();}
             } else {
                 close_cursor();
-                if (Int_left == 0){editText_left.setText("");}
-                if (Int_center == 0 && p == 3){editText_center.setText("");}
-                if (Int_right == 0){ editText_right.setText("");}
+                if (string_left.equals("0")){editText_left.setText("");}
+                if (string_center.equals("0") && p == 3){editText_center.setText("");}
+                if (string_right.equals("0")){ editText_right.setText("");}
             }
         }
     }
@@ -421,7 +421,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         if (L_direct_C == 0 || L_direct_C == 3){
             left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
         if (L_direct_C == 1 || L_direct_C == 2) { left_direct_center.setProgress(1);
-            if ((Final_left == 0 || Final_center == 0) && L_result_C != 0) {
+            if ((Final_left == 0 || Final_center == 0) && L_result_C != 0 && !StartData) {
                 left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality));
             } else { left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red)); } }
         if (L_direct_C == 0){ left_direct_center.setProgress(0);} // Left_and_Center
@@ -431,9 +431,9 @@ public class MainActivity extends MainData { // TODO Відповідає за �
 
         if (L_direct_R == 0 || L_direct_R == 3){
             left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
-        if (L_direct_R == 1 || L_direct_R == 2) { left_direct_right.setProgress(1);
-            if ((Final_left == 0 || Final_right == 0) && L_result_R != 0) {
-                left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality));
+        if (L_direct_R == 1 || L_direct_R == 2) { left_direct_right.setProgress(1); // Існує баг, як що вийти з програми, з напрямком на противника (L_direct_R = 1 or 2)
+            if ((Final_left == 0 || Final_right == 0) && L_result_R != 0 && !StartData) { // <(Баг в цій строці). і далі зайти в програму і нажати на лінію, вона стане червоною.
+                left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); // Це кстаті єдиний спосіб в ручну викликати червону лінію.
                 } else { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red)); } }
         if (L_direct_R == 0){ left_direct_right.setProgress(0); } // Left_and_Right
         if (L_direct_R == 2){ left_direct_right.setRotation(-90);} // Left_to_Right
@@ -443,7 +443,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         if (C_direct_R == 0 || C_direct_R == 3){
             center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
         if (C_direct_R == 1 || C_direct_R == 2) { center_direct_right.setProgress(1);
-            if ((Final_center == 0 || Final_right == 0) && C_result_R != 0) {
+            if ((Final_center == 0 || Final_right == 0) && C_result_R != 0 && !StartData) {
                 center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality));
             } else { center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red)); } }
         if (C_direct_R == 0){ center_direct_right.setProgress(0);} // Center_and_Right
@@ -527,7 +527,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
 
 
     public void editText_check () {
-        if (arguments == null) {
+        if (!StartData) {
             string_left = editText_left.getText().toString().trim();
             string_center = editText_center.getText().toString().trim();
             string_right = editText_right.getText().toString().trim();
@@ -559,7 +559,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
                     (button_count.getResources().getDisplayMetrics().density * 100);
 
             c_on = false;
-            if (arguments == null) {
+            if (!StartData) {
                 linear_Right_num_change.setVisibility(View.GONE);
                 linear_Center_num_change.setVisibility(View.GONE);
                 linear_Left_num_change.setVisibility(View.GONE);
@@ -581,7 +581,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
             else {button_modes.setText(R.string.modes);}
 
             m_on = false;
-            if (arguments == null) {
+            if (!StartData) {
                 button_direction.setVisibility(View.GONE);
                 button_accident.setVisibility(View.GONE);
                 button_battleline.setVisibility(View.GONE);
@@ -628,5 +628,12 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         localization(languageCode);
         button_player.callOnClick(); c_on = true; m_on = true; close_cursor();
         result_choice(); direction_choice();
+        StartData = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveData();
     }
 }

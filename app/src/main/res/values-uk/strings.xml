@@ -31,7 +31,7 @@
     <string name="isabsent">ВІДСУТНЯ</string>
     <string name="creative">КРЕАТИВ</string>
     <string name="rotate_notcount">НЕ\nЛІЧИТИ</string>
-    <string name="resume">відновити</string>
+    <string name="continue_action">відновити</string>
     <string name="stop">СТОП</string>
 
     <string name="rotate_stop">ПОТС</string>

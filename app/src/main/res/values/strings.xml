@@ -35,7 +35,7 @@
     <string name="isabsent">ISABSENT</string>
     <string name="creative">CREATIVE</string>
     <string name="rotate_notcount">NOT\nCOUNT</string>
-    <string name="resume">continue</string>
+    <string name="continue_action">continue</string>
     <string name="stop">STOP</string>
 
     <string name="flank_down" translatable="false">˅</string>

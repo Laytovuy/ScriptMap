@@ -11,7 +11,7 @@
     <item android:id="@android:id/progress">
         <clip>
             <shape android:shape="line">
-                <stroke android:width="2dip" android:color="@color/colorRed_SeekBar"
+                <stroke android:width="2dip" android:color="#D10000"
                     android:dashWidth="4dp" android:dashGap="2dp" />
             </shape>
         </clip>

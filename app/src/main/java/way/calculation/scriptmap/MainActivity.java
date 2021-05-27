@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 
 import androidx.core.content.ContextCompat;
 
@@ -351,13 +352,11 @@ public class MainActivity extends MainData { // TODO Відповідає за �
                 }
             }, 250);
         } else {
-            if (!string_left.isEmpty()) { Int_left = Integer.parseInt(string_left); }
-            if (!string_center.isEmpty() && p != 2) { Int_center = Integer.parseInt(string_center); }
-            if (!string_right.isEmpty()) { Int_right = Integer.parseInt(string_right); }
 
+            editText_Integer();
 
-            if ((Int_left != 0 && Int_right != 0 && p == 2) || (Int_left != 0 && Int_center != 0  && Int_right != 0 && p == 3 && menu_on) ||
-                    (Int_left != 0 && Int_center != 0 || Int_left != 0 && Int_right != 0 || Int_right != 0 && Int_center != 0) && p == 3  && !menu_on) {
+            if (((Int_left != 0 && Int_right != 0 && p == 2) || (Int_left != 0 && Int_center != 0  && Int_right != 0 && p == 3 && menu_on) ||
+                    (Int_left != 0 && Int_center != 0 || Int_left != 0 && Int_right != 0 || Int_right != 0 && Int_center != 0) && p == 3  && !menu_on)) {
 
                 if (!menu_on) {
                     final ActionCalculator DataExchange = new ActionCalculator();
@@ -379,7 +378,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
                     if ((Final_right == 0 && p == 2) || (Final_right == 0 && p == 3 && (Final_left == 0 || Final_center == 0))) {  editText_right.setText("");}
                     else if (p != 1) { editText_right.setText(String.valueOf(Final_right)); }
 
-                    result_choice(); direction_choice();
+                   result_choice(); direction_choice();
                 } else {menu_on = false; menu_visible();}
             } else {
                 close_cursor();
@@ -400,13 +399,15 @@ public class MainActivity extends MainData { // TODO Відповідає за �
 
             if (m != 2 && p == 3 && L_direct_C != 3){L_direct_C = 3;}
             else if (m != 2 && L_direct_C == 3){ L_direct_C = 0;}
-        } else if (id == R.id.Left_direction_Right){ System.out.println("Yes");
+            else if (m != 2 && menu_on) {L_direct_C = 0;}
+        } else if (id == R.id.Left_direction_Right){
             if (m == 2) {L_direct_R++;}
             if (m == 2 && p == 2 && L_direct_R == 3) {L_direct_R = 1;}
             if (m == 2 && L_direct_R >= 4) {L_direct_R = 1;}
 
             if (m != 2 && p == 3 && L_direct_R != 3) {L_direct_R = 3;}
             else if (m != 2 && L_direct_R == 3) {L_direct_R = 0;}
+            else if (m != 2 && menu_on) {L_direct_R = 0;}
         } else if (id == R.id.Center_direction_Right) {
             if (m == 2){ C_direct_R++;}
             if (m == 2 && p == 2 && C_direct_R == 3){ C_direct_R = 1;}
@@ -414,42 +415,58 @@ public class MainActivity extends MainData { // TODO Відповідає за �
 
             if (m != 2 && p == 3 && C_direct_R != 3){C_direct_R = 3;}
             else if (m != 2 && C_direct_R == 3){ C_direct_R = 0;}
-        } direction_choice();
+            else if (m != 2 && menu_on) {C_direct_R = 0;}
+        }
+
+        if (m == 2 && c != 0 && menu_on) {editText_Integer();
+            final ActionCalculator DataExchange = new ActionCalculator();
+
+            DataExchange.Int_left = Int_left; if (p != 2) { DataExchange.Int_center = Int_center; } DataExchange.Int_right = Int_right;
+            DataExchange.m = 2; DataExchange.c = c; DataExchange.p = p; DataExchange.sc = sc;
+            if (p != 2) { DataExchange.L_direct_C = L_direct_C; } DataExchange.L_direct_R = L_direct_R; if (p != 2) { DataExchange.C_direct_R = C_direct_R; }
+
+            if (Int_left + Int_center + Int_right != 0) { DataExchange.Calculation(); }
+
+            Final_left = DataExchange.Final_left; if (p != 2) { Final_center = DataExchange.Final_center; } Final_right = DataExchange.Final_right;
+        } // Це аналіз виграшу, яка показує чи буде противник виграний за один хіж
+        direction_choice();
     }
 
     public void direction_choice() {
         if (L_direct_C == 0 || L_direct_C == 3){
             left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
         if (L_direct_C == 1 || L_direct_C == 2) { left_direct_center.setProgress(1);
-            if ((Final_left == 0 || Final_center == 0) && L_result_C != 0 && !StartData) {
-                left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality));
-            } else { left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red)); } }
-        if (L_direct_C == 0){ left_direct_center.setProgress(0);} // Left_and_Center
+            left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red));
+            if (Final_center == 0 && Int_left + Int_center == Final_left && L_direct_C == 1)  { left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); }
+            if (Final_left == 0 && Int_center + Int_left == Final_center && L_direct_C == 2) { left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); } }
+        if (L_direct_C == 0){ left_direct_center.setProgress(0);  } // Left_and_Center
         if (L_direct_C == 1){ left_direct_center.setRotation(-90);} // Left_to_Center
-        if (L_direct_C == 2){ left_direct_center.setRotation(90);} // Center_to_Left
-        if (L_direct_C == 3 && p == 3){ left_direct_center.setProgress(30);} // Center_peace_Left
+        if (L_direct_C == 2){ left_direct_center.setRotation(90); } // Center_to_Left
+        if (L_direct_C == 3 && p == 3){ left_direct_center.setProgress(30); } // Center_peace_Left
 
-        if (L_direct_R == 0 || L_direct_R == 3){
-            left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
-        if (L_direct_R == 1 || L_direct_R == 2) { left_direct_right.setProgress(1); // Існує баг, як що вийти з програми, з напрямком на противника (L_direct_R = 1 or 2)
-            if ((Final_left == 0 || Final_right == 0) && L_result_R != 0 && !StartData) { // <(Баг в цій строці). і далі зайти в програму і нажати на лінію, вона стане червоною.
-                left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); // Це кстаті єдиний спосіб в ручну викликати червону лінію.
-                } else { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red)); } }
-        if (L_direct_R == 0){ left_direct_right.setProgress(0); } // Left_and_Right
+
+        if (L_direct_R == 0 || L_direct_R == 3){ left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
+        if (L_direct_R == 1 || L_direct_R == 2) { left_direct_right.setProgress(1);
+            left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red));
+            if (Final_right == 0 && Int_left + Int_right == Final_left && L_direct_R == 2) { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); }
+            if (Final_left == 0 && Int_right + Int_left == Final_right && L_direct_R == 1) { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); } }
+        if (L_direct_R == 0){ left_direct_right.setProgress(0);  } // Left_and_Right && (Int_left != 0 || Int_right != 0)
         if (L_direct_R == 2){ left_direct_right.setRotation(-90);} // Left_to_Right
         if (L_direct_R == 1){ left_direct_right.setRotation(90); } // Right_to_Left
         if (L_direct_R == 3){ left_direct_right.setProgress(30); } // Left_peace_Right
 
+
         if (C_direct_R == 0 || C_direct_R == 3){
             center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
         if (C_direct_R == 1 || C_direct_R == 2) { center_direct_right.setProgress(1);
-            if ((Final_center == 0 || Final_right == 0) && C_result_R != 0 && !StartData) {
-                center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality));
-            } else { center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red)); } }
-        if (C_direct_R == 0){ center_direct_right.setProgress(0);} // Center_and_Right
+            center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red));
+            if (Final_right == 0 && Int_center + Int_right == Final_center && C_direct_R == 1) { center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); }
+            if (Final_center == 0 && Int_right + Int_center == Final_right && C_direct_R == 2) { center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); } }
+        if (C_direct_R == 0){ center_direct_right.setProgress(0);  } // Center_and_Right
         if (C_direct_R == 1){ center_direct_right.setRotation(-90);} // Center_to_Right
-        if (C_direct_R == 2){ center_direct_right.setRotation(90);} // Right_to_Center
-        if (C_direct_R == 3 && p == 3){ center_direct_right.setProgress(30);} // Center_peace_Right
+        if (C_direct_R == 2){ center_direct_right.setRotation(90); } // Right_to_Center
+        if (C_direct_R == 3 && p == 3){ center_direct_right.setProgress(30); } // Center_peace_Right
+
     }
 
     View.OnLongClickListener long_direction_choice = v -> {
@@ -541,6 +558,12 @@ public class MainActivity extends MainData { // TODO Відповідає за �
            button_action.setEnabled(false);
            if (menu_on) {L_result_R = 0; L_result_C = 0; C_result_R = 0;}
         }
+    }
+
+    public void editText_Integer () {
+        if (!string_left.isEmpty()) { Int_left = Integer.parseInt(string_left); }
+        if (!string_center.isEmpty() && p != 2) { Int_center = Integer.parseInt(string_center); }
+        if (!string_right.isEmpty()) { Int_right = Integer.parseInt(string_right); }
     }
 
 

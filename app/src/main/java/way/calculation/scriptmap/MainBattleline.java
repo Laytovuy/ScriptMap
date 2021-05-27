@@ -346,11 +346,14 @@ public class MainBattleline extends MainData {
             textView_basisofmode.setTextSize(12);
 
             if (k == 1){ // Креатив.
-                button_action.setText(R.string.creative);
-                button_creative.setText(R.string.action);
+                button_action.setText(R.string.creative); button_creative.setText(R.string.action);
+                if (b != 0) { left_editText_center.setVisibility(View.VISIBLE); right_editText_center.setVisibility(View.VISIBLE); }
+                if (b == 1) { left_editText_left.setVisibility(View.VISIBLE); right_editText_left.setVisibility(View.VISIBLE); }
+
             } else if (k == 0){
-                button_action.setText(R.string.action);
-                button_creative.setText(R.string.creative);
+                button_action.setText(R.string.action); button_creative.setText(R.string.creative);
+                left_editText_center.setVisibility(View.GONE); right_editText_center.setVisibility(View.GONE);
+                left_editText_left.setVisibility(View.GONE); right_editText_left.setVisibility(View.GONE);
             }
         }
     }
@@ -374,8 +377,10 @@ public class MainBattleline extends MainData {
             if (b == -1) {b = 0;}
             button_move_Left.setVisibility(View.GONE); button_move_Right.setVisibility(View.GONE);
             linear_flank_Left.setVisibility(View.GONE); linear_flank_Right.setVisibility(View.GONE);
-
-            handler.postDelayed(() -> { button_attack_Left.setVisibility(View.GONE); button_attack_Right.setVisibility(View.GONE);
+            left_editText_center.setVisibility(View.GONE); right_editText_center.setVisibility(View.GONE);
+            left_editText_left.setVisibility(View.GONE); right_editText_left.setVisibility(View.GONE);
+            handler.postDelayed(() -> {
+                button_attack_Left.setVisibility(View.GONE); button_attack_Right.setVisibility(View.GONE);
                 button_defense_Left.setVisibility(View.GONE); button_defense_Right.setVisibility(View.GONE); }, 200);
         }
 
@@ -387,15 +392,19 @@ public class MainBattleline extends MainData {
             handler.postDelayed(() -> {
                 button_attack_Left.setVisibility(View.VISIBLE); button_attack_Right.setVisibility(View.VISIBLE);
                 button_defense_Left.setVisibility(View.VISIBLE); button_defense_Right.setVisibility(View.VISIBLE);
-            }, 700);
+            }, 700); // 700
             handler.postDelayed(() -> {
                 editText_left.setVisibility(View.VISIBLE); editText_right.setVisibility(View.VISIBLE);
-            }, 900);
+            }, 900); // 900
             handler.postDelayed(() -> {
                 button_move_Left.setVisibility(View.VISIBLE); button_move_Right.setVisibility(View.VISIBLE);
                 linear_flank_Left.setVisibility(View.VISIBLE); linear_flank_Right.setVisibility(View.VISIBLE);
+                if (k == 0) { view_on = false; viwe_on_off();}
+            }, 1050); // 1050
+            if (k == 1) {handler.postDelayed(() -> {
+                left_editText_center.setVisibility(View.VISIBLE); right_editText_center.setVisibility(View.VISIBLE);
                 view_on = false; viwe_on_off();
-            }, 1050);
+            }, 1200); }
         }
 
         if (b == 1) { // dynamicall
@@ -415,8 +424,13 @@ public class MainBattleline extends MainData {
                 button_defense_Left.setVisibility(View.GONE); button_defense_Right.setVisibility(View.GONE);
                 button_move_Left.setVisibility(View.VISIBLE); button_move_Right.setVisibility(View.VISIBLE);
                 linear_flank_Left.setVisibility(View.VISIBLE); linear_flank_Right.setVisibility(View.VISIBLE);
-                view_on = false; viwe_on_off();
+                if (k == 1){left_editText_center.setVisibility(View.VISIBLE); right_editText_center.setVisibility(View.VISIBLE);}
+                if (k == 0){view_on = false; viwe_on_off();}
             }, 1050);
+            if (k == 1) {handler.postDelayed(() -> {
+                left_editText_left.setVisibility(View.VISIBLE); right_editText_left.setVisibility(View.VISIBLE);
+                view_on = false; viwe_on_off();
+            }, 1200); }
         }
     }
 
@@ -808,20 +822,20 @@ public class MainBattleline extends MainData {
 
     public void click_direction_choice (View view) {
         if (p == 3 && L_direct_R != 3) {L_direct_R = 3;}
-        else if (L_direct_R == 3) {L_direct_R = 0;}
+        else if (m != 2 && L_direct_R == 3) {L_direct_R = 0;}
+        else if (m != 2 && menu_on) {L_direct_R = 0;}
         direction_choice();
     }
 
     public void direction_choice() {
-        if (L_direct_R == 0 || L_direct_R == 3){
-            left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
+        if (L_direct_R == 0 || L_direct_R == 3){ left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
         if (L_direct_R == 1 || L_direct_R == 2) { left_direct_right.setProgress(1);
-            if ((Final_left == 0 || Final_right == 0) && L_result_R != 0 && !StartData) {
-                left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality));
-            } else { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red)); } }
-        if (L_direct_R == 0){ left_direct_right.setProgress(0); } // Left_and_Right
-        if (L_direct_R == 2){ left_direct_right.setRotation(-180);} // Left_to_Right
-        if (L_direct_R == 1){ left_direct_right.setRotation(0); } // Right_to_Left
+            left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red));
+            if (Final_right == 0 && Int_left + Int_right == Final_left && L_direct_R == 2) { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); }
+            if (Final_left == 0 && Int_right + Int_left == Final_right && L_direct_R == 1) { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); } }
+        if (L_direct_R == 0){ left_direct_right.setProgress(0);  } // Left_and_Right && (Int_left != 0 || Int_right != 0)
+        if (L_direct_R == 2){ left_direct_right.setRotation(-90);} // Left_to_Right
+        if (L_direct_R == 1){ left_direct_right.setRotation(90); } // Right_to_Left
         if (L_direct_R == 3){ left_direct_right.setProgress(30); } // Left_peace_Right
     }
 
@@ -901,6 +915,11 @@ public class MainBattleline extends MainData {
             button_action.setEnabled(false);
             if (menu_on) {L_result_C = 0;}
         }
+    }
+
+    public void editText_Integer () {
+        if (!string_left.isEmpty()) { Int_left = Integer.parseInt(string_left); }
+        if (!string_right.isEmpty()) { Int_right = Integer.parseInt(string_right); }
     }
 
 

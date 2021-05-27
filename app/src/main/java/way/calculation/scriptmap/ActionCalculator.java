@@ -1,6 +1,8 @@
 package way.calculation.scriptmap;
 
 
+import androidx.core.content.ContextCompat;
+
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -125,7 +127,7 @@ public class ActionCalculator extends MainData {
         if (L_direct_C != 3 && L_direct_C != 0 && Int_left != 0 && Int_center != 0) { //  Сумування між Left і Center
             if (L_direct_C == 1 && C_direct_R != 2){
                 if (Int_center > L_result_C){
-                    if (c == 1){ // TODO можна цей код зменшити в 2 рази, але це мені поки подобається.
+                    if (c == 1){
                         Final_center = Final_center - L_result_C;
                         Final_left = Final_left + L_result_C;
                     } else if (c == 2){
@@ -274,7 +276,7 @@ public class ActionCalculator extends MainData {
             }
         }
 
-// Сумування 2 напрямків
+        // Сумування 2 напрямків
 
         if (L_direct_C == 2 && L_direct_R == 1 && Int_left != 0){ // Сумування 2 напрямків на left
 

@@ -119,6 +119,19 @@
                 android:text="@string/move"
                 android:visibility="gone" />
 
+            <EditText
+                android:id="@+id/Left_EditText_Left"
+                style="@style/ScriptMapNumText"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:autofillHints="@string/reltat"
+                android:background="@null"
+                android:enabled="false"
+                android:hint="@string/reltat"
+                android:imeOptions="actionDone|flagNoFullscreen|actionNext"
+                android:rotation="90"
+                android:textSize="18sp"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -130,22 +143,6 @@
                 style="@style/ScriptMapButtonRotateMin"
                 android:rotation="180"
                 android:text="@string/defense"
-                android:visibility="gone" />
-
-            <EditText
-                android:id="@+id/Left_EditText_Left"
-                style="@style/ScriptMapNumText"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="-65dp"
-                android:layout_marginBottom="25dp"
-                android:autofillHints="@string/reltat"
-                android:background="@null"
-                android:enabled="false"
-                android:hint="@string/reltat"
-                android:imeOptions="actionDone|flagNoFullscreen|actionNext"
-                android:rotation="90"
-                android:textSize="18sp"
                 android:visibility="gone" />
 
             <EditText
@@ -198,22 +195,6 @@
                 android:imeOptions="actionDone|flagNoFullscreen"
                 android:rotation="-90" />
 
-            <EditText
-                android:id="@+id/Right_EditText_Left"
-                style="@style/ScriptMapNumText"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginBottom="-65dp"
-                android:layout_marginTop="25dp"
-                android:autofillHints="@string/reltat"
-                android:background="@null"
-                android:enabled="false"
-                android:hint="@string/reltat"
-                android:imeOptions="actionDone|flagNoFullscreen"
-                android:rotation="-90"
-                android:textSize="18sp"
-                android:visibility="gone" />
-
             <Button
                 android:id="@+id/button_defense_Right"
                 style="@style/ScriptMapButtonRotateMin"
@@ -225,6 +206,20 @@
         <LinearLayout
             style="@style/ScriptMapLinearLayoutVertical"
             android:layout_width="50dp">
+
+            <EditText
+                android:id="@+id/Right_EditText_Left"
+                style="@style/ScriptMapNumText"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:autofillHints="@string/reltat"
+                android:background="@null"
+                android:enabled="false"
+                android:hint="@string/reltat"
+                android:imeOptions="actionDone|flagNoFullscreen"
+                android:rotation="-90"
+                android:textSize="18sp"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/button_move_Right"

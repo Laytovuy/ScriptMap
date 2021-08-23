@@ -1,11 +1,6 @@
 package way.calculation.scriptmap;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -29,19 +24,19 @@ public class MainData extends AppCompatActivity {
 
     public ToggleButton button_continue;
 
-    public LinearLayout linear_Right_num_change, linear_Center_num_change, linear_Left_num_change;
+    public LinearLayout linear_Right_num_change, linear_Center_num_change, linear_Left_num_change, linear_Left_Right_num_change;
     public LinearLayout linear_Left_Center_Right, linear_count_choice, linear_modes_count_choice, linear_accident_player; // Це поверхність, на яку можна помістити контент, і управляти ним як окремою частиною.
     public LinearLayout linear_basis_choice, linear_basisofmode_choice, linear_menu, linear_flank_Left, linear_flank_Right;
 
     public EditText editText_left, editText_center, editText_right; // Це поля в які можна щось писати.
-    public EditText left_editText_left, left_editText_center, right_editText_left, right_editText_center;
+    public EditText left_editText_right, left_down_editText, right_up_editText;
 
     public TextView textView_stiffcount, // Це їх аналоги, але без змоги воду.
             left_result_center, left_result_right, center_result_right;
     public TextView textView_basisofmode;
 
     public ProgressBar left_direct_center, left_direct_right, center_direct_right;
-    public SeekBar left_seekBarAnd_right, left_seekBar_right, right_seekBar_left;
+    public SeekBar left_seekBar_right, right_seekBar_left;
 
     public FrameLayout frameLayout_seekBar;
     public RelativeLayout launcher_background; // Це мабуть підключив заднік.

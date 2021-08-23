@@ -17,14 +17,15 @@
         android:layout_centerInParent="true"
         tools:visibility="visible">
 
-        <SeekBar
-            android:id="@+id/Left_seekBarAnd_Right"
-            style="@style/ScriptMapSeekBar"
-            android:progress="50"
-            android:progressBackgroundTint="@color/colorLeft_SeekBar"
-            android:progressTint="@color/colorRight_SeekBar"
-            android:thumb="@android:color/transparent"
-            android:visibility="gone" />
+        <ProgressBar
+            android:id="@+id/Left_direction_Right"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:progressDrawable="@drawable/direct_default"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="click_direction_choice"
+            android:max="30" />
 
         <SeekBar
             android:id="@+id/Left_seekBar_Right"
@@ -35,17 +36,42 @@
         <SeekBar
             android:id="@+id/Right_seekBar_Left"
             style="@style/ScriptMapSeekBar"
-            android:thumbTint="@color/colorRight_SeekBar"
-            android:rotation="180"/>
+            android:rotation="180"
+            android:thumbTint="@color/colorRight_SeekBar" />
 
-        <ProgressBar
-            android:id="@+id/Left_direction_Right"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:progressDrawable="@drawable/seekbar_default"
+        <LinearLayout
+            android:id="@+id/linear_Left_Right_num_change"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:onClick="click_direction_choice"
-            android:max="30" />
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/Left_Right_num_minus"
+                android:layout_width="16dp"
+                android:layout_height="38dp"
+                android:onClick="click_count_number" />
+
+            <EditText
+                android:id="@+id/Left_EditText_Right"
+                style="@style/ScriptMapNumText"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:autofillHints="@string/reltat"
+                android:background="@null"
+                android:enabled="false"
+                android:hint="@string/reltat"
+                android:imeOptions="actionDone|flagNoFullscreen|actionNext"
+                android:maxLength="5"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/Left_Right_num_plus"
+                android:layout_width="16dp"
+                android:layout_height="38dp"
+                android:onClick="click_count_number"/>
+        </LinearLayout>
     </FrameLayout>
 
 
@@ -97,20 +123,6 @@
                     android:textSize="20sp" />
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/Left_EditText_Center"
-                style="@style/ScriptMapNumText"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:autofillHints="@string/reltat"
-                android:background="@null"
-                android:enabled="false"
-                android:hint="@string/reltat"
-                android:imeOptions="actionDone|flagNoFullscreen|actionNext"
-                android:rotation="90"
-                android:textSize="18sp"
-                android:visibility="gone" />
-
             <Button
                 android:id="@+id/button_move_Left"
                 style="@style/ScriptMapButtonRotateMax"
@@ -120,7 +132,7 @@
                 android:visibility="gone" />
 
             <EditText
-                android:id="@+id/Left_EditText_Left"
+                android:id="@+id/Left_Down_EditText"
                 style="@style/ScriptMapNumText"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -131,6 +143,7 @@
                 android:imeOptions="actionDone|flagNoFullscreen|actionNext"
                 android:rotation="90"
                 android:textSize="18sp"
+                android:layout_marginBottom="-40dp"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -208,7 +221,7 @@
             android:layout_width="50dp">
 
             <EditText
-                android:id="@+id/Right_EditText_Left"
+                android:id="@+id/Right_Up_EditText"
                 style="@style/ScriptMapNumText"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -219,6 +232,7 @@
                 android:imeOptions="actionDone|flagNoFullscreen"
                 android:rotation="-90"
                 android:textSize="18sp"
+                android:layout_marginTop="-40dp"
                 android:visibility="gone" />
 
             <Button
@@ -227,20 +241,6 @@
                 android:layout_height="130dp"
                 android:hapticFeedbackEnabled="true"
                 android:text="@string/move"
-                android:visibility="gone" />
-
-            <EditText
-                android:id="@+id/Right_EditText_Center"
-                style="@style/ScriptMapNumText"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:autofillHints="@string/reltat"
-                android:background="@null"
-                android:enabled="false"
-                android:hint="@string/reltat"
-                android:imeOptions="actionDone|flagNoFullscreen|actionNext"
-                android:rotation="-90"
-                android:textSize="18sp"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -509,6 +509,18 @@
             android:enabled="false"
             android:visibility="gone" />
 
+        <EditText
+            android:id="@+id/Left_EditText_Down_Right"
+            style="@style/ScriptMapNumText"
+            android:layout_width="40dp"
+            android:layout_height="20dp"
+            android:autofillHints="@string/reltat"
+            android:background="@null"
+            android:enabled="false"
+            android:hint="@string/reltat"
+            android:imeOptions="actionDone|flagNoFullscreen|actionNext"
+            android:textSize="18sp"
+            android:visibility="gone" />
     </LinearLayout>
 
 
@@ -535,6 +547,7 @@
         android:onClick="click_clear"
         android:text="@string/clear"
         android:visibility="visible" />
+
 
     <LinearLayout
         android:id="@+id/linear_Left_num_change"

@@ -10,7 +10,7 @@
    <style name="ScriptMapSeekBar">
        <item name="android:layout_width">match_parent</item>
        <item name="android:layout_height">match_parent</item>
-       <item name="android:thumb">@drawable/seekbar_thumb</item>
+       <item name="android:thumb">@drawable/direct_thumb</item>
        <item name="android:progressBackgroundTint">@android:color/transparent</item>
        <item name="android:progressTint">@android:color/transparent</item>
        <item name="android:clickable">true</item>

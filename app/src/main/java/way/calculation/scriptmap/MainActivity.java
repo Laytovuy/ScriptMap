@@ -12,7 +12,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.core.content.ContextCompat;
 
@@ -120,7 +120,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         return false;
     };
 
-    public void click_launcher_background (View view){ if (menu_on) { if (m == 4 && m_on) {m = -4;} close_cursor();} } // TODO В цей метод зруповані закриття меню, і забрання курсора.
+    public void click_launcher_background (View view){ if (m == 4 && m_on && menu_on) {m = -4;} close_cursor(); } // TODO В цей метод зруповані закриття меню, і забрання курсора.
 
 
     public void click_clear (View view){ // TODO Очищує значення, і ставить їх в дефолтне положення.
@@ -249,15 +249,15 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         if (c_on) { int id = view.getId();
 
             if (id == R.id.Right_num_plus || id == R.id.Right_num_minus) {if (!string_right.isEmpty()) { Int_right = Integer.parseInt(string_right); } else {Int_right = 0;}}
-            if (id == R.id.Right_num_plus)   { Int_right++; editText_right.setText(String.valueOf(Int_right));
+            if (id == R.id.Right_num_plus)   { if (Int_right < 999999) {Int_right++; editText_right.setText(String.valueOf(Int_right));}
             } else if (id == R.id.Right_num_minus)  { if (Int_right > 1) {Int_right--; editText_right.setText(String.valueOf(Int_right));} else {editText_right.setText("");} }
 
             if (id == R.id.Center_num_plus || id == R.id.Center_num_minus) {if (!string_center.isEmpty()) { Int_center = Integer.parseInt(string_center); } else {Int_center = 0;}}
-            if (id == R.id.Center_num_plus)  { Int_center++; editText_center.setText(String.valueOf(Int_center));
+            if (id == R.id.Center_num_plus)  { if (Int_center < 999999) {Int_center++; editText_center.setText(String.valueOf(Int_center));}
             } else if (id == R.id.Center_num_minus) { if (Int_center > 1) {Int_center--; editText_center.setText(String.valueOf(Int_center));} else {editText_center.setText("");} }
 
             if (id == R.id.Left_num_plus || id == R.id.Left_num_minus) {if (!string_left.isEmpty()) { Int_left = Integer.parseInt(string_left); } else {Int_left = 0;}}
-            if (id == R.id.Left_num_plus)    { Int_left++; editText_left.setText(String.valueOf(Int_left));
+            if (id == R.id.Left_num_plus)    { if (Int_left < 999999) {Int_left++; editText_left.setText(String.valueOf(Int_left));}
             } else if (id == R.id.Left_num_minus)   { if (Int_left > 1) {Int_left--; editText_left.setText(String.valueOf(Int_left));} else {editText_left.setText("");} }
         }
     }
@@ -288,6 +288,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
                     //setRotationAnimation();
                     Intent intent = new Intent(MainActivity.this, MainBattleline.class); // Це створення обєкту який містить в собі запуск Активиті.
                     startActivity(intent);
+                    finish();
                 }, 250); }
             if (m == 1 && c == 3){c = 0;} // Задумка в тому, що "не рахувати" дозволяє використати режим "випадковість", і прораховувати як монетку, без зачислення результатів.
             close_cursor();
@@ -434,22 +435,22 @@ public class MainActivity extends MainData { // TODO Відповідає за �
 
     public void direction_choice() {
         if (L_direct_C == 0 || L_direct_C == 3){
-            left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
+            left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_default)); }
         if (L_direct_C == 1 || L_direct_C == 2) { left_direct_center.setProgress(1);
-            left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red));
-            if (Final_center == 0 && Int_left + Int_center == Final_left && L_direct_C == 1)  { left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); }
-            if (Final_left == 0 && Int_center + Int_left == Final_center && L_direct_C == 2) { left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); } }
+            left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_action));
+            if (Final_center == 0 && Int_left + Int_center == Final_left && L_direct_C == 1)  { left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); }
+            if (Final_left == 0 && Int_center + Int_left == Final_center && L_direct_C == 2) { left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
         if (L_direct_C == 0){ left_direct_center.setProgress(0);  } // Left_and_Center
         if (L_direct_C == 1){ left_direct_center.setRotation(-90);} // Left_to_Center
         if (L_direct_C == 2){ left_direct_center.setRotation(90); } // Center_to_Left
         if (L_direct_C == 3 && p == 3){ left_direct_center.setProgress(30); } // Center_peace_Left
 
 
-        if (L_direct_R == 0 || L_direct_R == 3){ left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
+        if (L_direct_R == 0 || L_direct_R == 3){ left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_default)); }
         if (L_direct_R == 1 || L_direct_R == 2) { left_direct_right.setProgress(1);
-            left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red));
-            if (Final_right == 0 && Int_left + Int_right == Final_left && L_direct_R == 2) { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); }
-            if (Final_left == 0 && Int_right + Int_left == Final_right && L_direct_R == 1) { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); } }
+            left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_action));
+            if (Final_right == 0 && Int_left + Int_right == Final_left && L_direct_R == 2) { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); }
+            if (Final_left == 0 && Int_right + Int_left == Final_right && L_direct_R == 1) { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
         if (L_direct_R == 0){ left_direct_right.setProgress(0);  } // Left_and_Right && (Int_left != 0 || Int_right != 0)
         if (L_direct_R == 2){ left_direct_right.setRotation(-90);} // Left_to_Right
         if (L_direct_R == 1){ left_direct_right.setRotation(90); } // Right_to_Left
@@ -457,11 +458,11 @@ public class MainActivity extends MainData { // TODO Відповідає за �
 
 
         if (C_direct_R == 0 || C_direct_R == 3){
-            center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_default)); }
+            center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_default)); }
         if (C_direct_R == 1 || C_direct_R == 2) { center_direct_right.setProgress(1);
-            center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_action_red));
-            if (Final_right == 0 && Int_center + Int_right == Final_center && C_direct_R == 1) { center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); }
-            if (Final_center == 0 && Int_right + Int_center == Final_right && C_direct_R == 2) { center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.seekbar_fatality)); } }
+            center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_action));
+            if (Final_right == 0 && Int_center + Int_right == Final_center && C_direct_R == 1) { center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); }
+            if (Final_center == 0 && Int_right + Int_center == Final_right && C_direct_R == 2) { center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
         if (C_direct_R == 0){ center_direct_right.setProgress(0);  } // Center_and_Right
         if (C_direct_R == 1){ center_direct_right.setRotation(-90);} // Center_to_Right
         if (C_direct_R == 2){ center_direct_right.setRotation(90); } // Right_to_Center
@@ -569,8 +570,9 @@ public class MainActivity extends MainData { // TODO Відповідає за �
 
     public void close_cursor (){
         if (!c_on && !m_on) {
-            editText_left.setEnabled(false); editText_right.setEnabled(false); editText_center.setEnabled(false);
-            editText_left.setEnabled(true); editText_center.setEnabled(true); editText_right.setEnabled(true);
+            launcher_background.requestFocusFromTouch();
+            InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(launcher_background.getWindowToken(), 0);
         }
 
         if (c_on) {
@@ -621,6 +623,12 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         } system_back_time = System.currentTimeMillis();
     }
 
+    @Override
+    protected void onPause() {
+        saveData();
+        super.onPause();
+    }
+
 
     public void saveData () {
         SharedPreferences.Editor editMainData = MainDataExchange.edit();
@@ -633,7 +641,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         editMainData.putInt("L_direct_C", L_direct_C); editMainData.putInt("L_direct_R", L_direct_R); editMainData.putInt("C_direct_R", C_direct_R);
         editMainData.putInt("sc", (int) sc);
 
-        editMainData.apply(); editMainData.commit();
+        editMainData.apply(); //editMainData.commit();
     }
 
     public void outData () {
@@ -647,16 +655,16 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         L_direct_C = (byte) MainDataExchange.getInt("L_direct_C", L_direct_C); L_direct_R = (byte) MainDataExchange.getInt("L_direct_R", L_direct_R); C_direct_R = (byte) MainDataExchange.getInt("C_direct_R", C_direct_R);
         sc = MainDataExchange.getInt("sc", (int) sc);
 
+        Handler handler = new Handler(); view_on = true; viwe_on_off();
+        handler.postDelayed(() -> { view_on = false; viwe_on_off(); }, 350); // 1050
+
         editText_left.setText(string_left); editText_center.setText(string_center); editText_right.setText(string_right);
         localization(languageCode);
         button_player.callOnClick(); c_on = true; m_on = true; close_cursor();
         result_choice(); direction_choice();
+
         StartData = false;
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        saveData();
-    }
+
 }

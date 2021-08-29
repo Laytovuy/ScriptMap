@@ -438,8 +438,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
             left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_default)); }
         if (L_direct_C == 1 || L_direct_C == 2) { left_direct_center.setProgress(1);
             left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_action));
-            if (Final_center == 0 && Int_left + Int_center == Final_left && L_direct_C == 1)  { left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); }
-            if (Final_left == 0 && Int_center + Int_left == Final_center && L_direct_C == 2) { left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
+            if (Int_center != 0 && Final_center == 0 || Int_left != 0 && Final_left == 0) { left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
         if (L_direct_C == 0){ left_direct_center.setProgress(0);  } // Left_and_Center
         if (L_direct_C == 1){ left_direct_center.setRotation(-90);} // Left_to_Center
         if (L_direct_C == 2){ left_direct_center.setRotation(90); } // Center_to_Left
@@ -447,10 +446,10 @@ public class MainActivity extends MainData { // TODO Відповідає за �
 
 
         if (L_direct_R == 0 || L_direct_R == 3){ left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_default)); }
-        if (L_direct_R == 1 || L_direct_R == 2) { left_direct_right.setProgress(1);
+        if (L_direct_R == 1 || L_direct_R == 2) {
+            left_direct_right.setProgress(1);
             left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_action));
-            if (Final_right == 0 && Int_left + Int_right == Final_left && L_direct_R == 2) { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); }
-            if (Final_left == 0 && Int_right + Int_left == Final_right && L_direct_R == 1) { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
+            if (Int_right != 0 && Final_right == 0 || Int_left != 0 && Final_left == 0) { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
         if (L_direct_R == 0){ left_direct_right.setProgress(0);  } // Left_and_Right && (Int_left != 0 || Int_right != 0)
         if (L_direct_R == 2){ left_direct_right.setRotation(-90);} // Left_to_Right
         if (L_direct_R == 1){ left_direct_right.setRotation(90); } // Right_to_Left
@@ -461,8 +460,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
             center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_default)); }
         if (C_direct_R == 1 || C_direct_R == 2) { center_direct_right.setProgress(1);
             center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_action));
-            if (Final_right == 0 && Int_center + Int_right == Final_center && C_direct_R == 1) { center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); }
-            if (Final_center == 0 && Int_right + Int_center == Final_right && C_direct_R == 2) { center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
+            if (Int_right != 0 && Final_right == 0 || Int_center != 0 && Final_center == 0) { center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
         if (C_direct_R == 0){ center_direct_right.setProgress(0);  } // Center_and_Right
         if (C_direct_R == 1){ center_direct_right.setRotation(-90);} // Center_to_Right
         if (C_direct_R == 2){ center_direct_right.setRotation(90); } // Right_to_Center
@@ -544,12 +542,16 @@ public class MainActivity extends MainData { // TODO Відповідає за �
     }
 
 
-    public void editText_check () {
+    public void editText_check () { // TODO Можна переробити в считування поля на 0, і видаляти це значення, а також упростити весь бій сюди.
         if (!StartData) {
             string_left = editText_left.getText().toString().trim();
             string_center = editText_center.getText().toString().trim();
             string_right = editText_right.getText().toString().trim();
         }
+
+        if (string_left.equals("0")) {editText_left.setText("");}
+        if (string_right.equals("0")) {editText_right.setText("");}
+        if (string_center.equals("0")) {editText_center.setText("");}
 
         if (!string_left.isEmpty() && !string_center.isEmpty() && !string_right.isEmpty() && p == 3 && (!view_on || !menu_on)){
             button_action.setEnabled(true);

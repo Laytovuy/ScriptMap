@@ -29,7 +29,7 @@ public class MainData extends AppCompatActivity {
     public LinearLayout linear_basis_choice, linear_basisofmode_choice, linear_menu, linear_flank_Left, linear_flank_Right;
 
     public EditText editText_left, editText_center, editText_right; // Це поля в які можна щось писати.
-    public EditText left_editText_right, left_down_editText, right_up_editText;
+    public EditText editText_left_right, editText_left_down, editText_right_up;
 
     public TextView textView_stiffcount, // Це їх аналоги, але без змоги воду.
             left_result_center, left_result_right, center_result_right;
@@ -53,6 +53,7 @@ public class MainData extends AppCompatActivity {
     public long system_start_Left_time, system_start_Right_time;
 
     public String string_left = "", string_center = "", string_right = ""; // Це переміні які хранять текст, який я провіряю на пустоту, бо як конверсія з пустої строки в переміну визве помилку.
+    public String string_right_up = "", string_left_down = "", string_left_right = "";
 
     public boolean view_on = false, c_on = false, m_on = false, menu_on = true; // Це переміні які я використовую як переключатілі на кнопках. v_on = Viwe_on, c_on = Count_on, m_on = Mode_on, d_long_on = Direct_long_on.
     public boolean b_on = false, move_on = false, L_direct = true, R_direct = true;
@@ -61,6 +62,7 @@ public class MainData extends AppCompatActivity {
     public int Int_left, Int_center, Int_right, L_result_C, L_result_R, C_result_R;
     public int L_seekbar_R, R_seekbar_L, L_position_R, R_position_L, L_speed_R, R_speed_L, L_seekbarLenght_R, L_sekbarResult_R,
             OLD_L_seekbar_R, OLD_R_seekbar_L, OLD_L_Int_and_R, roundedL, roundedR;
+    public int Int_left_k, Int_right_k, Int_left_right, Int_left_down, Int_right_up;
 
     public byte m, c, p = 2, L_direct_C, L_direct_R, C_direct_R; // Це скороченя від m = Mode, c = Count, p = Player, b = Basis, bm = BasisMode
     public double sc = 10; // Ця переміна має в собі ключове число яке впливає на результат сили атаки.

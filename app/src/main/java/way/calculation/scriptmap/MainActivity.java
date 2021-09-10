@@ -366,7 +366,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
                     DataExchange.m = m; DataExchange.c = c; DataExchange.p = p; DataExchange.sc = sc;
                     if (p != 2) { DataExchange.L_direct_C = L_direct_C; } DataExchange.L_direct_R = L_direct_R; if (p != 2) { DataExchange.C_direct_R = C_direct_R; }
 
-                    if (Int_left + Int_center + Int_right != 0) { DataExchange.Calculation(); }
+                    DataExchange.Calculation();
 
                     Final_left = DataExchange.Final_left; if (p != 2) { Final_center = DataExchange.Final_center; } Final_right = DataExchange.Final_right;
                     L_result_C = DataExchange.L_result_C; L_result_R = DataExchange.L_result_R; C_result_R = DataExchange.C_result_R;
@@ -549,17 +549,17 @@ public class MainActivity extends MainData { // TODO Відповідає за �
             string_right = editText_right.getText().toString().trim();
         }
 
-        if (string_left.equals("0")) {editText_left.setText("");}
-        if (string_right.equals("0")) {editText_right.setText("");}
-        if (string_center.equals("0")) {editText_center.setText("");}
+        //if (string_left.equals("0")) {editText_left.setText("");}
+        //if (string_right.equals("0")) {editText_right.setText("");}
+        //if (string_center.equals("0")) {editText_center.setText("");}
 
         if (!string_left.isEmpty() && !string_center.isEmpty() && !string_right.isEmpty() && p == 3 && (!view_on || !menu_on)){
             button_action.setEnabled(true);
         } else if (!string_left.isEmpty() && !string_right.isEmpty() && p == 2 && (!view_on || !menu_on)) {
             button_action.setEnabled(true);
         } else {
-           button_action.setEnabled(false);
-           if (menu_on) {L_result_R = 0; L_result_C = 0; C_result_R = 0;}
+            button_action.setEnabled(false);
+            if (menu_on) {L_result_R = 0; L_result_C = 0; C_result_R = 0;}
         }
     }
 

@@ -14,11 +14,11 @@
         style="@style/ScriptMapNumText"
         android:layout_width="80dp"
         android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
         android:autofillHints="@string/reltat"
         android:background="@null"
         android:hint="@string/reltat"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
         android:imeOptions="actionDone|flagNoFullscreen|actionNext" />
 
     <LinearLayout
@@ -154,12 +154,12 @@
         style="@style/ScriptMapNumText"
         android:layout_width="80dp"
         android:layout_height="40dp"
-        android:autofillHints="@string/reltat"
-        android:background="@null"
-        android:hint="@string/reltat"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp"
+        android:autofillHints="@string/reltat"
+        android:background="@null"
+        android:hint="@string/reltat"
         android:imeOptions="actionDone|flagNoFullscreen" />
 
 

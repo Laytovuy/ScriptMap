@@ -184,8 +184,11 @@ public class MainBattleline extends MainData {
 
             L_direct_R = 0;  L_result_R = 0;
             editText_right.setText(""); editText_left.setText("");
+            restore = 0;
 
-            restore = 0; if (k == 1) { clear_creative(); }
+            if (k == 1 || system_clear_time
+                    + 300 > System.currentTimeMillis()) { clear_creative(); }
+            system_clear_time = System.currentTimeMillis();
             result_choice(); direction_choice(); seekbar_choice(); close_cursor();
         }
     }
@@ -196,7 +199,7 @@ public class MainBattleline extends MainData {
             button_move_Left.setEnabled(false); button_move_Right.setEnabled(false);
             menu_on = true; menu_visible(); result_choice();
             button_continue.setVisibility(View.GONE);
-            if (k == 1 && !move_on) {creative();}
+            if (k == 1 && !move_on) {close_cursor(); creative();}
             if (move_on) {if (restore != 2) {restore = 1;} check_start();}
             if (string_left.equals("0")){editText_left.setText("");}
             if (string_right.equals("0")){ editText_right.setText("");}
@@ -209,7 +212,7 @@ public class MainBattleline extends MainData {
             b = -1; button_basis.setText(R.string.basis);
             c = 0; button_count.setText(R.string.count);
             k = 0; button_action.setText(R.string.action);
-            button_continue.setText(R.string.continue_action);
+
             sc = 10; bm = 2; anim_base_choice();
             view_on = false; viwe_on_off(); close_cursor();
 
@@ -220,19 +223,20 @@ public class MainBattleline extends MainData {
     };
 
 
-    public void click_restore (View view) { // TODO Відповідає за відновлння минулих показників.
+    public void click_restore (View view) { // Відповідає за відновлння минулих показників.
         if (!menu_on){
             boolean button_restore = ((ToggleButton) view).isChecked();
             if (k == 1) {
+                close_cursor(); clear_creative();
                 button_continue.setChecked(false);
                 button_continue.setText(R.string.clear);
-                clear_creative();
             } else {
                 if (button_restore){
                     restore = 2; // Продовжити
                 } else {
                     restore = 1; // Не продовжувати
                 } seekbar_choice();
+                button_continue.setText(R.string.continue_action);
             }
         } else {
             if (k == 1) {
@@ -249,7 +253,7 @@ public class MainBattleline extends MainData {
                 } else if (restore == 2) {
                     button_continue.setVisibility(View.VISIBLE);
                     button_continue.setChecked(true);
-                }
+                } button_continue.setText(R.string.continue_action);
             } button_continue.setTextSize(8);
         }
     }
@@ -329,61 +333,6 @@ public class MainBattleline extends MainData {
         }
     }
 
-    public void creative () {
-        final Handler handler = new Handler(); // TODO Дописати
-
-        if (!menu_on && !move_on) { button_clear.setEnabled(false);
-            handler.postDelayed(() -> {
-                editText_left_right.setVisibility(View.GONE);
-                if (b == 1) { editText_left_down.setVisibility(View.GONE); editText_right_up.setVisibility(View.GONE);}
-                editText_left.setVisibility(View.GONE); editText_right.setVisibility(View.GONE);
-
-                editText_left_right.getLayoutParams().width = (int)
-                        (editText_left_right.getResources().getDisplayMetrics().density * 490);
-
-            }, 200);
-            handler.postDelayed(() -> {
-                editText_left_right.setVisibility(View.VISIBLE); editText_left_right.setEnabled(true);
-                if (b == 1) { editText_left_down.setVisibility(View.VISIBLE); editText_right_up.setVisibility(View.VISIBLE);
-                    editText_left_down.setEnabled(true); editText_right_up.setEnabled(true); }
-                editText_left.setVisibility(View.VISIBLE); editText_right.setVisibility(View.VISIBLE);
-                editText_left.setEnabled(true); editText_right.setEnabled(true);
-
-                if (Int_left_k != 0) {editText_left.setText(String.valueOf(Int_left_k));}
-                if (Int_right_k != 0) {editText_right.setText(String.valueOf(Int_right_k));}
-                if (Int_left_down != 0) {editText_left_down.setText(String.valueOf(Int_left_down));}
-                if (Int_right_up != 0) {editText_right_up.setText(String.valueOf(Int_right_up));}
-                if (Int_left_right != 0) {editText_left_right.setText(String.valueOf(Int_left_right));}
-
-                button_clear.setEnabled(true);
-            }, 500);
-        } else if (!move_on) {
-
-            editText_left_right.setVisibility(View.GONE); editText_left_right.setEnabled(false);
-            if (b == 1) { editText_left_down.setEnabled(false); editText_right_up.setEnabled(false);}
-            editText_left.setEnabled(true); editText_right.setEnabled(true);
-
-            editText_left_right.getLayoutParams().width = (int)
-                    (editText_left_right.getResources().getDisplayMetrics().density * 80);
-            editText_left_right.setVisibility(View.VISIBLE);
-
-            if (!string_left.isEmpty()) {Int_left_k = Integer.parseInt(string_left);}else{Int_left_k = 0;}
-            if (!string_right.isEmpty()) {Int_right_k = Integer.parseInt(string_right);}else{Int_right_k = 0;}
-            if (!string_left_down.isEmpty()) {Int_left_down = Integer.parseInt(string_left_down);}else{Int_left_down = 0;}
-            if (!string_right_up.isEmpty()) {Int_right_up = Integer.parseInt(string_right_up);}else{Int_right_up = 0;}
-            if (!string_left_right.isEmpty()) {Int_left_right = Integer.parseInt(string_left_right);}else{Int_left_right = 0;}
-
-            battleline_count();
-        }
-    }
-
-    public void clear_creative () {
-        if (!menu_on) { editText_left.setText(""); editText_right.setText(""); }
-        editText_left_down.setText(""); editText_right_up.setText("");
-        editText_left_right.setText(""); Int_left_k = 0; Int_right_k = 0;
-        Int_left_right = 0; Int_left_down = 0; Int_right_up = 0;
-    }
-
 
     public void click_basis (View view){ // TODO Відповідає за вплив врахування очків на гемпей
         int id = view.getId();
@@ -409,7 +358,7 @@ public class MainBattleline extends MainData {
             if (bm < 2) { bm = 3;
             } else { bm ++; if (bm > 3){ bm = 2; } }
         } else if (id == R.id.button_creative) {
-            k ++; if (k >= 2) {k = 0;}
+            k ++; if (k >= 2) {k = 0;} seekbar_choice();
         }
 
         if (b_on) {
@@ -516,6 +465,61 @@ public class MainBattleline extends MainData {
         }
     }
 
+    public void creative () { // TODO  Не готове текстВю в якості часу або кількості кроків
+        final Handler handler = new Handler();
+
+        if (!menu_on && !move_on) { button_clear.setEnabled(false);
+            handler.postDelayed(() -> {
+                editText_left_right.setVisibility(View.GONE);
+                if (b == 1) { editText_left_down.setVisibility(View.GONE); editText_right_up.setVisibility(View.GONE);}
+                editText_left.setVisibility(View.GONE); editText_right.setVisibility(View.GONE);
+
+                editText_left_right.getLayoutParams().width = (int)
+                        (editText_left_right.getResources().getDisplayMetrics().density * 490);
+
+            }, 200);
+            handler.postDelayed(() -> {
+                editText_left_right.setVisibility(View.VISIBLE); editText_left_right.setEnabled(true);
+                if (b == 1) { editText_left_down.setVisibility(View.VISIBLE); editText_right_up.setVisibility(View.VISIBLE);
+                    editText_left_down.setEnabled(true); editText_right_up.setEnabled(true); }
+                editText_left.setVisibility(View.VISIBLE); editText_right.setVisibility(View.VISIBLE);
+                editText_left.setEnabled(true); editText_right.setEnabled(true);
+
+                if (Int_left_k != 0) {editText_left.setText(String.valueOf(Int_left_k));}
+                if (Int_right_k != 0) {editText_right.setText(String.valueOf(Int_right_k));}
+                if (Int_left_down != 0) {editText_left_down.setText(String.valueOf(Int_left_down));}
+                if (Int_right_up != 0) {editText_right_up.setText(String.valueOf(Int_right_up));}
+                if (Int_left_right != 0) {editText_left_right.setText(String.valueOf(Int_left_right));}
+
+                button_clear.setEnabled(true);
+            }, 500);
+        } else if (!move_on) {
+
+            editText_left_right.setVisibility(View.GONE); editText_left_right.setEnabled(false);
+            if (b == 1) { editText_left_down.setEnabled(false); editText_right_up.setEnabled(false);}
+            editText_left.setEnabled(true); editText_right.setEnabled(true);
+
+            editText_left_right.getLayoutParams().width = (int)
+                    (editText_left_right.getResources().getDisplayMetrics().density * 80);
+            editText_left_right.setVisibility(View.VISIBLE);
+
+            if (!string_left.isEmpty()) {Int_left_k = Integer.parseInt(string_left);}else{Int_left_k = 0;}
+            if (!string_right.isEmpty()) {Int_right_k = Integer.parseInt(string_right);}else{Int_right_k = 0;}
+            if (!string_left_down.isEmpty()) {Int_left_down = Integer.parseInt(string_left_down);}else{Int_left_down = 0;}
+            if (!string_right_up.isEmpty()) {Int_right_up = Integer.parseInt(string_right_up);}else{Int_right_up = 0;}
+            if (!string_left_right.isEmpty()) {Int_left_right = Integer.parseInt(string_left_right);}else{Int_left_right = 0;}
+
+            battleline_count();
+        }
+    }
+
+    public void clear_creative () {
+        if (!menu_on) { editText_left.setText(""); editText_right.setText(""); }
+        editText_left_down.setText(""); editText_right_up.setText("");
+        editText_left_right.setText(""); Int_left_k = 0; Int_right_k = 0;
+        Int_left_right = 0; Int_left_down = 0; Int_right_up = 0;
+    }
+
 
     public void click_action (View view){ // TODO Відповідає за готовність до гри - обрахунку
         if (b == 0 || c == 0){ // Провірка чи виконані умови для продовження
@@ -584,6 +588,7 @@ public class MainBattleline extends MainData {
                 break;
             case MotionEvent.ACTION_UP:
                 if (!move_on) {
+                    if (k == 1) {close_cursor();}
                     button_move_Left.setEnabled(false);
                     system_start_Left_time = System.currentTimeMillis();
                     check_start();
@@ -643,6 +648,7 @@ public class MainBattleline extends MainData {
                 break;
             case MotionEvent.ACTION_UP:
                 if (!move_on) {
+                    if (k == 1) {close_cursor();}
                     button_move_Right.setEnabled(false);
                     system_start_Right_time = System.currentTimeMillis();
                     check_start();
@@ -668,13 +674,15 @@ public class MainBattleline extends MainData {
     };
 
 
-    public void check_start() { // TODO Зрівнює таймінги відпускання суперниками move кнопки
+    public void check_start() { // Зрівнює таймінги відпускання суперниками move кнопки
         if (!move_on) {
             if (system_start_Left_time + 120 > System.currentTimeMillis() && system_start_Right_time + 120 > System.currentTimeMillis()){ // На основі фіксації часу проводиться зрівняння.
                 move_on = true; battleline_count();
                 //restore = 0; button_restore.callOnClick();
                 button_continue.setVisibility(View.GONE);
                 left_result_right.setVisibility(View.VISIBLE);
+                if (k == 1) { editText_left_down.setVisibility(View.GONE); editText_right_up.setVisibility(View.GONE);
+                    editText_left_right.setVisibility(View.GONE); linear_Left_Right_num_change.setVisibility(View.GONE); }
 
                 left_direct_right.setRotation(0);
                 left_direct_right.getLayoutParams().width = (int)
@@ -707,8 +715,8 @@ public class MainBattleline extends MainData {
                         }
                     }, 1000);
             } // else {}
-        } else {
-            move_on = false; battleline_count();
+        } else { move_on = false;
+            if (k == 1) {creative();} else {battleline_count();}
 
             button_attack_Left.setEnabled(false);
             button_attack_Right.setEnabled(false);
@@ -727,77 +735,84 @@ public class MainBattleline extends MainData {
     }
 
 
-    public void battleline_count() { //TODO Розрахунок значень в полях.
-        // TODO Використати нижнє в верхнє поле для сум захвата і іншого.
+    public void battleline_count() { //Розрахунок значень в полях.
+        // TODO Використати нижнє в верхнє поле для сум захвата і іншого. Также може хандрити рестор, і його треба доровобити. Ьакож збивається пунктирна ліні на ресорі.
         if (move_on) {
             // або як що вписати то швидкість буде виходити з цього показника.
                // Як що основа режиму 3 "довічне" то, очки не будуть обчислюватись, але як що гравець не виставить очки, задається стандартна швидкість,
 
-            if (k == 1) {}
-
-        if (bm == 3) { // Вплив очок на гемплей відсутній.
-
+            if (bm == 3) { // Вплив очок на гемплей відсутній.
             } else if (bm == 2) { // Вплив очок на гемплей звичайний.
-
             } else if (bm == 1) { // Вплив очок на гемплей одноманітний.
+            }
+
+            if (k == 1) {
+                L_seekbarLenght_R = Int_left_right;
+                L_seekbar_R = Int_left_k;
+                R_seekbar_L = Int_right_k;
+                //TextВю, який замість продовження битви
+                //Int_left_down за швидкість лівого
+                //Int_right_up за правого швидкість
+            } else {
+                if (restore == 2) {
+                    L_percen_R = L_seekbar_R * 1.0 / OLD_L_seekbar_R * 100;
+                    R_percen_L = R_seekbar_L * 1.0 / OLD_R_seekbar_L * 100;
+                    L_percenAnd_R = L_sekbarResult_R * 1.0 / OLD_L_Int_and_R * 100;
+                    L_percenPost_R = L_position_R * 1.0 / L_seekbarLenght_R * 100;
+                    R_percenPost_L = R_position_L * 1.0 / L_seekbarLenght_R * 100;
                 }
 
-            if (restore == 2) {
-                L_percen_R = L_seekbar_R * 1.0 / OLD_L_seekbar_R * 100;
-                R_percen_L = R_seekbar_L * 1.0 / OLD_R_seekbar_L * 100;
-                L_percenAnd_R = L_sekbarResult_R * 1.0 / OLD_L_Int_and_R * 100;
-                L_percenPost_R = L_position_R * 1.0 / L_seekbarLenght_R * 100;
-                R_percenPost_L = R_position_L * 1.0 / L_seekbarLenght_R * 100;
-            }
+                L_sekbarResult_R = Int_left + Int_right; // Спільне значення
+                L_seekbarLenght_R = L_sekbarResult_R; // Довжина шляху
+                double L_double_R = L_sekbarResult_R; int degree_LR, result_degree;
 
-            L_sekbarResult_R = Int_left + Int_right; // Спільне значення
-            L_seekbarLenght_R = L_sekbarResult_R; // Довжина шляху
-            double L_double_R = L_sekbarResult_R; int degree_LR, result_degree;
+                if (L_seekbarLenght_R > 25) { // Система розрахунку оптимальної суми кліків для пройдення поля
+                    for (degree_LR = 2, result_degree = 1 + L_seekbarLenght_R; result_degree > L_seekbarLenght_R; degree_LR ++) {
+                        result_degree = (L_seekbarLenght_R / degree_LR * (L_seekbarLenght_R / degree_LR));
+                    } L_seekbarLenght_R = degree_LR + 19;
+                }
 
-            if (L_seekbarLenght_R > 25) { // Система розрахунку оптимальної суми кліків для пройдення поля
-                for (degree_LR = 2, result_degree = 1 + L_seekbarLenght_R; result_degree > L_seekbarLenght_R; degree_LR ++) {
-                    result_degree = (L_seekbarLenght_R / degree_LR * (L_seekbarLenght_R / degree_LR));
-                } L_seekbarLenght_R = degree_LR + 19;
-            }
-
-            field_separation(L_double_R);
-
-            if (b == 2){ // mechanical // Підрахунок індевідуальних сум
-                L_seekbar_R = roundedL + 2 + (L_seekbarLenght_R - (L_seekbarLenght_R / roundedL));  // Кількість кліків лівого
-                R_seekbar_L = roundedR + 2 + (L_seekbarLenght_R - (L_seekbarLenght_R / roundedR)); // Кількість кліків правого
-                L_sekbarResult_R = (L_seekbar_R + R_seekbar_L + L_seekbarLenght_R) / 2; // Число спільної суми кліків
-            }
-
-            if (b == 1){ // dynamicall
-                L_speed_R = roundedL; R_speed_L = roundedR;
-
-                for (degree_LR = 0, result_degree = 0; result_degree < 200; degree_LR ++){
-                    result_degree = L_seekbarLenght_R * degree_LR;
-                    L_sekbarResult_R = result_degree - degree_LR;
-                } L_seekbarLenght_R += L_sekbarResult_R;
                 field_separation(L_double_R);
-                L_seekbar_R = (int) Math.round(((20.0 / roundedL) + 1) * ((L_seekbarLenght_R - L_sekbarResult_R) * (L_seekbarLenght_R)));
-                R_seekbar_L = (int) Math.round(((20.0 / roundedR) + 1) * ((L_seekbarLenght_R - L_sekbarResult_R) * (L_seekbarLenght_R)));
-                L_sekbarResult_R = (int) Math.round(((20.0 / L_double_R) + 1) * ((L_seekbarLenght_R - L_sekbarResult_R) * (L_seekbarLenght_R)));
-            }
 
-            if (bm == 1) {
-                if (b == 1) {L_speed_R = R_speed_L = (L_speed_R + R_speed_L) / 2;}
-                L_seekbar_R = R_seekbar_L = (L_seekbar_R + R_seekbar_L) / 2;
-                L_sekbarResult_R = L_seekbar_R + R_seekbar_L;
-                field_separation(L_double_R); // TODO Лінію переробити.
-            }
+                if (b == 2){ // mechanical // Підрахунок індевідуальних сум
+                    L_seekbar_R = roundedL + 2 + (L_seekbarLenght_R - (L_seekbarLenght_R / roundedL));  // Кількість кліків лівого
+                    R_seekbar_L = roundedR + 2 + (L_seekbarLenght_R - (L_seekbarLenght_R / roundedR)); // Кількість кліків правого
+                    L_sekbarResult_R = (L_seekbar_R + R_seekbar_L + L_seekbarLenght_R) / 2; // Число спільної суми кліків
+                }
 
-            OLD_L_seekbar_R = L_seekbar_R; OLD_R_seekbar_L = R_seekbar_L; OLD_L_Int_and_R = L_sekbarResult_R;
+                if (b == 1){ // dynamicall
+                    L_speed_R = roundedL; R_speed_L = roundedR;
 
-            if (restore == 2) {
-                L_seekbar_R = (int) Math.round(L_seekbar_R / 100.0 * L_percen_R);
-                R_seekbar_L = (int) Math.round(R_seekbar_L / 100.0 * R_percen_L);
-                L_sekbarResult_R = (int) Math.round(L_sekbarResult_R / 100.0 * L_percenAnd_R);
-                L_position_R = (int) Math.round(L_seekbarLenght_R / 100.0 * L_percenPost_R);
-                R_position_L = (int) Math.round(L_seekbarLenght_R / 100.0 * R_percenPost_L);
-            } else {
-                L_position_R = 0; R_position_L = 0; L_direct = true; R_direct = true;
+                    for (degree_LR = 0, result_degree = 0; result_degree < 200; degree_LR ++){
+                        result_degree = L_seekbarLenght_R * degree_LR;
+                        L_sekbarResult_R = result_degree - degree_LR;
+                    } L_seekbarLenght_R += L_sekbarResult_R;
+                    field_separation(L_double_R);
+                    L_seekbar_R = (int) Math.round(((20.0 / roundedL) + 1) * ((L_seekbarLenght_R - L_sekbarResult_R) * (L_seekbarLenght_R)));
+                    R_seekbar_L = (int) Math.round(((20.0 / roundedR) + 1) * ((L_seekbarLenght_R - L_sekbarResult_R) * (L_seekbarLenght_R)));
+                    L_sekbarResult_R = (int) Math.round(((20.0 / L_double_R) + 1) * ((L_seekbarLenght_R - L_sekbarResult_R) * (L_seekbarLenght_R)));
+                }
+
+                if (bm == 1) {
+                    if (b == 1) {L_speed_R = R_speed_L = (L_speed_R + R_speed_L) / 2;}
+                    L_seekbar_R = R_seekbar_L = (L_seekbar_R + R_seekbar_L) / 2;
+                    L_sekbarResult_R = L_seekbar_R + R_seekbar_L;
+                    field_separation(L_double_R); // TODO Лінію переробити.
+                }
+
+
+                OLD_L_seekbar_R = L_seekbar_R; OLD_R_seekbar_L = R_seekbar_L; OLD_L_Int_and_R = L_sekbarResult_R;
+
+
+                if (restore == 2) {
+                    L_seekbar_R = (int) Math.round(L_seekbar_R / 100.0 * L_percen_R);
+                    R_seekbar_L = (int) Math.round(R_seekbar_L / 100.0 * R_percen_L);
+                    L_sekbarResult_R = (int) Math.round(L_sekbarResult_R / 100.0 * L_percenAnd_R);
+                    L_position_R = (int) Math.round(L_seekbarLenght_R / 100.0 * L_percenPost_R);
+                    R_position_L = (int) Math.round(L_seekbarLenght_R / 100.0 * R_percenPost_L);
+                } else {
+                    L_position_R = 0; R_position_L = 0; L_direct = true; R_direct = true;
+                }
             }
 
             left_seekBar_right.setMax(L_seekbarLenght_R); right_seekBar_left.setMax(L_seekbarLenght_R);
@@ -806,8 +821,9 @@ public class MainBattleline extends MainData {
 
             editText_left.setText(String.valueOf(L_seekbar_R)); editText_right.setText(String.valueOf(R_seekbar_L));
             left_result_right.setText(String.valueOf(L_sekbarResult_R));
-            System.out.println(L_seekbarLenght_R);
         }
+
+
 
         if (!move_on) {
             editText_left.setText(String.valueOf(Int_left));
@@ -921,8 +937,8 @@ public class MainBattleline extends MainData {
         if (L_direct_R == 3){ left_direct_right.setProgress(30); } // Left_peace_Right
     }
 
-    public void seekbar_choice() { // TODO Відповідає за онулення позиції гравців. Як що рестор не 0, то показати старе положення.
-        if (restore == 2) {
+    public void seekbar_choice() { // Відповідає за онулення позиції гравців. Як що рестор не 0, то показати старе положення.
+        if (restore == 2 && k != 1) { // TODO Потрібно очистити на креативі, і повернути на ресторі.
             left_seekBar_right.setMax(L_seekbarLenght_R); right_seekBar_left.setMax(L_seekbarLenght_R);
             left_seekBar_right.setProgress(L_position_R); right_seekBar_left.setProgress(R_position_L);
         } else {
@@ -1002,11 +1018,13 @@ public class MainBattleline extends MainData {
         }
 
         if (k == 1 && !menu_on && !move_on) {
-            if (!string_left.isEmpty() && !string_left_down.isEmpty() && !string_left_right.isEmpty() && p == 2) {
+            if (!string_left.isEmpty() && !string_left_right.isEmpty()
+                    && (b == 2 || b == 1 && !string_left_down.isEmpty()) && p == 2) {
                 button_move_Left.setEnabled(true);
             } else { button_move_Left.setEnabled(false); }
 
-            if (!string_right.isEmpty() && !string_right_up.isEmpty() && !string_left_right.isEmpty() && p == 2) {
+            if (!string_right.isEmpty() && !string_left_right.isEmpty()
+                    && (b == 2 || b == 1 && !string_right_up.isEmpty()) && p == 2) {
                 button_move_Right.setEnabled(true);
             } else { button_move_Right.setEnabled(false); }
         } else {
@@ -1115,7 +1133,7 @@ public class MainBattleline extends MainData {
         editMainData.apply(); //editMainData.commit();
     }
 
-    public void outData () {
+    public void outData () { // TODO Зробити збреження Креатива
         languageCode = MainDataExchange.getString("languageCode", languageCode);
 
         string_left = MainDataExchange.getString("string_left", string_left) ; string_center = MainDataExchange.getString("string_center", string_center); string_right = MainDataExchange.getString("string_right", string_right) ;

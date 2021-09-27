@@ -94,19 +94,20 @@ public class MainBattleline extends MainData {
 
         left_seekBar_right = findViewById(R.id.Left_seekBar_Right);
         right_seekBar_left = findViewById(R.id.Right_seekBar_Left);
-        left_seekBar_right.setEnabled(false);
-        right_seekBar_left.setEnabled(false);
+        left_seekBar_right.setEnabled(false); right_seekBar_left.setEnabled(false);
 
         launcher_background = findViewById(R.id.launcher_background);
         launcher_background.setOnLongClickListener(long_click_launcher_background);
         button_clear.setOnLongClickListener(long_click_clear);
 
-        editText_left_right = findViewById(R.id.Left_EditText_Right);
         editText_left_down = findViewById(R.id.Left_Down_EditText);
+        editText_left_and_right = findViewById(R.id.Left_EditText_Right);
         editText_right_up = findViewById(R.id.Right_Up_EditText);
-        editText_left_right.addTextChangedListener(editText_watcher);
+        editText_left_down_right = findViewById(R.id.Left_EditText_Down_Right);
         editText_left_down.addTextChangedListener(editText_watcher);
+        editText_left_and_right.addTextChangedListener(editText_watcher);
         editText_right_up.addTextChangedListener(editText_watcher);
+        editText_left_down_right.addTextChangedListener(editText_watcher);
 
         editText_left = findViewById(R.id.Left_EditText);
         editText_right = findViewById(R.id.Right_EditText);
@@ -139,7 +140,7 @@ public class MainBattleline extends MainData {
         button_positive.setText(R.string.positive);
         button_notcount.setText(R.string.notcount);
         button_negative.setText(R.string.negative);
-        if (k == 1) {button_action.setText(R.string.creative);} else {button_action.setText(R.string.action);}
+        if (cr == 1) {button_action.setText(R.string.creative);} else {button_action.setText(R.string.action);}
         if (p == 3) {button_player.setText(R.string.outline);} else {button_player.setText(R.string.addline);}
         if (m == 4) {button_modes.setText(R.string.battleline);}
         button_attack_Left.setText(R.string.attack);
@@ -176,7 +177,7 @@ public class MainBattleline extends MainData {
     public void click_launcher_background (View view){ close_cursor();}
 
 
-    public void click_clear (View view){ // TODO Очищує показники.
+    public void click_clear (View view){ // Очищує показники.
         if (menu_on){
             L_seekbarLenght_R = 0; L_seekbar_R = 0; R_seekbar_L = 0;
             L_position_R = 0; R_position_L = 0;
@@ -186,7 +187,8 @@ public class MainBattleline extends MainData {
             editText_right.setText(""); editText_left.setText("");
             restore = 0;
 
-            if (k == 1 || system_clear_time
+
+            if (cr == 1 || system_clear_time
                     + 300 > System.currentTimeMillis()) { clear_creative(); }
             system_clear_time = System.currentTimeMillis();
             result_choice(); direction_choice(); seekbar_choice(); close_cursor();
@@ -194,12 +196,12 @@ public class MainBattleline extends MainData {
     }
 
 
-    View.OnLongClickListener long_click_clear = v -> {
-        if (!menu_on){ // TODO Зупинняє битву.
+    View.OnLongClickListener long_click_clear = v -> { // Зупинняє битву.
+        if (!menu_on){
             button_move_Left.setEnabled(false); button_move_Right.setEnabled(false);
             menu_on = true; menu_visible(); result_choice();
             button_continue.setVisibility(View.GONE);
-            if (k == 1 && !move_on) {close_cursor(); creative();}
+            if (cr == 1 && !move_on) {close_cursor(); creative();} // todo left result Right visibility
             if (move_on) {if (restore != 2) {restore = 1;} check_start();}
             if (string_left.equals("0")){editText_left.setText("");}
             if (string_right.equals("0")){ editText_right.setText("");}
@@ -211,7 +213,7 @@ public class MainBattleline extends MainData {
             localization(languageCode);
             b = -1; button_basis.setText(R.string.basis);
             c = 0; button_count.setText(R.string.count);
-            k = 0; button_action.setText(R.string.action);
+            cr = 0; button_action.setText(R.string.action);
 
             sc = 10; bm = 2; anim_base_choice();
             view_on = false; viwe_on_off(); close_cursor();
@@ -226,7 +228,7 @@ public class MainBattleline extends MainData {
     public void click_restore (View view) { // Відповідає за відновлння минулих показників.
         if (!menu_on){
             boolean button_restore = ((ToggleButton) view).isChecked();
-            if (k == 1) {
+            if (cr == 1) {
                 close_cursor(); clear_creative();
                 button_continue.setChecked(false);
                 button_continue.setText(R.string.clear);
@@ -239,7 +241,7 @@ public class MainBattleline extends MainData {
                 button_continue.setText(R.string.continue_action);
             }
         } else {
-            if (k == 1) {
+            if (cr == 1) {
                 button_continue.setVisibility(View.VISIBLE);
                 button_continue.setChecked(false);
                 button_continue.setText(R.string.clear);
@@ -326,15 +328,18 @@ public class MainBattleline extends MainData {
             } else if (id == R.id.Right_num_minus)  { if (Int_right > 1) {Int_right--; editText_right.setText(String.valueOf(Int_right));} else {editText_right.setText("");} }
         }
 
-        if (k == 1 && !menu_on && !move_on) { int id = view.getId();
-            if (id == R.id.Left_Right_num_plus || id == R.id.Left_Right_num_minus) {if (!string_left_right.isEmpty()) { Int_left_right = Integer.parseInt(string_left_right); } else {L_seekbarLenght_R = 0;}}
-            if (id == R.id.Left_Right_num_plus)   { if (Int_left_right < 999999) {Int_left_right++; editText_left_right.setText(String.valueOf(Int_left_right));}
-            } else if (id == R.id.Left_Right_num_minus)  { if (Int_left_right > 1) {Int_left_right--; editText_left_right.setText(String.valueOf(Int_left_right));} else {editText_left_right.setText("");} }
+        if (cr == 1 && !menu_on && !move_on) { int id = view.getId();
+            if (id == R.id.Left_Right_num_plus || id == R.id.Left_Right_num_minus) {if (!string_left_and_right.isEmpty()) { Int_left_and_right = Integer.parseInt(string_left_and_right); } else {L_seekbarLenght_R = 0;}}
+            if (id == R.id.Left_Right_num_plus)   { if (Int_left_and_right < 999999) {
+                Int_left_and_right++; editText_left_and_right.setText(String.valueOf(Int_left_and_right));}
+            } else if (id == R.id.Left_Right_num_minus)  { if (Int_left_and_right > 1) {
+                Int_left_and_right--; editText_left_and_right.setText(String.valueOf(Int_left_and_right));} else {
+                editText_left_and_right.setText("");} }
         }
     }
 
 
-    public void click_basis (View view){ // TODO Відповідає за вплив врахування очків на гемпей
+    public void click_basis (View view){ // Відповідає за вплив врахування очків на гемпей
         int id = view.getId();
         if (id == R.id.button_basisofmodeLeft) {
             if (bm > 2){ bm = 1;
@@ -358,11 +363,12 @@ public class MainBattleline extends MainData {
             if (bm < 2) { bm = 3;
             } else { bm ++; if (bm > 3){ bm = 2; } }
         } else if (id == R.id.button_creative) {
-            k ++; if (k >= 2) {k = 0;} seekbar_choice();
+            cr++; if (cr >= 2) {
+                cr = 0;} seekbar_choice();
         }
 
         if (b_on) {
-            if (bm == 3) { // Відсутній.
+            if (bm == 3) { // Відсутній
                 String string_isabsent = getString(R.string.isabsent);
                 textView_basisofmode.setText(Html.fromHtml(getString(R.string.basisofmode, string_isabsent)));
             } else if (bm == 2) { // Залежний.
@@ -373,14 +379,14 @@ public class MainBattleline extends MainData {
                 textView_basisofmode.setText(Html.fromHtml(getString(R.string.basisofmode, string_monotonous)));}
             textView_basisofmode.setTextSize(12);
 
-            if (k == 1){ // Креатив.
+            if (cr == 1){ // Креатив
                 button_action.setText(R.string.creative); button_creative.setText(R.string.action);
-                if (b != 0) { editText_left_right.setVisibility(View.VISIBLE); linear_Left_Right_num_change.setVisibility(View.VISIBLE);}
+                if (b != 0) { editText_left_and_right.setVisibility(View.VISIBLE); linear_Left_Right_num_change.setVisibility(View.VISIBLE);}
                 if (b == 1) { editText_left_down.setVisibility(View.VISIBLE); editText_right_up.setVisibility(View.VISIBLE); }
-            } else if (k == 0){
+            } else if (cr == 0){
                 button_action.setText(R.string.action); button_creative.setText(R.string.creative);
                 editText_left_down.setVisibility(View.GONE); editText_right_up.setVisibility(View.GONE);
-                editText_left_right.setVisibility(View.GONE); linear_Left_Right_num_change.setVisibility(View.GONE);
+                editText_left_and_right.setVisibility(View.GONE); linear_Left_Right_num_change.setVisibility(View.GONE);
             }
         }
     }
@@ -398,24 +404,24 @@ public class MainBattleline extends MainData {
         if (id != 0) {anim_base_choice();}
     }
 
-    public void anim_base_choice() { // TODO Відповідає за анімацію кнопок, руху, фронта, атаки, захиста.
+    public void anim_base_choice() { // Відповідає за анімацію кнопок, руху, фронта, атаки, захиста.
         final Handler handler = new Handler();
         if (b != 0) {
             if (b == -1) {b = 0;}
             button_move_Left.setVisibility(View.GONE); button_move_Right.setVisibility(View.GONE);
             linear_flank_Left.setVisibility(View.GONE); linear_flank_Right.setVisibility(View.GONE);
             editText_left_down.setVisibility(View.GONE); editText_right_up.setVisibility(View.GONE);
-            editText_left_right.setVisibility(View.GONE);
+            editText_left_and_right.setVisibility(View.GONE);
             handler.postDelayed(() -> {
                 button_attack_Left.setVisibility(View.GONE); button_attack_Right.setVisibility(View.GONE);
                 button_defense_Left.setVisibility(View.GONE); button_defense_Right.setVisibility(View.GONE);
                 linear_Left_Right_num_change.setVisibility(View.GONE);}, 200);
         }
 
-        if (b == 2){ // mechanical TODO доробити анімацію
+        if (b == 2){ // mechanical
             view_on = true; viwe_on_off();
             handler.postDelayed(() -> {
-                if (k == 1){ linear_Left_Right_num_change.setVisibility(View.VISIBLE); }
+                if (cr == 1){ linear_Left_Right_num_change.setVisibility(View.VISIBLE); }
                 editText_left.setVisibility(View.GONE); editText_right.setVisibility(View.GONE);
             }, 500);
             handler.postDelayed(() -> {
@@ -426,20 +432,20 @@ public class MainBattleline extends MainData {
                 editText_left.setVisibility(View.VISIBLE); editText_right.setVisibility(View.VISIBLE);
             }, 900); // 900
             handler.postDelayed(() -> {
-                if (k == 1){ editText_left_right.setVisibility(View.VISIBLE); }
+                if (cr == 1){ editText_left_and_right.setVisibility(View.VISIBLE); }
                 button_move_Left.setVisibility(View.VISIBLE); button_move_Right.setVisibility(View.VISIBLE);
                 linear_flank_Left.setVisibility(View.VISIBLE); linear_flank_Right.setVisibility(View.VISIBLE);
-                if (k == 0) { view_on = false; viwe_on_off();}
+                if (cr == 0) { view_on = false; viwe_on_off();}
             }, 1050); // 1050
-            if (k == 1) {handler.postDelayed(() -> {
+            if (cr == 1) {handler.postDelayed(() -> {
                 view_on = false; viwe_on_off();
             }, 1200); }
         }
 
-        if (b == 1) { // dynamicall TODO доробити анімацію
+        if (b == 1) { // dynamicall
             view_on = true; viwe_on_off();
             handler.postDelayed(() -> {
-                if (k == 1){ linear_Left_Right_num_change.setVisibility(View.VISIBLE); }
+                if (cr == 1){ linear_Left_Right_num_change.setVisibility(View.VISIBLE); }
                 editText_left.setVisibility(View.GONE); editText_right.setVisibility(View.GONE);
             }, 500);
             handler.postDelayed(() -> {
@@ -447,67 +453,72 @@ public class MainBattleline extends MainData {
                 button_defense_Left.setVisibility(View.VISIBLE); button_defense_Right.setVisibility(View.VISIBLE);
             }, 700);
             handler.postDelayed(() -> {
-                if (k == 1){
+                if (cr == 1){
                     editText_left_down.setVisibility(View.VISIBLE); editText_right_up.setVisibility(View.VISIBLE);}
                 editText_left.setVisibility(View.VISIBLE); editText_right.setVisibility(View.VISIBLE);
             }, 900);
             handler.postDelayed(() -> {
-                if (k == 1){ editText_left_right.setVisibility(View.VISIBLE); }
+                if (cr == 1){ editText_left_and_right.setVisibility(View.VISIBLE); }
                 button_attack_Left.setVisibility(View.GONE); button_attack_Right.setVisibility(View.GONE);
                 button_defense_Left.setVisibility(View.GONE); button_defense_Right.setVisibility(View.GONE);
                 button_move_Left.setVisibility(View.VISIBLE); button_move_Right.setVisibility(View.VISIBLE);
                 linear_flank_Left.setVisibility(View.VISIBLE); linear_flank_Right.setVisibility(View.VISIBLE);
-                if (k == 0){view_on = false; viwe_on_off();}
+                if (cr == 0){view_on = false; viwe_on_off();}
             }, 1050);
-            if (k == 1) {handler.postDelayed(() -> {
+            if (cr == 1) {handler.postDelayed(() -> {
                 view_on = false; viwe_on_off();
             }, 1200); }
         }
     }
 
-    public void creative () { // TODO  Не готове текстВю в якості часу або кількості кроків
+    public void creative () {
         final Handler handler = new Handler();
 
         if (!menu_on && !move_on) { button_clear.setEnabled(false);
             handler.postDelayed(() -> {
-                editText_left_right.setVisibility(View.GONE);
+                editText_left_and_right.setVisibility(View.GONE);
                 if (b == 1) { editText_left_down.setVisibility(View.GONE); editText_right_up.setVisibility(View.GONE);}
                 editText_left.setVisibility(View.GONE); editText_right.setVisibility(View.GONE);
+                left_result_right.setVisibility(View.GONE);
 
-                editText_left_right.getLayoutParams().width = (int)
-                        (editText_left_right.getResources().getDisplayMetrics().density * 490);
+                editText_left_and_right.getLayoutParams().width = (int)
+                        (editText_left_and_right.getResources().getDisplayMetrics().density * 490);
 
             }, 200);
             handler.postDelayed(() -> {
-                editText_left_right.setVisibility(View.VISIBLE); editText_left_right.setEnabled(true);
+                editText_left_and_right.setVisibility(View.VISIBLE); editText_left_and_right.setEnabled(true);
                 if (b == 1) { editText_left_down.setVisibility(View.VISIBLE); editText_right_up.setVisibility(View.VISIBLE);
                     editText_left_down.setEnabled(true); editText_right_up.setEnabled(true); }
                 editText_left.setVisibility(View.VISIBLE); editText_right.setVisibility(View.VISIBLE);
+                editText_left_down_right.setVisibility(View.VISIBLE); editText_left_down_right.setEnabled(true);
                 editText_left.setEnabled(true); editText_right.setEnabled(true);
 
-                if (Int_left_k != 0) {editText_left.setText(String.valueOf(Int_left_k));}
-                if (Int_right_k != 0) {editText_right.setText(String.valueOf(Int_right_k));}
+                if (Int_left_cr != 0) {editText_left.setText(String.valueOf(Int_left_cr));}
+                if (Int_right_cr != 0) {editText_right.setText(String.valueOf(Int_right_cr));}
                 if (Int_left_down != 0) {editText_left_down.setText(String.valueOf(Int_left_down));}
+                if (Int_left_and_right != 0) { editText_left_and_right.setText(String.valueOf(Int_left_and_right));}
                 if (Int_right_up != 0) {editText_right_up.setText(String.valueOf(Int_right_up));}
-                if (Int_left_right != 0) {editText_left_right.setText(String.valueOf(Int_left_right));}
+                if (Int_left_down_right != 0) {editText_left_down_right.setText(String.valueOf(Int_left_down_right));}
 
                 button_clear.setEnabled(true);
             }, 500);
         } else if (!move_on) {
 
-            editText_left_right.setVisibility(View.GONE); editText_left_right.setEnabled(false);
+            editText_left_and_right.setVisibility(View.GONE); editText_left_and_right.setEnabled(false);
             if (b == 1) { editText_left_down.setEnabled(false); editText_right_up.setEnabled(false);}
             editText_left.setEnabled(true); editText_right.setEnabled(true);
+            editText_left_down_right.setVisibility(View.GONE); editText_left_down_right.setEnabled(false);
 
-            editText_left_right.getLayoutParams().width = (int)
-                    (editText_left_right.getResources().getDisplayMetrics().density * 80);
-            editText_left_right.setVisibility(View.VISIBLE);
+            editText_left_and_right.getLayoutParams().width = (int)
+                    (editText_left_and_right.getResources().getDisplayMetrics().density * 80);
+            editText_left_and_right.setVisibility(View.VISIBLE);
 
-            if (!string_left.isEmpty()) {Int_left_k = Integer.parseInt(string_left);}else{Int_left_k = 0;}
-            if (!string_right.isEmpty()) {Int_right_k = Integer.parseInt(string_right);}else{Int_right_k = 0;}
+            if (!string_left.isEmpty()) { Int_left_cr = Integer.parseInt(string_left);}else{ Int_left_cr = 0;}
+            if (!string_right.isEmpty()) { Int_right_cr = Integer.parseInt(string_right);}else{ Int_right_cr = 0;}
             if (!string_left_down.isEmpty()) {Int_left_down = Integer.parseInt(string_left_down);}else{Int_left_down = 0;}
+            if (!string_left_and_right.isEmpty()) { Int_left_and_right = Integer.parseInt(string_left_and_right);}else{ Int_left_and_right = 0;}
             if (!string_right_up.isEmpty()) {Int_right_up = Integer.parseInt(string_right_up);}else{Int_right_up = 0;}
-            if (!string_left_right.isEmpty()) {Int_left_right = Integer.parseInt(string_left_right);}else{Int_left_right = 0;}
+            if (!string_left_down_right.isEmpty()) {Int_left_down_right = Integer.parseInt(string_left_down_right);}else{ Int_left_down_right = 0;}
 
             battleline_count();
         }
@@ -515,13 +526,14 @@ public class MainBattleline extends MainData {
 
     public void clear_creative () {
         if (!menu_on) { editText_left.setText(""); editText_right.setText(""); }
-        editText_left_down.setText(""); editText_right_up.setText("");
-        editText_left_right.setText(""); Int_left_k = 0; Int_right_k = 0;
-        Int_left_right = 0; Int_left_down = 0; Int_right_up = 0;
+        editText_left_down.setText(""); editText_left_and_right.setText("");
+        editText_right_up.setText(""); editText_left_down_right.setText("");
+        Int_left_cr = 0; Int_right_cr = 0; Int_left_down_right = 0;
+         Int_left_down = 0; Int_left_and_right = 0; Int_right_up = 0;
     }
 
 
-    public void click_action (View view){ // TODO Відповідає за готовність до гри - обрахунку
+    public void click_action (View view){ // Відповідає за готовність до гри - обрахунку
         if (b == 0 || c == 0){ // Провірка чи виконані умови для продовження
             if (b == 0){button_basis.setEnabled(false);}
             if (c == 0){button_count.setEnabled(false);}
@@ -540,7 +552,7 @@ public class MainBattleline extends MainData {
 
                 button_continue.callOnClick();
                 menu_on = false; menu_visible(); // Кладеться значення в "меню виключенне? - так", і викликається його закриття
-                if (k == 1) { creative();
+                if (cr == 1) { creative();
                 } else { button_move_Left.setEnabled(true); button_move_Right.setEnabled(true); }
             } else {
                 close_cursor();
@@ -579,16 +591,14 @@ public class MainBattleline extends MainData {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (move_on) {
-                    if (b == 2){ // mechanical
-                    }
+                    //if (b == 2){ // mechanical}
 
-                    if (b == 1){ // dynamicall
-                    }
+                    //if (b == 1){ // dynamicall}
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 if (!move_on) {
-                    if (k == 1) {close_cursor();}
+                    if (cr == 1) {close_cursor();}
                     button_move_Left.setEnabled(false);
                     system_start_Left_time = System.currentTimeMillis();
                     check_start();
@@ -599,9 +609,7 @@ public class MainBattleline extends MainData {
                             button_move_Left.setEnabled(true);
                         }
                     }, 1200);
-                } else {
-
-                }
+                } //else { }
                 break;
         }
         view.performClick();
@@ -609,7 +617,7 @@ public class MainBattleline extends MainData {
     };
 
     View.OnLongClickListener long_click_move_Left = v -> {
-        if (move_on){}
+        //if (move_on){}
         return true;
     };
 
@@ -642,13 +650,12 @@ public class MainBattleline extends MainData {
                         } else {button_move_Right.setEnabled(false);}
                     }
 
-                    if (b == 1){ // dynamicall
-                    }
+                    //if (b == 1){ // dynamicall }
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 if (!move_on) {
-                    if (k == 1) {close_cursor();}
+                    if (cr == 1) {close_cursor();}
                     button_move_Right.setEnabled(false);
                     system_start_Right_time = System.currentTimeMillis();
                     check_start();
@@ -659,9 +666,7 @@ public class MainBattleline extends MainData {
                             button_move_Right.setEnabled(true);
                         }
                     }, 1200);
-                } else {
-
-                }
+                } //else { }
                 break;
         }
         view.performClick();
@@ -669,7 +674,7 @@ public class MainBattleline extends MainData {
     };
 
     View.OnLongClickListener long_click_move_Right = v -> {
-        if (move_on){}
+        //if (move_on){}
         return true;
     };
 
@@ -681,8 +686,9 @@ public class MainBattleline extends MainData {
                 //restore = 0; button_restore.callOnClick();
                 button_continue.setVisibility(View.GONE);
                 left_result_right.setVisibility(View.VISIBLE);
-                if (k == 1) { editText_left_down.setVisibility(View.GONE); editText_right_up.setVisibility(View.GONE);
-                    editText_left_right.setVisibility(View.GONE); linear_Left_Right_num_change.setVisibility(View.GONE); }
+                if (cr == 1) { editText_left_down_right.setVisibility(View.GONE); // Todo creative may be creative();
+                    editText_left_down.setVisibility(View.GONE); editText_right_up.setVisibility(View.GONE);
+                    editText_left_and_right.setVisibility(View.GONE); linear_Left_Right_num_change.setVisibility(View.GONE);}
 
                 left_direct_right.setRotation(0);
                 left_direct_right.getLayoutParams().width = (int)
@@ -716,7 +722,7 @@ public class MainBattleline extends MainData {
                     }, 1000);
             } // else {}
         } else { move_on = false;
-            if (k == 1) {creative();} else {battleline_count();}
+            if (cr == 1) {creative();} else {battleline_count();}
 
             button_attack_Left.setEnabled(false);
             button_attack_Right.setEnabled(false);
@@ -746,10 +752,10 @@ public class MainBattleline extends MainData {
             } else if (bm == 1) { // Вплив очок на гемплей одноманітний.
             }
 
-            if (k == 1) {
-                L_seekbarLenght_R = Int_left_right;
-                L_seekbar_R = Int_left_k;
-                R_seekbar_L = Int_right_k;
+            if (cr == 1) {
+                L_seekbarLenght_R = Int_left_and_right;
+                L_seekbar_R = Int_left_cr;
+                R_seekbar_L = Int_right_cr;
                 //TextВю, який замість продовження битви
                 //Int_left_down за швидкість лівого
                 //Int_right_up за правого швидкість
@@ -823,8 +829,6 @@ public class MainBattleline extends MainData {
             left_result_right.setText(String.valueOf(L_sekbarResult_R));
         }
 
-
-
         if (!move_on) {
             editText_left.setText(String.valueOf(Int_left));
             editText_right.setText(String.valueOf(Int_right));
@@ -851,11 +855,11 @@ public class MainBattleline extends MainData {
     View.OnTouchListener click_defense_Left = (view, event) -> {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (b == 2){ // mechanical
+                /*if (b == 2){ // mechanical
                 }
 
                 if (b == 1){ // dynamicall
-                }
+                }*/
                 break;
             case MotionEvent.ACTION_UP:
                 break;
@@ -938,7 +942,7 @@ public class MainBattleline extends MainData {
     }
 
     public void seekbar_choice() { // Відповідає за онулення позиції гравців. Як що рестор не 0, то показати старе положення.
-        if (restore == 2 && k != 1) { // TODO Потрібно очистити на креативі, і повернути на ресторі.
+        if (restore == 2 && cr != 1) {
             left_seekBar_right.setMax(L_seekbarLenght_R); right_seekBar_left.setMax(L_seekbarLenght_R);
             left_seekBar_right.setProgress(L_position_R); right_seekBar_left.setProgress(R_position_L);
         } else {
@@ -965,7 +969,7 @@ public class MainBattleline extends MainData {
     }
 
 
-    public void menu_visible () { // TODO Відповідає за скриття опційного меню
+    public void menu_visible () { // Відповідає за скриття опційного меню
         if (!menu_on) { // Як що меню виключине то:
             view_on = true; viwe_on_off();
             linear_menu.setVisibility(View.GONE);
@@ -988,18 +992,15 @@ public class MainBattleline extends MainData {
             button_basis.setEnabled(true); button_player.setEnabled(true);
             button_modes.setEnabled(true);
 
-            editText_left.setEnabled(true);
-            editText_right.setEnabled(true);
+            editText_left.setEnabled(true); editText_right.setEnabled(true);
             left_direct_right.setEnabled(true);
-
             editText_check();
         } else {
             if(menu_on){button_clear.setEnabled(false);} if (!c_on){button_count.setEnabled(false);}
             if (!b_on){button_basis.setEnabled(false);} button_action.setEnabled(false);
             button_player.setEnabled(false); if (!m_on){button_modes.setEnabled(false);}
 
-            editText_left.setEnabled(false);
-            editText_right.setEnabled(false);
+            editText_left.setEnabled(false); editText_right.setEnabled(false);
             if (menu_on) {left_direct_right.setEnabled(false);}
         }
     }
@@ -1010,20 +1011,21 @@ public class MainBattleline extends MainData {
 
             string_left = editText_left.getText().toString().trim();
             string_right = editText_right.getText().toString().trim();
-            if (k == 1 && !menu_on && !move_on) {
-                string_left_right = editText_left_right.getText().toString().trim();
+            if (cr == 1 && !menu_on && !move_on) {
                 string_left_down = editText_left_down.getText().toString().trim();
+                string_left_and_right = editText_left_and_right.getText().toString().trim();
                 string_right_up = editText_right_up.getText().toString().trim();
+                string_left_down_right = editText_left_down_right.getText().toString().trim();
             }
         }
 
-        if (k == 1 && !menu_on && !move_on) {
-            if (!string_left.isEmpty() && !string_left_right.isEmpty()
+        if (cr == 1 && !menu_on && !move_on) {
+            if (!string_left.isEmpty() && !string_left_and_right.isEmpty() && !string_left_down_right.isEmpty()
                     && (b == 2 || b == 1 && !string_left_down.isEmpty()) && p == 2) {
                 button_move_Left.setEnabled(true);
             } else { button_move_Left.setEnabled(false); }
 
-            if (!string_right.isEmpty() && !string_left_right.isEmpty()
+            if (!string_right.isEmpty() && !string_left_and_right.isEmpty() && !string_left_down_right.isEmpty()
                     && (b == 2 || b == 1 && !string_right_up.isEmpty()) && p == 2) {
                 button_move_Right.setEnabled(true);
             } else { button_move_Right.setEnabled(false); }
@@ -1077,7 +1079,8 @@ public class MainBattleline extends MainData {
             else if (b == 1) {button_basis.setText(R.string.dynamicall);}
             else {button_basis.setText(R.string.basis);}
 
-            if (k == 1){button_action.setText(R.string.creative);
+            if (cr == 1){button_action.setText(R.string.creative);
+
             } else {button_action.setText(R.string.action);}
 
             b_on = false;
@@ -1120,32 +1123,42 @@ public class MainBattleline extends MainData {
         editMainData.putString("string_left", string_left); editMainData.putString("string_center", string_center); editMainData.putString("string_right", string_right);
         editMainData.putBoolean("L_direct", L_direct); editMainData.putBoolean("R_direct", R_direct);
         editMainData.putInt("Int_left", Int_left); editMainData.putInt("Int_center", Int_center); editMainData.putInt("Int_right", Int_right);
+
+        editMainData.putInt("Int_left_cr", Int_left_cr); editMainData.putInt("Int_right_cr", Int_right_cr);
+        editMainData.putInt("Int_left_down", Int_left_down); editMainData.putInt("Int_right_up", Int_right_up);
+        editMainData.putInt("Int_left_and_right", Int_left_and_right); editMainData.putInt("Int_left_down_right", Int_left_down_right);
+
         editMainData.putInt("L_result_C", L_result_C); editMainData.putInt("L_result_R", L_result_R); editMainData.putInt("C_result_R", C_result_R);
         editMainData.putInt("L_seekbar_R", L_seekbar_R); editMainData.putInt("R_seekbar_L", R_seekbar_L);
         editMainData.putInt("L_position_R", L_position_R); editMainData.putInt("R_position_L", R_position_L);
         editMainData.putInt("L_speed_R", L_speed_R); editMainData.putInt("R_speed_L", R_speed_L);
         editMainData.putInt("L_seekbarLenght_R", L_seekbarLenght_R); editMainData.putInt("L_sekbarResult_R", L_sekbarResult_R);
         editMainData.putInt("OLD_L_seekbar_R", OLD_L_seekbar_R); editMainData.putInt("OLD_R_seekbar_L", OLD_R_seekbar_L); editMainData.putInt("OLD_L_Int_and_R", OLD_L_Int_and_R);
-        editMainData.putInt("m", m); editMainData.putInt("c", c); editMainData.putInt("p", p); editMainData.putInt("b", b); editMainData.putInt("k", k);
+        editMainData.putInt("m", m); editMainData.putInt("c", c); editMainData.putInt("p", p); editMainData.putInt("b", b); editMainData.putInt("cr", cr);
         editMainData.putInt("L_direct_C", L_direct_C); editMainData.putInt("L_direct_R", L_direct_R); editMainData.putInt("C_direct_R", C_direct_R);
         editMainData.putInt("restore", restore); editMainData.putInt("bm", bm); editMainData.putInt("sc", (int) sc);
 
         editMainData.apply(); //editMainData.commit();
     }
 
-    public void outData () { // TODO Зробити збреження Креатива
+    public void outData () {
         languageCode = MainDataExchange.getString("languageCode", languageCode);
 
         string_left = MainDataExchange.getString("string_left", string_left) ; string_center = MainDataExchange.getString("string_center", string_center); string_right = MainDataExchange.getString("string_right", string_right) ;
         L_direct = MainDataExchange.getBoolean("L_direct", L_direct); R_direct = MainDataExchange.getBoolean("R_direct", R_direct);
         Int_left = MainDataExchange.getInt("Int_left", Int_left); Int_center = MainDataExchange.getInt("Int_center", Int_center); Int_right = MainDataExchange.getInt("Int_right", Int_right);
+
+        Int_left_cr = MainDataExchange.getInt("Int_left_cr", Int_left_cr); Int_right_cr = MainDataExchange.getInt("Int_right_cr", Int_right_cr);
+        Int_left_down = MainDataExchange.getInt("Int_left_down", Int_left_down); Int_right_up = MainDataExchange.getInt("Int_right_up", Int_right_up);
+        Int_left_and_right = MainDataExchange.getInt("Int_left_and_right", Int_left_and_right); Int_left_down_right = MainDataExchange.getInt("Int_left_down_right", Int_left_down_right);
+
         L_result_C = MainDataExchange.getInt("L_result_C", L_result_C); L_result_R = MainDataExchange.getInt("L_result_R", L_result_R); C_result_R = MainDataExchange.getInt("C_result_R", C_result_R);
         L_seekbar_R = MainDataExchange.getInt("L_seekbar_R", L_seekbar_R); R_seekbar_L = MainDataExchange.getInt("R_seekbar_L", R_seekbar_L);
         L_position_R = MainDataExchange.getInt("L_position_R", L_position_R); R_position_L = MainDataExchange.getInt("R_position_L", R_position_L);
         L_speed_R = MainDataExchange.getInt("L_speed_R", L_speed_R); R_speed_L = MainDataExchange.getInt("R_speed_L", R_speed_L);
         L_seekbarLenght_R = MainDataExchange.getInt("L_seekbarLenght_R", L_seekbarLenght_R); L_sekbarResult_R = MainDataExchange.getInt("L_sekbarResult_R", L_sekbarResult_R);
         OLD_L_seekbar_R = MainDataExchange.getInt("OLD_L_seekbar_R", OLD_L_seekbar_R); OLD_R_seekbar_L = MainDataExchange.getInt("OLD_R_seekbar_L", OLD_R_seekbar_L); OLD_L_Int_and_R = MainDataExchange.getInt("OLD_L_Int_and_R", OLD_L_Int_and_R);
-        m = (byte) MainDataExchange.getInt("m", m); c = (byte) MainDataExchange.getInt("c", c); p = (byte) MainDataExchange.getInt("p", p); b = (byte) MainDataExchange.getInt("b", b); k = (byte) MainDataExchange.getInt("k", k);
+        m = (byte) MainDataExchange.getInt("m", m); c = (byte) MainDataExchange.getInt("c", c); p = (byte) MainDataExchange.getInt("p", p); b = (byte) MainDataExchange.getInt("b", b); cr = (byte) MainDataExchange.getInt("cr", cr);
         L_direct_C = (byte) MainDataExchange.getInt("L_direct_C", L_direct_C); L_direct_R = (byte) MainDataExchange.getInt("L_direct_R", L_direct_R); C_direct_R = (byte) MainDataExchange.getInt("C_direct_R", C_direct_R);
         restore = (byte) MainDataExchange.getInt("restore", restore); bm = (byte) MainDataExchange.getInt("bm", bm); sc = MainDataExchange.getInt("sc", (int) sc);
 
@@ -1154,6 +1167,8 @@ public class MainBattleline extends MainData {
             handler.postDelayed(() -> { view_on = false; viwe_on_off(); }, 350); // 1050
         } else {anim_base_choice();}
 
+        if (Int_left_down != 0) {editText_left_down.setText(String.valueOf(Int_left_down));}
+        if (Int_right_up != 0) {editText_right_up.setText(String.valueOf(Int_right_up));}
         editText_left.setText(string_left); editText_right.setText(string_right);
         localization(languageCode);
         button_player.callOnClick(); c_on = true; b_on = true; close_cursor();

@@ -18,10 +18,10 @@ import androidx.core.content.ContextCompat;
 
 import java.util.Locale;
 
-public class MainActivity extends MainData { // TODO Відповідає за вміст головного меню гри.
+public class MainActivity extends MainData { // Відповідає за вміст головного меню гри.
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) { // TODO Цей клас, викликається на початку здійненя коду, тому в ньому виповниться все в першу чергу.
+    protected void onCreate(Bundle savedInstanceState) { // Цей клас, викликається на початку здійненя коду, тому в ньому виповниться все в першу чергу.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         MainDataExchange = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -76,7 +76,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
     } // І кстаті, цей код має послідовність, тобто функціонал вюшок розпосаний, від нижньої вшки до верхньої, йдучи зік заком, з ліва на право. І між методами, пропуски в два рядка.
 
 
-    private void setRotationAnimation() { // TODO Проводить заміну анімації зміни орінтації екрана.
+    private void setRotationAnimation() { // Проводить заміну анімації зміни орінтації екрана.
         int rotationAnimation = WindowManager.LayoutParams.ROTATION_ANIMATION_JUMPCUT;
         Window win = getWindow();
         WindowManager.LayoutParams winParams = win.getAttributes();
@@ -84,7 +84,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         win.setAttributes(winParams);
     }
 
-    public void localization (String languageCode) { // TODO Проводить зміну локалізації.
+    public void localization (String languageCode) { // Проводить зміну локалізації.
         Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
@@ -100,7 +100,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
     }
 
 
-    private final TextWatcher editText_watcher = new TextWatcher() { // TODO Це реєструє редагування ЕдітТекста користувачем.
+    private final TextWatcher editText_watcher = new TextWatcher() { // Це реєструє редагування ЕдітТекста користувачем.
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
         @Override
@@ -110,7 +110,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
     };
 
 
-    View.OnLongClickListener long_click_launcher_background = v -> { // TODO Це автоматичне виставлення в поля 50 очків
+    View.OnLongClickListener long_click_launcher_background = v -> { // Це автоматичне виставлення в поля 50 очків
         if (menu_on){
             button_clear.callOnClick();
             editText_right.setText(String.valueOf(50));
@@ -120,10 +120,10 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         return false;
     };
 
-    public void click_launcher_background (View view){ if (m == 4 && m_on && menu_on) {m = -4;} close_cursor(); } // TODO В цей метод зруповані закриття меню, і забрання курсора.
+    public void click_launcher_background (View view){ if (m == 4 && m_on && menu_on) {m = -4;} close_cursor(); } // В цей метод зруповані закриття меню, і забрання курсора.
 
 
-    public void click_clear (View view){ // TODO Очищує значення, і ставить їх в дефолтне положення.
+    public void click_clear (View view){ // Очищує значення, і ставить їх в дефолтне положення.
         if (menu_on) {
             L_direct_R = 0; L_result_R = 0;
             editText_right.setText(""); editText_left.setText("");
@@ -140,7 +140,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         }
     }
 
-    View.OnLongClickListener long_click_clear = v -> { // TODO При втримані на кнопку клір, скидуються кнопки на дефолт, як і режими, але не значення полей.
+    View.OnLongClickListener long_click_clear = v -> { // При втримані на кнопку клір, скидуються кнопки на дефолт, як і режими, але не значення полей.
         if (!menu_on) {
             menu_on = true; menu_visible(); result_choice();
             if (string_left.equals("0")){editText_left.setText("");}
@@ -163,7 +163,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
     };
 
 
-    public void click_player (View view){ // TODO Це клік по додаваню гравців.
+    public void click_player (View view){ // Це клік по додаваню гравців.
         if (!StartData) {p ++; if (p == 4) {p = 2;}} // По дефолту значення 2, тому що початковий режим для двох гравців
 
         if (p == 2){ // Зміна на 4 гравців, який насправді перехід до 2
@@ -185,7 +185,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
     } // заповнені, і повина бути включна, як що текс є і в третій, яка тепер не скрита), і закритя курсора.
 
 
-    public void click_count (View view){ // TODO Відповідає за жорсткосткість атак.
+    public void click_count (View view){ // Відповідає за жорсткосткість атак.
         int id = view.getId(); // Не величка привязка до одного слухача нажаття, яка фіксує по айді, в одній системі.
         if (id == R.id.button_stiffLeft) { // Ліва кнопка. Більше число видасть менший результат. Зявляються після включення меню.
             sc += 2; if (sc > 20){ sc = 10; }
@@ -233,7 +233,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
         }
     }
 
-    public void click_count_choice (View view) { // TODO Вибір методу рахування.
+    public void click_count_choice (View view) { // Вибір методу рахування.
         int id = view.getId();
         if (id == R.id.button_notcount) {
             c = 3; button_count.setText(R.string.notcount);
@@ -263,7 +263,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
     }
 
 
-    public void click_modes (View view) { // TODO Вибір режиму
+    public void click_modes (View view) { // Вибір режиму
         if (!m_on){
             m_on = true; view_on = true; viwe_on_off(); // viwe_on_off запускает метод, який відключає кнопки на час взамодії з меню.
             button_direction.setVisibility(View.VISIBLE);
@@ -296,7 +296,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
     }
 
 
-    public void click_mode_choice (){ // TODO Меню вибору режимів
+    public void click_mode_choice (){ // Меню вибору режимів
 
         if (m == 1 || m == 0){ // Віалізує режим probably. Дефолтний режем 0, але при відкреті я вітображаю меню 1.
             button_direction.setText(R.string.direction);
@@ -328,7 +328,7 @@ public class MainActivity extends MainData { // TODO Відповідає за �
     }
 
 
-    public void click_action (View view){ // TODO Цей метод викликається після кліку на Action, відповідає за надіслання даних в клас, і подальшуї оброботку.
+    public void click_action (View view){ // Цей метод викликається після кліку на Action, відповідає за надіслання даних в клас, і подальшуї оброботку.
         if (m == 0 || m == 4 || c == 0 || m == 2 && menu_on && (
                 ((L_direct_C == 0 || L_direct_R == 0 || C_direct_R == 0) && p == 3) || L_direct_R == 0 && p == 2)){
             if (m == 0 || m == 4){button_modes.setEnabled(false);}
@@ -549,9 +549,9 @@ public class MainActivity extends MainData { // TODO Відповідає за �
             string_right = editText_right.getText().toString().trim();
         }
 
-        //if (string_left.equals("0")) {editText_left.setText("");}
-        //if (string_right.equals("0")) {editText_right.setText("");}
-        //if (string_center.equals("0")) {editText_center.setText("");}
+        /*if (string_left.equals("0")) {editText_left.setText("");}
+        if (string_right.equals("0")) {editText_right.setText("");}
+        if (string_center.equals("0")) {editText_center.setText("");}*/
 
         if (!string_left.isEmpty() && !string_center.isEmpty() && !string_right.isEmpty() && p == 3 && (!view_on || !menu_on)){
             button_action.setEnabled(true);

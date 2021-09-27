@@ -512,14 +512,16 @@
         <EditText
             android:id="@+id/Left_EditText_Down_Right"
             style="@style/ScriptMapNumText"
-            android:layout_width="40dp"
-            android:layout_height="20dp"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="145dp"
             android:autofillHints="@string/reltat"
             android:background="@null"
             android:enabled="false"
             android:hint="@string/reltat"
             android:imeOptions="actionDone|flagNoFullscreen|actionNext"
-            android:textSize="18sp"
+            android:textSize="30sp"
+            android:maxLength="8"
             android:visibility="gone" />
     </LinearLayout>
 

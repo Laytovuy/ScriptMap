@@ -40,11 +40,19 @@
 
     <string name="flank_down" translatable="false">˅</string>
     <string name="flank_up" translatable="false">˄</string>
-    <string name="rotate_stop">POTS</string>
+    <string name="vertically_stop">POTS</string>
+    <string name="fatality">YTILATAF</string>
     <string name="move">EVOM</string>
     <string name="rotate">ETATOR</string>
     <string name="attack">KCATTA</string>
+    <string name="capture">ERUTPAC</string>
+    <string name="sabotage">EGATOBAS</string>
+    <string name="destroy">YORTSED</string>
+    <string name="impossible">ELBISSOPMI</string>
+    <string name="canceled">DELECNAC</string>
     <string name="defense">ESNEFED</string>
+    <string name="protect">TCETORP</string>
+    <string name="success">SSECCUS</string>
 
 
     <string name="bacgraund" translatable="false">bacgraund</string>

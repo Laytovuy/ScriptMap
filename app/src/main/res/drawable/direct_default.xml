@@ -9,7 +9,7 @@
     <item android:id="@android:id/progress">
         <clip>
             <shape android:shape="line">
-                <stroke android:width="2dip" android:color="@color/colorNow_ScriptMap"
+                <stroke android:width="2dip" android:color="@color/colorNew_ScriptMap"
                     android:dashWidth="20dp" android:dashGap="4dp"/>
             </shape>
         </clip>

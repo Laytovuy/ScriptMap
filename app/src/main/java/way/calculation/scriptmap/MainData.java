@@ -54,15 +54,19 @@ public class MainData extends AppCompatActivity {
 
     public String string_left = "", string_center = "", string_right = ""; // Це переміні які хранять текст, який я провіряю на пустоту, бо як конверсія з пустої строки в переміну визве помилку.
     public String string_right_up = "", string_left_down = "", string_left_and_right = "", string_left_down_right = "";
+    public String string_left_front = "center", string_right_front = "center";
+    public String string_L_activity_R = "", string_R_activity_L = "";
 
     public boolean view_on = false, c_on = false, m_on = false, menu_on = true; // Це переміні які я використовую як переключатілі на кнопках. v_on = Viwe_on, c_on = Count_on, m_on = Mode_on, d_long_on = Direct_long_on.
     public boolean b_on = false, move_on = false, L_direct = true, R_direct = true;
 
+
     public int Final_left, Final_center, Final_right;
     public int Int_left, Int_center, Int_right, L_result_C, L_result_R, C_result_R;
     public int L_seekbar_R, R_seekbar_L, L_position_R, R_position_L, L_speed_R, R_speed_L, L_seekbarLenght_R, L_sekbarResult_R,
-            OLD_L_seekbar_R, OLD_R_seekbar_L, OLD_L_Int_and_R, roundedL, roundedR;
+            OLD_L_seekbar_R, OLD_R_seekbar_L, OLD_L_Int_and_R, rounded_L, rounded_R;
     public int Int_left_cr, Int_right_cr, Int_left_down, Int_left_and_right, Int_right_up, Int_left_down_right;
+    public int L_capture_R, L_protect_R;
 
     public byte m, c, p = 2, L_direct_C, L_direct_R, C_direct_R; // Це скороченя від m = Mode, c = Count, p = Player, b = Basis, bm = BasisMode
     public double sc = 10; // Ця переміна має в собі ключове число яке впливає на результат сили атаки.

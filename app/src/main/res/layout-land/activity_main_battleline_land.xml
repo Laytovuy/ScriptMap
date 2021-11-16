@@ -98,7 +98,7 @@
                     style="@style/ScriptMapButtonRotateMax"
                     android:layout_height="55dp"
                     android:layout_marginBottom="-6dp"
-                    android:onClick="click_flank"
+                    android:onClick="click_flank_Left"
                     android:rotation="180"
                     android:text="@string/flank_up"
                     android:textSize="20sp" />
@@ -109,7 +109,7 @@
                     android:layout_height="43dp"
                     android:layout_marginTop="-6dp"
                     android:layout_marginBottom="-6dp"
-                    android:onClick="click_flank"
+                    android:onClick="click_flank_Left"
                     android:rotation="180" />
 
                 <Button
@@ -117,7 +117,7 @@
                     style="@style/ScriptMapButtonRotateMax"
                     android:layout_height="55dp"
                     android:layout_marginTop="-6dp"
-                    android:onClick="click_flank"
+                    android:onClick="click_flank_Left"
                     android:rotation="180"
                     android:text="@string/flank_down"
                     android:textSize="20sp" />
@@ -255,7 +255,7 @@
                     style="@style/ScriptMapButtonRotateMax"
                     android:layout_height="55dp"
                     android:layout_marginBottom="-6dp"
-                    android:onClick="click_flank"
+                    android:onClick="click_flank_Right"
                     android:text="@string/flank_down"
                     android:textSize="20sp" />
 
@@ -265,14 +265,14 @@
                     android:layout_height="43dp"
                     android:layout_marginTop="-6dp"
                     android:layout_marginBottom="-6dp"
-                    android:onClick="click_flank" />
+                    android:onClick="click_flank_Right" />
 
                 <Button
                     android:id="@+id/button_down_flank_Right"
                     style="@style/ScriptMapButtonRotateMax"
                     android:layout_height="55dp"
                     android:layout_marginTop="-6dp"
-                    android:onClick="click_flank"
+                    android:onClick="click_flank_Right"
                     android:text="@string/flank_up"
                     android:textSize="20sp" />
             </LinearLayout>

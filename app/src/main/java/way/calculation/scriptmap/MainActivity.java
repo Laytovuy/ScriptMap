@@ -430,15 +430,15 @@ public class MainActivity extends MainData { // Відповідає за вмі
 
             Final_left = DataExchange.Final_left; if (p != 2) { Final_center = DataExchange.Final_center; } Final_right = DataExchange.Final_right;
         } // Це аналіз виграшу, яка показує чи буде противник виграний за один хіж
-        direction_choice();
+        direction_choice(); // todo iand to do n var
     }
 
-    public void direction_choice() {
+    public void direction_choice() { // TODO Лінія бою лукавить
         if (L_direct_C == 0 || L_direct_C == 3){
             left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_default)); }
         if (L_direct_C == 1 || L_direct_C == 2) { left_direct_center.setProgress(1);
             left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_action));
-            if (Int_center != 0 && Final_center == 0 || Int_left != 0 && Final_left == 0) { left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
+            if (Int_center != 0 && Final_center == 0 && Final_left != 0 || Int_left != 0 && Final_left == 0 && Final_center != 0) { left_direct_center.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
         if (L_direct_C == 0){ left_direct_center.setProgress(0);  } // Left_and_Center
         if (L_direct_C == 1){ left_direct_center.setRotation(-90);} // Left_to_Center
         if (L_direct_C == 2){ left_direct_center.setRotation(90); } // Center_to_Left
@@ -449,7 +449,7 @@ public class MainActivity extends MainData { // Відповідає за вмі
         if (L_direct_R == 1 || L_direct_R == 2) {
             left_direct_right.setProgress(1);
             left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_action));
-            if (Int_right != 0 && Final_right == 0 || Int_left != 0 && Final_left == 0) { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
+            if (Int_right != 0 && Final_right == 0 && Final_left != 0 || Int_left != 0 && Final_left == 0 && Final_right != 0) { left_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
         if (L_direct_R == 0){ left_direct_right.setProgress(0);  } // Left_and_Right && (Int_left != 0 || Int_right != 0)
         if (L_direct_R == 2){ left_direct_right.setRotation(-90);} // Left_to_Right
         if (L_direct_R == 1){ left_direct_right.setRotation(90); } // Right_to_Left
@@ -460,7 +460,7 @@ public class MainActivity extends MainData { // Відповідає за вмі
             center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_default)); }
         if (C_direct_R == 1 || C_direct_R == 2) { center_direct_right.setProgress(1);
             center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_action));
-            if (Int_right != 0 && Final_right == 0 || Int_center != 0 && Final_center == 0) { center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
+            if (Int_right != 0 && Final_right == 0 && Final_center != 0 || Int_center != 0 && Final_center == 0 && Final_right != 0) { center_direct_right.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.direct_fatality)); } }
         if (C_direct_R == 0){ center_direct_right.setProgress(0);  } // Center_and_Right
         if (C_direct_R == 1){ center_direct_right.setRotation(-90);} // Center_to_Right
         if (C_direct_R == 2){ center_direct_right.setRotation(90); } // Right_to_Center
@@ -626,7 +626,7 @@ public class MainActivity extends MainData { // Відповідає за вмі
     }
 
     @Override
-    protected void onPause() {
+    protected void onPause() { // TODO При закриті програми значення зберігаються і вставляються при заходжені.
         saveData();
         super.onPause();
     }

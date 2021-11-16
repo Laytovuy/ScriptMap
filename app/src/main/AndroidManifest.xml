@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="way.calculation.scriptmap">
 
     <uses-permission android:name="android.permission.VIBRATE"/>
+
+    <!--android:screenOrientation="portrait">-->
 
     <application
         android:allowBackup="true"
@@ -16,7 +19,9 @@
         <activity
             android:name=".MainActivity"
 
-            android:screenOrientation="portrait">
+            android:screenOrientation="reversePortrait"
+            tools:ignore="LockedOrientationActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +32,7 @@
         <activity
             android:name=".MainBattleline"
 
-            android:screenOrientation="landscape">
+            android:screenOrientation="reverseLandscape">
         </activity>
     </application>
 </manifest>

@@ -34,9 +34,17 @@
     <string name="continue_action">відновити</string>
     <string name="stop">СТОП</string>
 
-    <string name="rotate_stop">ПОТС</string>
+    <string name="vertically_stop">ПОТС</string>
+    <string name="fatality">YTILATAF</string>
     <string name="move">ИТАХУР</string>
     <string name="rotate">ТРЕБО</string>
     <string name="attack">АКАТТА</string>
+    <string name="capture">ТАВХАЗ</string>
+    <string name="sabotage">ЖАТОБАС</string>
+    <string name="destroy">ИТИЩИН</string>
+    <string name="impossible">ОВИЛЖОМЕН</string>
+    <string name="canceled">ОНАВОСАКС</string>
     <string name="defense">АНОРОБО</string>
+    <string name="protect">ТСИХАЗ</string>
+    <string name="success">ХІПСУ</string>
 </resources>

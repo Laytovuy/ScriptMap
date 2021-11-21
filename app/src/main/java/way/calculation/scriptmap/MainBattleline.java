@@ -581,6 +581,7 @@ public class MainBattleline extends MainData {
         }
     }
 
+    // --------------------- ----------  -------  ----   --    -
 
     View.OnTouchListener click_move_Left = (view, event) -> {
         switch (event.getAction()) {
@@ -628,7 +629,7 @@ public class MainBattleline extends MainData {
                                         (204 - 115) / (L_speed_R * -1)  + 115, (204 - 62) / (L_speed_R * -1) + 62, (204 - 62) / (L_speed_R * -1) + 62)));
                             }
 
-                            if (string_L_activity_R.equals("capture")) { // TODO Поінт завеликий
+                            if (string_L_activity_R.equals("capture")) {
                                 L_capture_R += -(rounded_R / (L_speed_R * -1));
                                 if (L_capture_R >= -rounded_R) {
                                     left_direct_right.setProgressBackgroundTintList(ColorStateList.valueOf(Color.rgb(
@@ -639,6 +640,7 @@ public class MainBattleline extends MainData {
                             }
                         }
 
+                        if (Final_left > 0) { Final_left = 0;} else if (Final_left < 0) {Final_left++; if (Final_left == 0) {left_seekBar_right.setVisibility(View.VISIBLE);}}
                         if (L_seekbar_R == 0 && L_speed_R == 0) {button_move_Left.setEnabled(false);  string_L_activity_R = "spent";}
                         if (L_sekbarResult_R <= 0) {L_direct_R = 4; string_L_activity_R = "draw";
                             string_R_activity_L = "draw"; stop_battle();}
@@ -670,8 +672,9 @@ public class MainBattleline extends MainData {
     View.OnLongClickListener long_click_move_Left = v -> {
         if (move_on) {
             if (b == 2) {
-                if (string_L_activity_R.equals("") && L_speed_R == 0) {
-                    L_direct = !L_direct;
+                if (L_speed_R == 0 && string_L_activity_R.equals("")) {
+                    L_direct = !L_direct; Final_left++;
+                    if (Final_left > 2) {left_seekBar_right.setVisibility(View.INVISIBLE); Final_left = -4;}
 
                     if (string_left_front.equals("up")) { button_down_flank_Left.callOnClick(); } else if (string_left_front.equals("down")) {  button_up_flank_Left.callOnClick(); }
                     button_move_Left.setText(R.string.rotate); final Handler handler = new Handler();
@@ -681,6 +684,8 @@ public class MainBattleline extends MainData {
                     final Handler handler = new Handler();
                     handler.postDelayed(() -> {button_move_Left.setText(R.string.move);}, 600);
                 }
+
+
             }
         } return true;
     };
@@ -722,9 +727,9 @@ public class MainBattleline extends MainData {
                                 button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
                                 button_attack_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
                                 button_defense_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
-                                button_down_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
-                                button_up_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
-                                button_center_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_down_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_up_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_center_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
 
                                 L_direct_R = 2; stop_battle();
                             } else {
@@ -738,6 +743,7 @@ public class MainBattleline extends MainData {
                                 L_speed_R = -n1 + 1;
                             }
                         }
+                        if (Final_left > 0) { Final_left = 0;} else if (Final_left < 0) {Final_left++; if (Final_left == 0) {left_seekBar_right.setVisibility(View.VISIBLE);}}
                     } //if (b == 1){ // dynamicall }
                 }
                 break;
@@ -761,6 +767,21 @@ public class MainBattleline extends MainData {
                         button_attack_Left.setEnabled(false);
                         button_attack_Left.setText(R.string.attack);
                         string_L_activity_R = "";
+                    } else if (string_L_activity_R.equals("bypass")) {
+                        if (L_direct) { L_position_R += 3;
+                            if (L_position_R > L_seekbarLenght_R) { L_position_R = L_seekbarLenght_R - (L_position_R - L_seekbarLenght_R); L_direct = false;
+                                if (string_left_front.equals("up")) { button_down_flank_Left.callOnClick();
+                                } else if (string_left_front.equals("down")) {  button_up_flank_Left.callOnClick(); } }
+                        } else { L_position_R -= 3;
+                            if (L_position_R < 0) { L_position_R = +L_position_R; L_direct = true;
+                                if (string_left_front.equals("up")) { button_down_flank_Left.callOnClick();
+                                } else if (string_left_front.equals("down")) {  button_up_flank_Left.callOnClick(); } }
+                        }
+                        left_seekBar_right.setProgress(L_position_R);
+
+                        button_move_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonYellow)));
+                        button_attack_Left.setEnabled(false); button_attack_Left.setText(R.string.attack);
+                        L_speed_R = 2; string_L_activity_R = "";
                     }
 
                     button_move_Left.setEnabled(true);
@@ -794,12 +815,15 @@ public class MainBattleline extends MainData {
                     left_direct_right.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
                 }
             } else {
-                if (L_seekbar_R >= 1 && L_position_R > rounded_L) { // саботаж
+                if (L_seekbar_R >= 1 && L_position_R < rounded_L && string_R_activity_L.equals("capture")) { // саботаж
                     string_L_activity_R = "sabotage";
                     L_seekbar_R -= 1; editText_left.setText(String.valueOf(L_seekbar_R));
                     L_capture_R += -(rounded_L / (R_speed_L * -1));
                     button_attack_Left.setText(R.string.success);
                     button_attack_Right.setText(R.string.sabotage);
+                } else if (L_position_R < rounded_L) { // перестрибнути
+                    if (L_seekbar_R >= 1) {L_seekbar_R -= 1; editText_left.setText(String.valueOf(L_seekbar_R));}
+                    string_L_activity_R = "bypass"; button_attack_Left.setText(R.string.bypass);
                 } else {
                     button_attack_Left.setText(R.string.impossible);
                     final Handler handler = new Handler();
@@ -817,7 +841,7 @@ public class MainBattleline extends MainData {
             case MotionEvent.ACTION_DOWN:
                 if (move_on) {
                     if (b == 2){ // mechanical
-                        if (string_L_activity_R.equals("protection")) { // 150 141 101 ==> 62 62 115
+                        if (string_L_activity_R.equals("protection")) { // 150 141 101 ==> 61 88 114
                             L_protect_R++;
                             if (L_protect_R == 0) { string_L_activity_R = ""; button_move_Left.setEnabled(true); button_defense_Left.setEnabled(false);
                                 left_direct_right.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorLeft_SeekBar)));
@@ -831,7 +855,7 @@ public class MainBattleline extends MainData {
                                 left_direct_right.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonBlue)));
                             } else {
                                 left_direct_right.setProgressTintList(ColorStateList.valueOf(Color.rgb(
-                                        150 - ((150 - 62) / (L_protect_R * -1)), 141 - ((141 - 62) / (L_protect_R * -1)), (115 - 101) / (L_protect_R * -1) + 101))); }
+                                        150 - ((150 - 61) / (L_protect_R * -1)), 141 - ((141 - 88) / (L_protect_R * -1)), (114 - 101) / (L_protect_R * -1) + 101))); }
                         } else {
                             if (string_L_activity_R.equals("defense")) {
                                 if (L_position_R + R_position_L == L_seekbarLenght_R) {
@@ -852,9 +876,9 @@ public class MainBattleline extends MainData {
                                     button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
                                     button_attack_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
                                     button_defense_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
-                                    button_down_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
-                                    button_up_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
-                                    button_center_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                    button_down_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                    button_up_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                    button_center_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
 
                                     L_direct_R = 2; stop_battle();
                                 } else { L_speed_R++;
@@ -876,6 +900,7 @@ public class MainBattleline extends MainData {
                                 L_speed_R = -n1 + 1;
                             }
                         }
+                        if (Final_left > 0) { Final_left = 0;} else if (Final_left < 0) {Final_left++; if (Final_left == 0) {left_seekBar_right.setVisibility(View.VISIBLE);}}
                     }
                 }
                 //if (b == 1){ // dynamicall}
@@ -883,7 +908,29 @@ public class MainBattleline extends MainData {
             case MotionEvent.ACTION_UP:
                 if (move_on) {
                     if (string_L_activity_R.equals("defense")) {
-                        button_defense_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonYellow))); }
+                        button_defense_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonYellow)));
+                    } else if (string_L_activity_R.equals("sabotage")) {
+                        button_defense_Left.setEnabled(false);
+                        button_defense_Left.setText(R.string.defense);
+                        if (L_protect_R == 0) {button_defense_Right.setText(R.string.defense);
+                        } else {button_defense_Right.setText(R.string.capture);}
+                        string_L_activity_R = ""; L_speed_R = -2;
+                    } else if (string_L_activity_R.equals("bypass")) {
+                        if (L_direct) { L_position_R += 3;
+                            if (L_position_R > L_seekbarLenght_R) { L_position_R = L_seekbarLenght_R - (L_position_R - L_seekbarLenght_R); L_direct = false;
+                                if (string_left_front.equals("up")) { button_down_flank_Left.callOnClick();
+                                } else if (string_left_front.equals("down")) {  button_up_flank_Left.callOnClick(); } }
+                        } else { L_position_R -= 3;
+                          if (L_position_R < 0) { L_position_R = +L_position_R; L_direct = true;
+                              if (string_left_front.equals("up")) { button_down_flank_Left.callOnClick();
+                              } else if (string_left_front.equals("down")) {  button_up_flank_Left.callOnClick(); } }
+                        }
+                        left_seekBar_right.setProgress(L_position_R);
+
+                        button_move_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonYellow)));
+                        button_defense_Left.setEnabled(false); button_defense_Left.setText(R.string.defense);
+                        L_speed_R = -1; string_L_activity_R = ""; button_move_Left.setEnabled(true);
+                    }
                 }
                 break;
         }
@@ -898,11 +945,21 @@ public class MainBattleline extends MainData {
                 L_seekbar_R--; editText_left.setText(String.valueOf(L_seekbar_R));
                 left_direct_right.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonYellow)));
             } else {
-                if (L_seekbar_R == 0) {} // зробити цікаву оборону
-                button_defense_Left.setText(R.string.impossible);
-                final Handler handler = new Handler();
-                handler.postDelayed(() -> {
-                    button_defense_Left.setText(R.string.defense); }, 600);
+                if (L_seekbar_R >= 1 && L_position_R > rounded_L && string_R_activity_L.equals("protection")) { // саботаж
+                    string_L_activity_R = "sabotage"; string_R_activity_L = ""; L_protect_R = 0;
+                    R_speed_L = -1; left_direct_right.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorRight_SeekBar)));
+                    button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonYellow)));
+                    button_move_Right.setEnabled(true); button_defense_Right.setEnabled(false);
+                    button_defense_Left.setText(R.string.success); button_defense_Right.setText(R.string.sabotage);
+                } else if (L_position_R > rounded_L) { // перестрибнути
+                    string_L_activity_R = "bypass"; button_defense_Left.setText(R.string.bypass);
+                    if (L_seekbar_R >= 1) {L_seekbar_R -= 1; editText_left.setText(String.valueOf(L_seekbar_R));}
+                } else {
+                    button_defense_Left.setText(R.string.impossible);
+                    final Handler handler = new Handler();
+                    handler.postDelayed(() -> {
+                        button_defense_Left.setText(R.string.defense); }, 600);
+                }
             }
         }
         return true;
@@ -925,43 +982,69 @@ public class MainBattleline extends MainData {
         }
     }
 
-    public void rotate_flank_Left () {
-    }
-
+    // --------------------- ----------  -------  ----   --    -
 
     View.OnTouchListener click_move_Right = (view, event) -> {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (move_on) {
                     if (b == 2){ // mechanical
-                        if (R_seekbar_L != 0){
-                            if (R_speed_L >= 0) {
+                        if (R_speed_L == 0) {
+                            R_seekbar_L -= 1; editText_right.setText(String.valueOf(R_seekbar_L));
+                            L_sekbarResult_R -= 1; left_result_right.setText(String.valueOf(L_sekbarResult_R));
+
+                            if (R_direct) {
+                                if (R_position_L >= L_seekbarLenght_R || (L_position_R + R_position_L == L_seekbarLenght_R
+                                        && string_L_activity_R.equals("defense"))) {
+                                    R_direct = false; R_position_L--;
+                                    if (string_right_front.equals("up")) { button_down_flank_Right.callOnClick();
+                                    } else if (string_right_front.equals("down")) {  button_up_flank_Right.callOnClick(); }
+                                } else { R_position_L++; }
+                            } else {
+                                if (R_position_L <= 0 || (L_position_R + R_position_L == L_seekbarLenght_R
+                                        && string_L_activity_R.equals("defense"))){
+                                    R_direct = true; R_position_L++;
+                                    if (string_right_front.equals("up")) { button_down_flank_Right.callOnClick();
+                                    } else if (string_right_front.equals("down")) {  button_up_flank_Right.callOnClick(); }
+                                } else { R_position_L--; }
+                            }
+
+                            if (R_position_L + L_position_R == L_seekbarLenght_R) {
+                                frameLayout_seekBar.bringChildToFront(findViewById(R.id.Right_seekBar_Left));
+                                right_seekBar_left.bringToFront(); } right_seekBar_left.setProgress(R_position_L);
+                        } else { // 115 62 62 ==> 204 204 204
+                            R_speed_L++;
+
+                            if (R_speed_L == 0) { button_attack_Right.setEnabled(true);  button_defense_Right.setEnabled(true); //Рушати // рушити // to move // to ran
                                 button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_Button)));
-                                R_seekbar_L -= 1; editText_right.setText(String.valueOf(R_seekbar_L));
-                                L_sekbarResult_R -= 1; left_result_right.setText(String.valueOf(L_sekbarResult_R)); button_attack_Right.setEnabled(true);
+                                if (string_R_activity_L.equals("capture")) {
+                                    L_capture_R = 0; button_attack_Right.setText(R.string.attack);
+                                    left_direct_right.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorLeft_SeekBar))); }
+                                string_R_activity_L = "";
+                            } else if (R_speed_L == -1) {
+                                if (string_R_activity_L.equals("capture")) {
+                                    button_attack_Right.setEnabled(false); button_attack_Right.setText(R.string.canceled); }
+                                button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonYellow)));
+                            } else {
+                                button_move_Right.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(
+                                        (204 - 115) / (R_speed_L * -1)  + 115, (204 - 62) / (R_speed_L * -1) + 62, (204 - 62) / (R_speed_L * -1) + 62)));
+                            }
 
-                                if (R_direct) {
-                                    if (R_position_L >= L_seekbarLenght_R){
-                                        R_direct = false; R_position_L--;
-                                    } else {
-                                        R_position_L++;
-                                    }
-                                } else {
-                                    if (R_position_L <= 0){
-                                        R_direct = true; R_position_L++;
-                                    } else {
-                                        R_position_L--;
-                                    }
-                                }
+                            if (string_R_activity_L.equals("capture")) {
+                                L_capture_R += -(rounded_L / (R_speed_L * -1));
+                                if (L_capture_R >= -rounded_L) {
+                                    left_direct_right.setProgressTintList(ColorStateList.valueOf(Color.rgb(
+                                            115 - ((115 - 85) / (L_capture_R * -1)), (115 - 62) / (L_capture_R * -1) + 62, 62)));
+                                } else {// 115 62 62 ==> 62 115 62 = - - -
+                                    left_direct_right.setProgressTintList(ColorStateList.valueOf(Color.rgb(
+                                            115 - ((115 - 62) / (L_capture_R * -1)), (115 - 62) / (L_capture_R * -1) + 62, 62))); }
+                            }
+                        }
 
-                                if (L_position_R + R_position_L == L_seekbarLenght_R) {
-                                    frameLayout_seekBar.bringChildToFront(findViewById(R.id.Right_seekBar_Left));
-                                    right_seekBar_left.bringToFront();
-                                } right_seekBar_left.setProgress(R_position_L);
-
-                                if (L_sekbarResult_R == 0) {button_move_Left.setEnabled(false); button_move_Right.setEnabled(false);}
-                            } else { R_speed_L += 1; }
-                        } else {button_move_Right.setEnabled(false);}
+                        if (Final_right > 0) { Final_right = 0;} else if (Final_right < 0) {Final_right++; if (Final_right == 0) {right_seekBar_left.setVisibility(View.VISIBLE);}}
+                        if (R_seekbar_L == 0 && R_speed_L == 0) {button_move_Right.setEnabled(false);  string_R_activity_L = "spent";}
+                        if (L_sekbarResult_R <= 0) {L_direct_R = 4; string_R_activity_L = "draw";
+                            string_L_activity_R = "draw"; stop_battle();}
                     }
 
                     //if (b == 1){ // dynamicall }
@@ -988,8 +1071,22 @@ public class MainBattleline extends MainData {
     };
 
     View.OnLongClickListener long_click_move_Right = v -> {
-        //if (move_on){}
-        return true;
+        if (move_on) {
+            if (b == 2) {
+                if (R_speed_L == 0 && string_R_activity_L.equals("")) {
+                    R_direct = !R_direct; Final_right++;
+                    if (Final_right > 2) {right_seekBar_left.setVisibility(View.INVISIBLE); Final_right = -4;}
+
+                    if (string_right_front.equals("up")) { button_down_flank_Right.callOnClick(); } else if (string_right_front.equals("down")) {  button_up_flank_Right.callOnClick(); }
+                    button_move_Right.setText(R.string.rotate); final Handler handler = new Handler();
+                    handler.postDelayed(() -> { button_move_Right.setText(R.string.move); }, 400);
+                } else {
+                    button_move_Right.setText(R.string.impossible);
+                    final Handler handler = new Handler();
+                    handler.postDelayed(() -> {button_move_Right.setText(R.string.move);}, 600);
+                }
+            }
+        } return true;
     };
 
     View.OnTouchListener click_attack_Right = (view, event) -> {
@@ -997,25 +1094,97 @@ public class MainBattleline extends MainData {
             case MotionEvent.ACTION_DOWN:
                 if (move_on) {
                     if (b == 2){ // mechanical
-                        if (L_sekbarResult_R != 0){
-                            button_attack_Right.setEnabled(false);
-                            R_speed_L = -2;
-
-                            button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorOld_ScriptMap)));
-
-                            if (L_position_R + R_position_L == L_seekbarLenght_R) {
+                        if (string_R_activity_L.equals("capture")) {
+                            L_capture_R++; button_move_Right.setEnabled(false);
+                            if (L_capture_R == 0) { button_attack_Right.setEnabled(false); string_R_activity_L = "win"; string_L_activity_R = "fall"; L_direct_R = 1; stop_battle();
+                                left_direct_right.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorLeft_SeekBar)));
+                            } else if (L_capture_R == -1) {
+                                left_direct_right.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonGreen)));
+                            } else if (L_capture_R >= -rounded_L) {
+                                left_direct_right.setProgressTintList(ColorStateList.valueOf(Color.rgb(
+                                        115 - ((115 - 85) / (L_capture_R * -1)), (115 - 62) / (L_capture_R * -1) + 62, 62)));
+                            } else { // 115 62 62 ==> 62 115 62
+                                left_direct_right.setProgressTintList(ColorStateList.valueOf(Color.rgb(
+                                        115 - ((115 - 62) / (L_capture_R * -1)), (115 - 62) / (L_capture_R * -1) + 62, 62)));
+                            }
+                        } else {
+                            if (R_position_L + L_position_R == L_seekbarLenght_R) {
                                 frameLayout_seekBar.bringChildToFront(findViewById(R.id.Right_seekBar_Left));
                                 right_seekBar_left.bringToFront();
 
-                                editText_left.setText(""); L_seekbar_R = 0;
+                                // sr - -1 коли фаталити
+                                if (string_right_front.equals("up") && string_left_front.equals("up")) {string_L_activity_R = "double_fatality";}
+                                else if (string_right_front.equals("up") && string_left_front.equals("center")) {string_L_activity_R = "hard_fatality";}
+                                else if (string_right_front.equals("center") && string_left_front.equals("center") && R_direct != L_direct) {string_L_activity_R = "double_fatality";}
+                                else if (string_right_front.equals("center") && (string_left_front.equals("up") || string_left_front.equals("down"))) {string_L_activity_R = "hard_fatality";}
+                                else if (string_right_front.equals("down") && string_left_front.equals("center")) {string_L_activity_R = "hard_fatality";}
+                                else if (string_right_front.equals("down") && string_left_front.equals("down")) {string_L_activity_R = "double_fatality";}
+                                else {string_L_activity_R = "fatality";}
+
+                                // лише коли проотивник досяг 0
+                                button_move_Left.setText(R.string.fatality); button_attack_Left.setText(R.string.fatality); button_defense_Left.setText(R.string.fatality);
+                                button_move_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_attack_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_defense_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_down_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_up_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_center_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+
+                                L_direct_R = 1; stop_battle();
+                            } else {
+                                if (R_seekbar_L != 0) { R_seekbar_L--; editText_right.setText(String.valueOf(R_seekbar_L)); }
+
+                                string_R_activity_L = "attack"; button_move_Right.setEnabled(false); button_defense_Right.setEnabled(false);
+                                button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+
+                                int n1 = 1, n2 = 1, r = 0;
+                                while (r <= (rounded_R + R_seekbar_L) / 2) { n1++; n2++; r = n1 * n2; }
+                                R_speed_L = -n1 + 1;
                             }
                         }
-                    }
-
-                    //if (b == 1){ // dynamicall }
+                        if (Final_right > 0) { Final_right = 0;} else if (Final_right < 0) {Final_right++; if (Final_right == 0) {right_seekBar_left.setVisibility(View.VISIBLE);}}
+                    } //if (b == 1){ // dynamicall }
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                if (move_on) {
+                    if (string_R_activity_L.equals("attack")) {
+                        button_attack_Right.setEnabled(false);
+                        string_R_activity_L = "";
+                    } else if (string_R_activity_L.equals("sabotage")) {
+                        button_attack_Right.setEnabled(false);
+                        button_attack_Right.setText(R.string.attack);
+                        if (L_capture_R == 0) {button_attack_Left.setText(R.string.attack);} else if
+                        (L_capture_R == -1) {button_attack_Left.setText(R.string.canceled);} else
+                        {button_attack_Left.setText(R.string.capture);}
+                        string_R_activity_L = "";
+                    } else if (string_R_activity_L.equals("destroy")) {
+                        if (L_seekbar_R > 1) {
+                            L_seekbar_R -= 1; editText_left.setText(String.valueOf(L_seekbar_R));
+                            R_seekbar_L += 1; editText_right.setText(String.valueOf(R_seekbar_L));
+                        }
+                        button_attack_Right.setEnabled(false);
+                        button_attack_Right.setText(R.string.attack);
+                        string_R_activity_L = "";
+                    } else if (string_R_activity_L.equals("bypass")) {
+                        if (R_direct) { R_position_L += 3;
+                            if (R_position_L > L_seekbarLenght_R) { R_position_L = L_seekbarLenght_R - (R_position_L - L_seekbarLenght_R); R_direct = false;
+                                if (string_right_front.equals("up")) { button_down_flank_Right.callOnClick();
+                                } else if (string_right_front.equals("down")) {  button_up_flank_Right.callOnClick(); } }
+                        } else { R_position_L -= 3;
+                            if (R_position_L < 0) { R_position_L = +R_position_L; R_direct = true;
+                                if (string_right_front.equals("up")) { button_down_flank_Right.callOnClick();
+                                } else if (string_right_front.equals("down")) {  button_up_flank_Right.callOnClick(); } }
+                        }
+                        right_seekBar_left.setProgress(R_position_L);
+
+                        button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonYellow)));
+                        button_attack_Right.setEnabled(false); button_attack_Right.setText(R.string.attack);
+                        R_speed_L = 2; string_R_activity_L = "";
+                    }
+
+                    button_move_Right.setEnabled(true);
+                }
                 break;
         }
         view.performClick();
@@ -1023,15 +1192,145 @@ public class MainBattleline extends MainData {
     };
 
     View.OnLongClickListener long_click_attack_Right = v -> {
+        if (move_on) {
+            if (R_position_L > rounded_R && !string_L_activity_R.equals("capture") && R_seekbar_L >= 1) {
+                if (string_R_activity_L.equals("capture")) { // розграбувати
+                    if (L_seekbar_R > 1) {
+                        string_R_activity_L = "destroy";
+                        L_seekbar_R -= 1; editText_left.setText(String.valueOf(L_seekbar_R));
+                        R_seekbar_L += 1; editText_right.setText(String.valueOf(R_seekbar_L));
+                        button_attack_Right.setText(R.string.destroy);
+                    } else {
+                        button_attack_Right.setText(R.string.impossible);
+                        final Handler handler = new Handler();
+                        handler.postDelayed(() -> { button_attack_Right.setText(R.string.attack); }, 600);
+                    } L_capture_R = 0; left_direct_right.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorLeft_SeekBar)));
+                    int n1 = 1, n2 = 1, r = 0;
+                    while (r <= (rounded_R + R_seekbar_L) / 2) { n1++; n2++; r = n1 * n2; }
+                    R_speed_L = -n1 + 1;
+                } else {
+                    string_R_activity_L = "capture"; button_attack_Right.setText(R.string.capture); L_capture_R = -rounded_L;
+                    R_seekbar_L--; editText_right.setText(String.valueOf(R_seekbar_L));
+                    left_direct_right.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                }
+            } else {
+                if (R_seekbar_L >= 1 && R_position_L < rounded_R && string_L_activity_R.equals("capture")) { // саботаж
+                    string_R_activity_L = "sabotage";
+                    R_seekbar_L -= 1; editText_right.setText(String.valueOf(R_seekbar_L));
+                    L_capture_R += -(rounded_R / (L_speed_R * -1));
+                    button_attack_Right.setText(R.string.success);
+                    button_attack_Left.setText(R.string.sabotage);
+                } else if (R_position_L < rounded_R) { // перестрибнути
+                    if (R_seekbar_L >= 1) {R_seekbar_L -= 1; editText_right.setText(String.valueOf(R_seekbar_L));}
+                    string_R_activity_L = "bypass"; button_attack_Right.setText(R.string.bypass);
+                } else {
+                    button_attack_Right.setText(R.string.impossible);
+                    final Handler handler = new Handler();
+                    handler.postDelayed(() -> {
+                        button_move_Right.setEnabled(true);
+                        button_attack_Right.setText(R.string.attack); }, 600);
+                } button_attack_Right.setEnabled(false);
+            }
+        }
         return true;
     };
 
     View.OnTouchListener click_defense_Right = (view, event) -> {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                L_protect_R++;
+                if (move_on) {
+                    if (b == 2){ // mechanical
+                        if (string_R_activity_L.equals("protection")) { // 150 141 101 ==> 61 88 114
+                            L_protect_R++;
+                            if (L_protect_R == 0) { string_R_activity_L = ""; button_move_Right.setEnabled(true); button_defense_Right.setEnabled(false);
+                                left_direct_right.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorRight_SeekBar)));
+                                if (L_position_R > rounded_L) {string_R_activity_L = "win"; string_L_activity_R = "fall"; L_direct_R = 1; stop_battle();
+                                } else {
+                                    int n1 = 1, n2 = 1, r = 0;
+                                    while (r <= (rounded_R + R_seekbar_L) / 2) { n1++; n2++; r = n1 * n2; }
+                                    R_speed_L = -n1 + 1;
+                                }
+                            } else if (L_protect_R == -1) {
+                                left_direct_right.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonBlue)));
+                            } else {
+                                left_direct_right.setProgressBackgroundTintList(ColorStateList.valueOf(Color.rgb(
+                                        150 - ((150 - 61) / (L_protect_R * -1)), 141 - ((141 - 88) / (L_protect_R * -1)), (114 - 101) / (L_protect_R * -1) + 101))); }
+                        } else {
+                            if (string_R_activity_L.equals("defense")) {
+                                 if (R_position_L + L_position_R == L_seekbarLenght_R) {
+                                     frameLayout_seekBar.bringChildToFront(findViewById(R.id.Right_seekBar_Left));
+                                     right_seekBar_left.bringToFront();
+
+                                     // sr - -1 коли фаталити
+                                     if (string_right_front.equals("up") && string_left_front.equals("up")) {string_L_activity_R = "double_fatality";}
+                                     else if (string_right_front.equals("up") && string_left_front.equals("center")) {string_L_activity_R = "hard_fatality";}
+                                     else if (string_right_front.equals("center") && string_left_front.equals("center") && R_direct != L_direct) {string_L_activity_R = "double_fatality";}
+                                     else if (string_right_front.equals("center") && (string_left_front.equals("up") || string_left_front.equals("down"))) {string_L_activity_R = "hard_fatality";}
+                                     else if (string_right_front.equals("down") && string_left_front.equals("center")) {string_L_activity_R = "hard_fatality";}
+                                     else if (string_right_front.equals("down") && string_left_front.equals("down")) {string_L_activity_R = "double_fatality";}
+                                     else {string_L_activity_R = "fatality";}
+
+                                     // лише коли проотивник досяг 0
+                                     button_move_Left.setText(R.string.fatality); button_attack_Left.setText(R.string.fatality); button_defense_Left.setText(R.string.fatality);
+                                     button_move_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                     button_attack_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                     button_defense_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                     button_down_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                     button_up_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                     button_center_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+
+                                     L_direct_R = 1; stop_battle();
+                                } else { R_speed_L++;
+                                    if (R_speed_L == 0) { string_R_activity_L = ""; button_defense_Right.setEnabled(false); button_move_Right.setEnabled(true); //Рушати // рушити // to move // to ran
+                                        button_defense_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_Button)));
+                                        int n1 = 1, n2 = 1, r = 0;
+                                        while (r <= (rounded_R + R_seekbar_L) / 2) { n1++; n2++; r = n1 * n2; }
+                                        R_speed_L = -n1 + 1;
+                                    }
+                                }
+                            } else {
+                                if (R_seekbar_L != 0) { R_seekbar_L--; editText_right.setText(String.valueOf(R_seekbar_L)); }
+
+                                string_R_activity_L = "defense"; button_move_Right.setEnabled(false); button_attack_Right.setEnabled(false);
+                                button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+
+                                int n1 = 1, n2 = 1, r = 0;
+                                while (r <= (rounded_R + R_seekbar_L) / 2) { n1++; n2++; r = n1 * n2; }
+                                R_speed_L = -n1 + 1;
+                            }
+                        }
+                        if (Final_right > 0) { Final_right = 0;} else if (Final_right < 0) {Final_right++; if (Final_right == 0) {right_seekBar_left.setVisibility(View.VISIBLE);}}
+                    }
+                }
+                //if (b == 1){ // dynamicall}
                 break;
             case MotionEvent.ACTION_UP:
+                if (move_on) {
+                    if (string_R_activity_L.equals("defense")) {
+                        button_defense_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonYellow)));
+                    } else if (string_R_activity_L.equals("sabotage")) {
+                        button_defense_Right.setEnabled(false);
+                        button_defense_Right.setText(R.string.defense);
+                        if (L_protect_R == 0) {button_defense_Left.setText(R.string.defense);
+                        } else {button_defense_Left.setText(R.string.capture);}
+                        string_R_activity_L = ""; R_speed_L = -2;
+                    } else if (string_R_activity_L.equals("bypass")) {
+                        if (R_direct) { R_position_L += 3;
+                            if (R_position_L > L_seekbarLenght_R) { R_position_L = L_seekbarLenght_R - (R_position_L - L_seekbarLenght_R); R_direct = false;
+                                if (string_right_front.equals("up")) { button_down_flank_Right.callOnClick();
+                                } else if (string_right_front.equals("down")) {  button_up_flank_Right.callOnClick(); } }
+                        } else { R_position_L -= 3;
+                            if (R_position_L < 0) { R_position_L = +R_position_L; R_direct = true;
+                                if (string_right_front.equals("up")) { button_down_flank_Right.callOnClick();
+                                } else if (string_right_front.equals("down")) {  button_up_flank_Right.callOnClick(); } }
+                        }
+                        right_seekBar_left.setProgress(R_position_L);
+
+                        button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonYellow)));
+                        button_defense_Right.setEnabled(false); button_defense_Right.setText(R.string.defense);
+                        R_speed_L = -1; string_R_activity_L = ""; button_move_Right.setEnabled(true);
+                    }
+                }
                 break;
         }
         view.performClick();
@@ -1039,20 +1338,50 @@ public class MainBattleline extends MainData {
     };
 
     View.OnLongClickListener long_click_defense_Right = v -> {
+        if (move_on) {
+            if (R_position_L < rounded_R && !string_L_activity_R.equals("protection") && R_seekbar_L >= 1) {
+                string_R_activity_L = "protection"; button_defense_Right.setText(R.string.protect); L_protect_R = -(rounded_R + 1) / 2 ;
+                R_seekbar_L--; editText_right.setText(String.valueOf(R_seekbar_L));
+                left_direct_right.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonYellow)));
+            } else {
+                if (R_seekbar_L >= 1 && R_position_L > rounded_R && string_L_activity_R.equals("protection")) { // саботаж
+                    string_R_activity_L = "sabotage"; string_L_activity_R = ""; L_protect_R = 0;
+                    L_speed_R = -1; left_direct_right.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorLeft_SeekBar)));
+                    button_move_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonYellow)));
+                    button_move_Left.setEnabled(true); button_defense_Left.setEnabled(false);
+                    button_defense_Right.setText(R.string.success); button_defense_Left.setText(R.string.sabotage);
+                } else if (R_position_L > rounded_R) { // перестрибнути
+                    string_R_activity_L = "bypass"; button_defense_Right.setText(R.string.bypass);
+                    if (R_seekbar_L >= 1) {R_seekbar_L -= 1; editText_right.setText(String.valueOf(R_seekbar_L));}
+                } else {
+                    button_defense_Right.setText(R.string.impossible);
+                    final Handler handler = new Handler();
+                    handler.postDelayed(() -> {
+                        button_defense_Right.setText(R.string.defense); }, 600);
+                }
+            }
+        }
         return true;
     };
 
     public void click_flank_Right (View view) {
         int id = view.getId();
         if (id == R.id.button_up_flank_Right) {
-
+            button_up_flank_Right.setText(R.string.flank_up);
+            string_right_front = "up";
+            button_down_flank_Right.setText("");
         } else if (id == R.id.button_center_flank_Right) {
-
+            button_up_flank_Right.setText(R.string.flank_up);
+            string_right_front = "center";
+            button_down_flank_Right.setText(R.string.flank_down);
         } else if (id == R.id.button_down_flank_Right) {
-
+            button_up_flank_Right.setText("");
+            string_right_front = "down";
+            button_down_flank_Right.setText(R.string.flank_down);
         }
     }
 
+    // --------------------- ----------  -------  ----   --    -
 
     public void check_start() { // Зрівнює таймінги відпускання суперниками move кнопки
         if (!move_on) {
@@ -1120,6 +1449,7 @@ public class MainBattleline extends MainData {
             L_seekbarLenght_R = L_sekbarResult_R; // Довжина шляху
             double L_double_R = L_sekbarResult_R; int degree_LR, result_degree;
             L_speed_R = 0; R_speed_L = 0;
+            Final_left = 0; Final_right = 0;
 
             if (bm == 3) { // Вплив очок на гемплей відсутній.
                 if (cr == 1) {

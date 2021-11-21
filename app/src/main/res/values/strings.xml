@@ -53,6 +53,7 @@
     <string name="defense">ESNEFED</string>
     <string name="protect">TCETORP</string>
     <string name="success">SSECCUS</string>
+    <string name="bypass">SSAPYBOT</string>
 
 
     <string name="bacgraund" translatable="false">bacgraund</string>

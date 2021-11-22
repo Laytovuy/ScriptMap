@@ -640,10 +640,12 @@ public class MainBattleline extends MainData {
                             }
                         }
 
-                        if (Final_left > 0) { Final_left = 0;} else if (Final_left < 0) {Final_left++; if (Final_left == 0) {left_seekBar_right.setVisibility(View.VISIBLE);}}
+                        if (Final_left > 0) { if (!string_L_activity_R.equals("invisible")) { Final_left = 0; }} else if (Final_left < 0) {Final_left++; if (Final_left == 0) {left_seekBar_right.setVisibility(View.VISIBLE);}}
                         if (L_seekbar_R == 0 && L_speed_R == 0) {button_move_Left.setEnabled(false);  string_L_activity_R = "spent";}
-                        if (L_sekbarResult_R <= 0) {L_direct_R = 4; string_L_activity_R = "draw";
-                            string_R_activity_L = "draw"; stop_battle();}
+                        if (L_sekbarResult_R <= 0) {L_direct_R = 4;
+                            button_move_Right.setEnabled(false); button_attack_Right.setEnabled(false); button_defense_Right.setEnabled(false);
+                            button_move_Left.setEnabled(false); button_attack_Left.setEnabled(false); button_defense_Left.setEnabled(false);
+                        string_L_activity_R = "draw"; string_R_activity_L = "draw"; stop_battle();}
                     }
 
                     //if (b == 1){ // dynamicall}
@@ -672,9 +674,9 @@ public class MainBattleline extends MainData {
     View.OnLongClickListener long_click_move_Left = v -> {
         if (move_on) {
             if (b == 2) {
-                if (L_speed_R == 0 && string_L_activity_R.equals("")) {
-                    L_direct = !L_direct; Final_left++;
-                    if (Final_left > 2) {left_seekBar_right.setVisibility(View.INVISIBLE); Final_left = -4;}
+                if (L_speed_R == 0 && (string_L_activity_R.equals("") || string_L_activity_R.equals("invisible"))) {
+                    L_direct = !L_direct; Final_left++; if (string_L_activity_R.equals("")) {string_L_activity_R = "invisible";}
+                    if (Final_left > 2) {left_seekBar_right.setVisibility(View.INVISIBLE); Final_left = -5;}
 
                     if (string_left_front.equals("up")) { button_down_flank_Left.callOnClick(); } else if (string_left_front.equals("down")) {  button_up_flank_Left.callOnClick(); }
                     button_move_Left.setText(R.string.rotate); final Handler handler = new Handler();
@@ -698,6 +700,17 @@ public class MainBattleline extends MainData {
                         if (string_L_activity_R.equals("capture")) {
                             L_capture_R++; button_move_Left.setEnabled(false);
                             if (L_capture_R == 0) { button_attack_Left.setEnabled(false); string_L_activity_R = "win"; string_R_activity_L = "fall"; L_direct_R = 2; stop_battle();
+
+                                button_move_Left.setEnabled(false); button_attack_Left.setEnabled(false); button_defense_Left.setEnabled(false);
+                                button_move_Right.setEnabled(false); button_attack_Right.setEnabled(false); button_defense_Right.setEnabled(false);
+                                button_move_Right.setText(R.string.fatality); button_attack_Right.setText(R.string.fatality); button_defense_Right.setText(R.string.fatality);
+                                button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_attack_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_defense_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_down_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_up_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_center_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+
                                 left_direct_right.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorRight_SeekBar)));
                             } else if (L_capture_R == -1) {
                                 left_direct_right.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonGreen)));
@@ -723,6 +736,9 @@ public class MainBattleline extends MainData {
                                 else {string_R_activity_L = "fatality";}
 
                                 // лише коли проотивник досяг 0
+
+                                button_move_Left.setEnabled(false); button_attack_Left.setEnabled(false); button_defense_Left.setEnabled(false);
+                                button_move_Right.setEnabled(false); button_attack_Right.setEnabled(false); button_defense_Right.setEnabled(false);
                                 button_move_Right.setText(R.string.fatality); button_attack_Right.setText(R.string.fatality); button_defense_Right.setText(R.string.fatality);
                                 button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
                                 button_attack_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
@@ -781,9 +797,8 @@ public class MainBattleline extends MainData {
 
                         button_move_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonYellow)));
                         button_attack_Left.setEnabled(false); button_attack_Left.setText(R.string.attack);
-                        L_speed_R = 2; string_L_activity_R = "";
+                        L_speed_R = -1; string_L_activity_R = ""; button_move_Left.setEnabled(true);
                     }
-
                     button_move_Left.setEnabled(true);
                 }
                 break;
@@ -830,7 +845,7 @@ public class MainBattleline extends MainData {
                     handler.postDelayed(() -> {
                         button_move_Left.setEnabled(true);
                         button_attack_Left.setText(R.string.attack); }, 600);
-                } button_attack_Left.setEnabled(false);
+                } // button_attack_Left.setEnabled(false);
             }
         }
         return true;
@@ -846,6 +861,16 @@ public class MainBattleline extends MainData {
                             if (L_protect_R == 0) { string_L_activity_R = ""; button_move_Left.setEnabled(true); button_defense_Left.setEnabled(false);
                                 left_direct_right.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorLeft_SeekBar)));
                                 if (R_position_L > rounded_R) {string_L_activity_R = "win"; string_R_activity_L = "fall";L_direct_R = 2; stop_battle();
+
+                                    button_move_Left.setEnabled(false); button_attack_Left.setEnabled(false); button_defense_Left.setEnabled(false);
+                                    button_move_Right.setEnabled(false); button_attack_Right.setEnabled(false); button_defense_Right.setEnabled(false);
+                                    button_move_Right.setText(R.string.fatality); button_attack_Right.setText(R.string.fatality); button_defense_Right.setText(R.string.fatality);
+                                    button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                    button_attack_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                    button_defense_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                    button_down_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                    button_up_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                    button_center_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
                                 } else {
                                     int n1 = 1, n2 = 1, r = 0;
                                     while (r <= (rounded_L + L_seekbar_R) / 2) { n1++; n2++; r = n1 * n2; }
@@ -872,6 +897,9 @@ public class MainBattleline extends MainData {
                                     else {string_R_activity_L = "fatality";}
 
                                     // лише коли проотивник досяг 0
+
+                                    button_move_Left.setEnabled(false); button_attack_Left.setEnabled(false); button_defense_Left.setEnabled(false);
+                                    button_move_Right.setEnabled(false); button_attack_Right.setEnabled(false); button_defense_Right.setEnabled(false);
                                     button_move_Right.setText(R.string.fatality); button_attack_Right.setText(R.string.fatality); button_defense_Right.setText(R.string.fatality);
                                     button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
                                     button_attack_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
@@ -1041,10 +1069,12 @@ public class MainBattleline extends MainData {
                             }
                         }
 
-                        if (Final_right > 0) { Final_right = 0;} else if (Final_right < 0) {Final_right++; if (Final_right == 0) {right_seekBar_left.setVisibility(View.VISIBLE);}}
+                        if (Final_right > 0) {  if (!string_R_activity_L.equals("invisible")) { Final_right = 0; } } else if (Final_right < 0) {Final_right++; if (Final_right == 0) {right_seekBar_left.setVisibility(View.VISIBLE);}}
                         if (R_seekbar_L == 0 && R_speed_L == 0) {button_move_Right.setEnabled(false);  string_R_activity_L = "spent";}
-                        if (L_sekbarResult_R <= 0) {L_direct_R = 4; string_R_activity_L = "draw";
-                            string_L_activity_R = "draw"; stop_battle();}
+                        if (L_sekbarResult_R <= 0) {L_direct_R = 4;
+                            button_move_Right.setEnabled(false); button_attack_Right.setEnabled(false); button_defense_Right.setEnabled(false);
+                            button_move_Left.setEnabled(false); button_attack_Left.setEnabled(false); button_defense_Left.setEnabled(false);
+                        string_R_activity_L = "draw"; string_L_activity_R = "draw"; stop_battle();}
                     }
 
                     //if (b == 1){ // dynamicall }
@@ -1073,9 +1103,9 @@ public class MainBattleline extends MainData {
     View.OnLongClickListener long_click_move_Right = v -> {
         if (move_on) {
             if (b == 2) {
-                if (R_speed_L == 0 && string_R_activity_L.equals("")) {
-                    R_direct = !R_direct; Final_right++;
-                    if (Final_right > 2) {right_seekBar_left.setVisibility(View.INVISIBLE); Final_right = -4;}
+                if (R_speed_L == 0 && (string_R_activity_L.equals("") || string_R_activity_L.equals("invisible"))) {
+                    R_direct = !R_direct; Final_right++; if (string_R_activity_L.equals("")) {string_R_activity_L = "invisible";}
+                    if (Final_right > 2) {right_seekBar_left.setVisibility(View.INVISIBLE); Final_right = -5;}
 
                     if (string_right_front.equals("up")) { button_down_flank_Right.callOnClick(); } else if (string_right_front.equals("down")) {  button_up_flank_Right.callOnClick(); }
                     button_move_Right.setText(R.string.rotate); final Handler handler = new Handler();
@@ -1097,6 +1127,17 @@ public class MainBattleline extends MainData {
                         if (string_R_activity_L.equals("capture")) {
                             L_capture_R++; button_move_Right.setEnabled(false);
                             if (L_capture_R == 0) { button_attack_Right.setEnabled(false); string_R_activity_L = "win"; string_L_activity_R = "fall"; L_direct_R = 1; stop_battle();
+
+                                button_move_Right.setEnabled(false); button_attack_Right.setEnabled(false); button_defense_Right.setEnabled(false);
+                                button_move_Left.setEnabled(false); button_attack_Left.setEnabled(false); button_defense_Left.setEnabled(false);
+                                button_move_Left.setText(R.string.fatality); button_attack_Left.setText(R.string.fatality); button_defense_Left.setText(R.string.fatality);
+                                button_move_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_attack_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_defense_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_down_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_up_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                button_center_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+
                                 left_direct_right.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorLeft_SeekBar)));
                             } else if (L_capture_R == -1) {
                                 left_direct_right.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonGreen)));
@@ -1122,6 +1163,9 @@ public class MainBattleline extends MainData {
                                 else {string_L_activity_R = "fatality";}
 
                                 // лише коли проотивник досяг 0
+
+                                button_move_Right.setEnabled(false); button_attack_Right.setEnabled(false); button_defense_Right.setEnabled(false);
+                                button_move_Left.setEnabled(false); button_attack_Left.setEnabled(false); button_defense_Left.setEnabled(false);
                                 button_move_Left.setText(R.string.fatality); button_attack_Left.setText(R.string.fatality); button_defense_Left.setText(R.string.fatality);
                                 button_move_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
                                 button_attack_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
@@ -1180,7 +1224,7 @@ public class MainBattleline extends MainData {
 
                         button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonYellow)));
                         button_attack_Right.setEnabled(false); button_attack_Right.setText(R.string.attack);
-                        R_speed_L = 2; string_R_activity_L = "";
+                        R_speed_L = -1; string_R_activity_L = ""; button_move_Right.setEnabled(true);
                     }
 
                     button_move_Right.setEnabled(true);
@@ -1229,7 +1273,7 @@ public class MainBattleline extends MainData {
                     handler.postDelayed(() -> {
                         button_move_Right.setEnabled(true);
                         button_attack_Right.setText(R.string.attack); }, 600);
-                } button_attack_Right.setEnabled(false);
+                } //button_attack_Right.setEnabled(false);
             }
         }
         return true;
@@ -1245,6 +1289,16 @@ public class MainBattleline extends MainData {
                             if (L_protect_R == 0) { string_R_activity_L = ""; button_move_Right.setEnabled(true); button_defense_Right.setEnabled(false);
                                 left_direct_right.setProgressBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorRight_SeekBar)));
                                 if (L_position_R > rounded_L) {string_R_activity_L = "win"; string_L_activity_R = "fall"; L_direct_R = 1; stop_battle();
+
+                                    button_move_Right.setEnabled(false); button_attack_Right.setEnabled(false); button_defense_Right.setEnabled(false);
+                                    button_move_Left.setEnabled(false); button_attack_Left.setEnabled(false); button_defense_Left.setEnabled(false);
+                                    button_move_Left.setText(R.string.fatality); button_attack_Left.setText(R.string.fatality); button_defense_Left.setText(R.string.fatality);
+                                    button_move_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                    button_attack_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                    button_defense_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                    button_down_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                    button_up_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                                    button_center_flank_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
                                 } else {
                                     int n1 = 1, n2 = 1, r = 0;
                                     while (r <= (rounded_R + R_seekbar_L) / 2) { n1++; n2++; r = n1 * n2; }
@@ -1271,6 +1325,9 @@ public class MainBattleline extends MainData {
                                      else {string_L_activity_R = "fatality";}
 
                                      // лише коли проотивник досяг 0
+
+                                     button_move_Right.setEnabled(false); button_attack_Right.setEnabled(false); button_defense_Right.setEnabled(false);
+                                     button_move_Left.setEnabled(false); button_attack_Left.setEnabled(false); button_defense_Left.setEnabled(false);
                                      button_move_Left.setText(R.string.fatality); button_attack_Left.setText(R.string.fatality); button_defense_Left.setText(R.string.fatality);
                                      button_move_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
                                      button_attack_Left.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));

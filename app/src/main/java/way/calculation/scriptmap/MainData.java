@@ -1,6 +1,7 @@
 package way.calculation.scriptmap;
 
 import android.content.SharedPreferences;
+import android.os.CountDownTimer;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -47,13 +48,14 @@ public class MainData extends AppCompatActivity {
     public static SharedPreferences MainDataExchange;
     public String languageCode = "default";
     public boolean StartData = true;
+    public CountDownTimer L_DownTimer_R = null;
 
 
     public long system_clear_time, system_back_time; // Це невеличкі переміні які зберігають час кліка, в деяких функціях.
     public long system_start_Left_time, system_start_Right_time;
 
     public String string_left = "", string_center = "", string_right = ""; // Це переміні які хранять текст, який я провіряю на пустоту, бо як конверсія з пустої строки в переміну визве помилку.
-    public String string_right_up = "", string_left_down = "", string_left_and_right = "", string_left_down_right = "";
+    public String string_left_down = "", string_right_up = "",  string_left_and_right = "", string_left_down_right = "";
     public String string_left_front = "center", string_right_front = "center";
     public String string_L_activity_R = "", string_R_activity_L = "";
 
@@ -64,7 +66,7 @@ public class MainData extends AppCompatActivity {
     public int Final_left, Final_center, Final_right;
     public int Int_left, Int_center, Int_right, L_result_C, L_result_R, C_result_R;
     public int L_seekbar_R, R_seekbar_L, L_position_R, R_position_L, L_speed_R, R_speed_L, L_seekbarLenght_R, L_sekbarResult_R,
-            OLD_L_seekbar_R, OLD_R_seekbar_L, OLD_L_Int_and_R, rounded_L, rounded_R;
+            OLD_L_seekbar_R, OLD_R_seekbar_L, OLD_L_Int_and_R, rounded_L, rounded_R; // TODO Переробити переміні в зюереження під іншим ключом, і все, потім просто приймати значення з них.
     public int Int_left_cr, Int_right_cr, Int_left_down, Int_left_and_right, Int_right_up, Int_left_down_right;
     public int L_capture_R, L_protect_R;
 

@@ -7,6 +7,7 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -121,6 +122,31 @@ public class MainBattleline extends MainData {
         editText_right.addTextChangedListener(editText_watcher);
 
         if (StartData) { setRotationAnimation(); outData(); }
+
+        /*
+        Доробити гравця
+        оптимізувати його
+        добавити стоп боя
+        оптимізувати код
+        зробити збереження переміних, а не їх дострокове зберігання в переміних
+        додати активності
+        змінити на нуль провірки, забравши їх нараз
+        перестроїти розумміння коли гравець програє актиностю
+        рішити з шрифтом
+        добавити ошагове відкриття функцій
+        добавити графіку
+        добавити музику
+        добавити авторство
+
+        добавити 3 гравця
+        перенести в юніті
+        перенести на сайт
+        в плей маркет
+
+        щочик для листа
+        галактик, ресурсів
+        картили випадкові де різні ачівки і бонуси
+        */
     }
 
 
@@ -582,11 +608,12 @@ public class MainBattleline extends MainData {
     }
 
     // --------------------- ----------  -------  ----   --    -
+    int L_s_R;
 
     View.OnTouchListener click_move_Left = (view, event) -> {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (move_on) { // L_speed_R, L_position_R, string_L_activity_R
+                if (move_on) {
                     if (b == 2){ // mechanical
                         if (L_speed_R == 0) {
                             L_seekbar_R -= 1; editText_left.setText(String.valueOf(L_seekbar_R));
@@ -646,9 +673,38 @@ public class MainBattleline extends MainData {
                             button_move_Right.setEnabled(false); button_attack_Right.setEnabled(false); button_defense_Right.setEnabled(false);
                             button_move_Left.setEnabled(false); button_attack_Left.setEnabled(false); button_defense_Left.setEnabled(false);
                         string_L_activity_R = "draw"; string_R_activity_L = "draw"; stop_battle();}
-                    }
+                    } else if (b == 1){ // dynamicall
+                        if (L_DownTimer_R != null) { L_DownTimer_R.cancel(); }
 
-                    //if (b == 1){ // dynamicall}
+                        if (L_position_R + R_position_L == L_seekbarLenght_R) {
+
+                            frameLayout_seekBar.bringChildToFront(findViewById(R.id.Left_seekBar_Right));
+                            left_seekBar_right.bringToFront();
+
+                            // sr - -1 коли фаталити
+                            if (string_left_front.equals("up") && string_right_front.equals("up")) {string_R_activity_L = "double_fatality";}
+                            else if (string_left_front.equals("up") && string_right_front.equals("center")) {string_R_activity_L = "hard_fatality";}
+                            else if (string_left_front.equals("center") && string_right_front.equals("center") && L_direct != R_direct) {string_R_activity_L = "double_fatality";}
+                            else if (string_left_front.equals("center") && (string_right_front.equals("up") || string_right_front.equals("down"))) {string_R_activity_L = "hard_fatality";}
+                            else if (string_left_front.equals("down") && string_right_front.equals("center")) {string_R_activity_L = "hard_fatality";}
+                            else if (string_left_front.equals("down") && string_right_front.equals("down")) {string_R_activity_L = "double_fatality";}
+                            else {string_R_activity_L = "fatality";}
+
+                            // лише коли проотивник досяг 0
+
+                            button_move_Left.setEnabled(false); button_attack_Left.setEnabled(false); button_defense_Left.setEnabled(false);
+                            button_move_Right.setEnabled(false); button_attack_Right.setEnabled(false); button_defense_Right.setEnabled(false);
+                            button_move_Right.setText(R.string.fatality); button_attack_Right.setText(R.string.fatality); button_defense_Right.setText(R.string.fatality);
+                            button_move_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                            button_attack_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                            button_defense_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                            button_down_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                            button_up_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+                            button_center_flank_Right.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorTint_ButtonRed)));
+
+                            L_direct_R = 2; stop_battle();
+                        }
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -664,7 +720,45 @@ public class MainBattleline extends MainData {
                             button_move_Left.setEnabled(true);
                         }
                     }, 1200);
-                } //else { }
+                } else {
+                    if (b == 1) { // dynamicall
+                        if (L_DownTimer_R == null && string_L_activity_R.equals("")) {
+                            L_s_R = 1;
+                            L_DownTimer_R = new CountDownTimer(L_seekbar_R, L_s_R) {
+                                public void onTick(long millisUntilFinished) {
+                                    L_seekbar_R = (int) millisUntilFinished; editText_left.setText(String.valueOf(L_seekbar_R));
+                                    L_sekbarResult_R -= 1; left_result_right.setText(String.valueOf(L_sekbarResult_R));
+
+                                    if (L_direct) {
+                                            if (L_position_R >= L_seekbarLenght_R || (R_position_L + L_position_R == L_seekbarLenght_R
+                                                    && string_R_activity_L.equals("defense"))) {
+                                                L_direct = false; L_position_R--;
+                                                if (string_left_front.equals("up")) { button_down_flank_Left.callOnClick();
+                                                } else if (string_left_front.equals("down")) {  button_up_flank_Left.callOnClick(); }
+                                            } else { L_position_R++; }
+                                        } else {
+                                            if (L_position_R <= 0 || (R_position_L + L_position_R == L_seekbarLenght_R
+                                                    && string_R_activity_L.equals("defense"))){
+                                                L_direct = true; L_position_R++;
+                                                if (string_left_front.equals("up")) { button_down_flank_Left.callOnClick();
+                                                } else if (string_left_front.equals("down")) {  button_up_flank_Left.callOnClick(); }
+                                            } else { L_position_R--; }
+                                        } left_seekBar_right.setProgress(L_position_R);
+                                        System.out.println(L_speed_R + "Ход");
+
+                                    if (L_s_R < L_speed_R) {
+                                        L_DownTimer_R.cancel(); L_s_R += 1; L_DownTimer_R.start();  System.out.println(L_s_R + "Ход");
+                                    }
+                                }
+                                public void onFinish() {
+                                    L_seekbar_R = 0; editText_left.setText(String.valueOf(L_seekbar_R));
+                                }
+                            }.start();
+                        } else { if (string_L_activity_R.equals("")) { L_DownTimer_R.cancel(); L_DownTimer_R = null; }
+                        else { string_L_activity_R = ""; }
+                        }
+                    }
+                }
                 break;
         }
         view.performClick();
@@ -686,8 +780,19 @@ public class MainBattleline extends MainData {
                     final Handler handler = new Handler();
                     handler.postDelayed(() -> {button_move_Left.setText(R.string.move);}, 600);
                 }
+            } else if (b == 1) {
+                if (string_L_activity_R.equals("") && L_DownTimer_R != null) {
+                    L_direct = !L_direct; L_DownTimer_R.start(); string_L_activity_R = "rotate";
 
-
+                    if (string_left_front.equals("up")) { button_down_flank_Left.callOnClick(); } else if (string_left_front.equals("down")) {  button_up_flank_Left.callOnClick(); }
+                    button_move_Left.setText(R.string.rotate); final Handler handler = new Handler();
+                    handler.postDelayed(() -> { button_move_Left.setText(R.string.move); }, 400);
+                } else {
+                    string_L_activity_R = "impossible";
+                    button_move_Left.setText(R.string.impossible);
+                    final Handler handler = new Handler();
+                    handler.postDelayed(() -> {button_move_Left.setText(R.string.move);}, 600);
+                }
             }
         } return true;
     };
